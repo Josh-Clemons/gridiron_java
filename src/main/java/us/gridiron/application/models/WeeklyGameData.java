@@ -2,8 +2,9 @@ package us.gridiron.application.models;
 
 import java.util.List;
 
-public class GameData {
+public class WeeklyGameData {
 	private String id;
+	private Integer week;
 	private List<NflEvent> events;
 
 	public String getId() {
@@ -22,4 +23,11 @@ public class GameData {
 		this.events = events;
 	}
 
+	public Integer getWeek() {
+		return week;
+	}
+
+	public void setWeek(Integer week) {
+		this.week = week;
+	}
 }

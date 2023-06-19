@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import us.gridiron.application.models.CompetitorInfo;
-import us.gridiron.application.models.GameData;
+import us.gridiron.application.models.WeeklyGameData;
 import us.gridiron.application.models.NflEvent;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -29,12 +29,21 @@ public class NflDataController {
 			final String uri = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=" + i;
 
 			try {
-				GameData result = restTemplate.getForObject(uri, GameData.class);
+				WeeklyGameData result = restTemplate.getForObject(uri, WeeklyGameData.class);
 
 				if(result != null) {
+					// for debugging purposes
+					System.out.println("Week: " + result.getWeek());
 					for (NflEvent event : result.getEvents()) {
+						// for debugging purposes
+						for (CompetitorInfo competitor: event.getCompetitors()) {
+							System.out.println("Event id: " + event.getId() + ", competitor: " + competitor);
+						}
 						allCompetitors.addAll(event.getCompetitors());
 					}
+				} else {
+					// for debugging purposes
+					System.out.println("Result is null for data from week: " + i);
 				}
 			} catch (Exception e) {
 				System.out.println("error GETing espn data in GameController: " + e.getMessage());

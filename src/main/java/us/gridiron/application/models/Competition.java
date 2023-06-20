@@ -19,7 +19,7 @@ public class Competition {
 		return competitors;
 	}
 
-	public void setCompetitions(List<Competitor> competitors) {
+	public void setCompetitors(List<Competitor> competitors) {
 		this.competitors = competitors;
 	}
 

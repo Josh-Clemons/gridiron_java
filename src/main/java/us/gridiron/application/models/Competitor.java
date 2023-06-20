@@ -4,13 +4,17 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 @Entity
-public class CompetitorInfo {
+public class Competitor {
 
 	@Id
 	private String id;
-	private String team;
+	@OneToOne
+	@JoinColumn(name = "team_id")
+	private Team team;
 	private boolean winner;
 	private String homeAway;
 	private LocalDateTime startDate;
@@ -25,13 +29,6 @@ public class CompetitorInfo {
 		this.id = id;
 	}
 
-	public String getTeam() {
-		return team;
-	}
-
-	public void setTeam(String team) {
-		this.team = team;
-	}
 
 	public boolean isWinner() {
 		return winner;

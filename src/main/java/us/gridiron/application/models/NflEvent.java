@@ -5,7 +5,7 @@ import java.util.List;
 public class NflEvent {
 
 	private String id;
-	private List<CompetitorInfo> competitors;
+	private List<Competition> competitions;
 
 	public String getId() {
 		return id;
@@ -15,14 +15,11 @@ public class NflEvent {
 		this.id = id;
 	}
 
-	public List<CompetitorInfo> getCompetitors() {
-		return competitors;
+	public List<Competition> getCompetitions() {
+		return competitions;
 	}
 
-	public void setCompetitors(List<CompetitorInfo> competitors) {
-		this.competitors = competitors;
+	public void setCompetitions(List<Competition> competitions) {
+		this.competitions = competitions;
 	}
-
-
-
 }

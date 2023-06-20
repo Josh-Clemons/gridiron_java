@@ -1,0 +1,239 @@
+let testData =
+    {
+        "leagues": [
+            {
+                "id": "28",
+                "uid": "s:20~l:28",
+                "name": "National Football League",
+                "abbreviation": "NFL",
+                "slug": "nfl",
+                "season": {
+                    "year": 2022,
+                    "startDate": "2022-08-01T07:00Z",
+                    "endDate": "2023-02-15T07:59Z",
+                    "displayName": "2022",
+                    "type": {
+                        "id": "4",
+                        "type": 4,
+                        "name": "Off Season",
+                        "abbreviation": "off"
+                    }
+                },
+                "calendarType": "list",
+                "calendarIsWhitelist": true,
+                "calendarStartDate": "2023-08-01T07:00Z",
+            }
+        ],
+        "season": {
+            "type": 2,
+            "year": 2022
+        },
+        "events": [
+            {
+                "id": "401434030",
+                "uid": "s:20~l:28~e:401434030",
+                "date": "2022-09-16T00:15Z",
+                "name": "Los Angeles Chargers at Kansas City Chiefs",
+                "shortName": "LAC @ KC",
+                "season": {
+                    "year": 2022,
+                    "type": 2,
+                    "slug": "regular-season"
+                },
+                "week": {
+                    "number": 2
+                },
+                "competitions": [
+                    {
+                        "id": "401434030",
+                        "uid": "s:20~l:28~e:401434030~c:401434030",
+                        "date": "2022-09-16T00:15Z",
+                        "attendance": 73461,
+                        "type": {
+                            "id": "1",
+                            "abbreviation": "STD"
+                        },
+                        "timeValid": true,
+                        "neutralSite": false,
+                        "conferenceCompetition": false,
+                        "playByPlayAvailable": true,
+                        "recent": false,
+                        "venue": {
+                            "id": "3622",
+                            "fullName": "GEHA Field at Arrowhead Stadium",
+                            "address": {
+                                "city": "Kansas City",
+                                "state": "MO"
+                            },
+                            "capacity": 72936,
+                            "indoor": false
+                        },
+                        "competitors": [
+                            {
+                                "id": "12",
+                                "uid": "s:20~l:28~t:12",
+                                "type": "team",
+                                "order": 0,
+                                "homeAway": "home",
+                                "winner": true,
+                                "team": {
+                                    "id": "12",
+                                    "uid": "s:20~l:28~t:12",
+                                    "location": "Kansas City",
+                                    "name": "Chiefs",
+                                    "abbreviation": "KC",
+                                    "displayName": "Kansas City Chiefs",
+                                    "shortDisplayName": "Chiefs",
+                                    "color": "BE1415",
+                                    "alternateColor": "ffb612",
+                                    "isActive": true,
+                                    "venue": {
+                                        "id": "3622"
+                                    },
+                                    "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/kc.png"
+                                },
+                                "score": "27",
+                                "statistics": [],
+                            },
+                            {
+                                "id": "24",
+                                "uid": "s:20~l:28~t:24",
+                                "type": "team",
+                                "order": 1,
+                                "homeAway": "away",
+                                "winner": false,
+                                "team": {
+                                    "id": "24",
+                                    "uid": "s:20~l:28~t:24",
+                                    "location": "Los Angeles",
+                                    "name": "Chargers",
+                                    "abbreviation": "LAC",
+                                    "displayName": "Los Angeles Chargers",
+                                    "shortDisplayName": "Chargers",
+                                    "color": "042453",
+                                    "alternateColor": "ffc20e",
+                                    "isActive": true,
+                                    "venue": {
+                                        "id": "538"
+                                    },
+                                    "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lac.png"
+                                },
+                                "score": "24",
+                                "statistics": [],
+                            }
+                        ],
+                        "notes": [],
+                        "format": {
+                            "regulation": {
+                                "periods": 4
+                            }
+                        },
+                        "startDate": "2022-09-16T00:15Z",
+                    }
+                ],
+            },
+            {
+                "id": "401437635",
+                "uid": "s:20~l:28~e:401437635",
+                "date": "2022-09-18T17:00Z",
+                "name": "New York Jets at Cleveland Browns",
+                "shortName": "NYJ @ CLE",
+                "season": {
+                    "year": 2022,
+                    "type": 2,
+                    "slug": "regular-season"
+                },
+                "week": {
+                    "number": 2
+                },
+                "competitions": [
+                    {
+                        "id": "401437635",
+                        "uid": "s:20~l:28~e:401437635~c:401437635",
+                        "date": "2022-09-18T17:00Z",
+                        "attendance": 67431,
+                        "type": {
+                            "id": "1",
+                            "abbreviation": "STD"
+                        },
+                        "timeValid": true,
+                        "neutralSite": false,
+                        "conferenceCompetition": false,
+                        "playByPlayAvailable": true,
+                        "recent": false,
+                        "venue": {
+                            "id": "3679",
+                            "fullName": "Cleveland Browns Stadium",
+                            "address": {
+                                "city": "Cleveland",
+                                "state": "OH"
+                            },
+                            "capacity": 67431,
+                            "indoor": false
+                        },
+                        "competitors": [
+                            {
+                                "id": "5",
+                                "uid": "s:20~l:28~t:5",
+                                "type": "team",
+                                "order": 0,
+                                "homeAway": "home",
+                                "winner": false,
+                                "team": {
+                                    "id": "5",
+                                    "uid": "s:20~l:28~t:5",
+                                    "location": "Cleveland",
+                                    "name": "Browns",
+                                    "abbreviation": "CLE",
+                                    "displayName": "Cleveland Browns",
+                                    "shortDisplayName": "Browns",
+                                    "color": "4C230E",
+                                    "alternateColor": "ff3c00",
+                                    "isActive": true,
+                                    "venue": {
+                                        "id": "3679"
+                                    },
+                                    "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cle.png"
+                                },
+                                "score": "30",
+                                "statistics": [],
+                            },
+                            {
+                                "id": "20",
+                                "uid": "s:20~l:28~t:20",
+                                "type": "team",
+                                "order": 1,
+                                "homeAway": "away",
+                                "winner": true,
+                                "team": {
+                                    "id": "20",
+                                    "uid": "s:20~l:28~t:20",
+                                    "location": "New York",
+                                    "name": "Jets",
+                                    "abbreviation": "NYJ",
+                                    "displayName": "New York Jets",
+                                    "shortDisplayName": "Jets",
+                                    "color": "174032",
+                                    "alternateColor": "ffffff",
+                                    "isActive": true,
+                                    "venue": {
+                                        "id": "3839"
+                                    },
+                                    "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyj.png"
+                                },
+                                "score": "31",
+                                "statistics": [],
+                            }
+                        ],
+                        "notes": [],
+                        "format": {
+                            "regulation": {
+                                "periods": 4
+                            }
+                        },
+                        "startDate": "2022-09-18T17:00Z",
+                    }
+                ],
+            },
+        ]
+    }

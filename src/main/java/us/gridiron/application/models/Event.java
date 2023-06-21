@@ -2,7 +2,7 @@ package us.gridiron.application.models;
 
 import java.util.List;
 
-public class NflEvent {
+public class Event {
 
 	private String id;
 	private List<Competition> competitions;

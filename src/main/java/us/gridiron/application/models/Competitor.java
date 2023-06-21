@@ -2,22 +2,13 @@ package us.gridiron.application.models;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-
-@Entity
 public class Competitor {
 
-	@Id
 	private String id;
-	@OneToOne
-	@JoinColumn(name = "team_id")
 	private Team team;
 	private boolean winner;
 	private String homeAway;
-	private LocalDateTime startDate;
+	private String startDate;
 	private int week;
 
 
@@ -46,11 +37,11 @@ public class Competitor {
 		this.homeAway = homeAway;
 	}
 
-	public LocalDateTime getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDateTime startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
@@ -62,4 +53,11 @@ public class Competitor {
 		this.week = week;
 	}
 
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
+	}
 }

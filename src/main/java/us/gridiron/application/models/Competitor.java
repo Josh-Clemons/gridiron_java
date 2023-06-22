@@ -1,10 +1,15 @@
 package us.gridiron.application.models;
 
-import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Competitor {
 
-	private String id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@OneToOne
 	private Team team;
 	private boolean winner;
 	private String homeAway;
@@ -12,11 +17,11 @@ public class Competitor {
 	private int week;
 
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

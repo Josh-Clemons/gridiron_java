@@ -53,6 +53,7 @@ public class TestController {
 
 		// Configuring the ObjectMapper to parse the date string into LocalDateTime
 		objectMapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.registerModule(new JavaTimeModule());
 
 		InputStream testDataFile = getClass().getClassLoader().getResourceAsStream("testData.json");

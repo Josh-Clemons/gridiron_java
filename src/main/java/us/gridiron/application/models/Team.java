@@ -1,10 +1,10 @@
 package us.gridiron.application.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Team {
@@ -17,6 +17,8 @@ public class Team {
 	private String color;
 	private String alternateColor;
 	private String logo;
+	@OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Competitor> competitors = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -64,5 +66,13 @@ public class Team {
 
 	public void setLogo(String logo) {
 		this.logo = logo;
+	}
+
+	public List<Competitor> getCompetitors() {
+		return competitors;
+	}
+
+	public void setCompetitors(List<Competitor> competitors) {
+		this.competitors = competitors;
 	}
 }

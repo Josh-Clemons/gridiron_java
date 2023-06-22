@@ -1,12 +1,13 @@
-package us.gridiron.application.models;
+package us.gridiron.application.models.espn;
 
-import java.time.LocalDateTime;
+import us.gridiron.application.models.Competitor;
+
 import java.util.List;
 
 public class Competition {
 
 	private String id;
-	private LocalDateTime startDate;
+	private String startDate;
 	private int week;
 	private List<Competitor> competitors;
 
@@ -18,11 +19,11 @@ public class Competition {
 		this.id = id;
 	}
 
-	public LocalDateTime getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDateTime startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 

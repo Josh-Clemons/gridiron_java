@@ -1,4 +1,6 @@
-package us.gridiron.application.models;
+package us.gridiron.application.models.espn;
+
+import us.gridiron.application.models.espn.Event;
 
 import java.util.List;
 

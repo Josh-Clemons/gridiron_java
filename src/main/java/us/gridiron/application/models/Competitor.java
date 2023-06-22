@@ -9,12 +9,14 @@ public class Competitor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@OneToOne
+	@ManyToOne
+	@JoinColumn(name = "team_id")
 	private Team team;
 	private boolean winner;
 	private String homeAway;
 	private String startDate;
 	private int week;
+	private String eventId;
 
 
 	public Long getId() {
@@ -64,5 +66,13 @@ public class Competitor {
 
 	public void setTeam(Team team) {
 		this.team = team;
+	}
+
+	public String getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
 	}
 }

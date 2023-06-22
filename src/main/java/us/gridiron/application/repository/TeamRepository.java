@@ -6,4 +6,5 @@ import us.gridiron.application.models.Team;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
+    Team findByName(String name);
 }

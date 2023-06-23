@@ -1,5 +1,6 @@
 package us.gridiron.application.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,10 +18,12 @@ public class League {
     @JoinTable(name = "leagues_users",
             joinColumns = @JoinColumn(name = "league_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonManagedReference
     private Set<User> users = new HashSet<>();
     private String leagueName;
     @ManyToOne
     @JoinColumn(name = "owner_id")
+    @JsonManagedReference
     private User leagueOwner;
     private Boolean isPrivate;
     private Integer maxUsers;

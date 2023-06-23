@@ -2,22 +2,27 @@ package us.gridiron.application.services;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import us.gridiron.application.models.League;
 import us.gridiron.application.models.User;
 import us.gridiron.application.repository.LeagueRepository;
+import us.gridiron.application.repository.UserRepository;
 
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
 public class LeagueService {
     private final LeagueRepository leagueRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public LeagueService(LeagueRepository leagueRepository) {
+    public LeagueService(LeagueRepository leagueRepository, UserRepository userRepository) {
         this.leagueRepository = leagueRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -37,6 +42,21 @@ public class LeagueService {
         League newLeague = new League(leagueName, leagueOwner, isPrivate, maxUsers, inviteCode);
         newLeague.addUser(leagueOwner);
         return leagueRepository.save(newLeague);
+    }
+
+    @Transactional
+    public ResponseEntity<String> addUserToLeague(Long leagueId, Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        League league = leagueRepository.findById(leagueId)
+            .orElseThrow(() -> new RuntimeException("League not found"));
+        boolean isAdded = league.addUser(user);
+        if(!isAdded){
+            return ResponseEntity.badRequest().body("User is already in the league");
+        } else {
+            leagueRepository.save(league);
+            return ResponseEntity.ok("User added to the league");
+        }
     }
 
     public String generateInviteCode() {

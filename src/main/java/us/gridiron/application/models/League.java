@@ -2,7 +2,6 @@ package us.gridiron.application.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -57,9 +56,10 @@ public class League {
         this.users = users;
     }
 
-    public void addUser(User user) {
-        this.users.add(user);
+    public boolean addUser(User user) {
+        boolean isAdded = this.users.add(user);
         this.userCount = this.users.size();
+        return isAdded;
     }
 
     public void removeUser(User user) {

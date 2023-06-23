@@ -29,11 +29,11 @@ public class CreateLeagueRequestDTO {
 		this.maxUsers = maxUsers;
 	}
 
-	public Boolean isPrivate() {
+	public Boolean getIsPrivate() {
 		return isPrivate;
 	}
 
-	public void setPrivate(Boolean isPrivate) {
+	public void setIsPrivate(Boolean isPrivate) {
 		this.isPrivate = isPrivate;
 	}
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import us.gridiron.application.models.League;
 import us.gridiron.application.models.User;
 import us.gridiron.application.payload.request.CreateLeagueRequestDTO;
+import us.gridiron.application.payload.request.JoinLeagueDTO;
 import us.gridiron.application.payload.response.LeagueResponseDTO;
 import us.gridiron.application.repository.UserRepository;
 import us.gridiron.application.services.LeagueService;
@@ -65,12 +66,25 @@ public class LeagueController {
                             + userDetails.getUsername()));
             League newLeague = leagueService.createLeague(
                 createLeagueRequestDTO.getLeagueName(), loggedInUser,
-                createLeagueRequestDTO.getMaxUsers(), createLeagueRequestDTO.isPrivate());
+                createLeagueRequestDTO.getMaxUsers(), createLeagueRequestDTO.getIsPrivate());
             return ResponseEntity.ok(
                     "League created with name: " + newLeague.getLeagueName()
                             + ", and id: " + newLeague.getId());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/join-league")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<String> joinLeague(
+        @RequestBody JoinLeagueDTO joinLeagueDTO) {
+
+        try {
+            return leagueService.addUserToLeague(joinLeagueDTO.getLeagueId(), joinLeagueDTO.getUserId());
+        } catch(Exception e) {
+            return ResponseEntity.badRequest()
+                .body("Failure to join league with leagueId: " + joinLeagueDTO.getLeagueId() + ", and userId: " + joinLeagueDTO.getUserId());
         }
     }
 }

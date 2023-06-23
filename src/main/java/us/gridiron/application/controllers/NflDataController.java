@@ -26,7 +26,7 @@ public class NflDataController {
 		this.nflDataService = nflDataService;
 	}
 
-	@GetMapping("/allgames")
+	@GetMapping("/all-games")
 	@PreAuthorize("hasRole('MODERATOR')")
 	public ResponseEntity<List<Competitor>> getAllGameData() {
 		try{

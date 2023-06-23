@@ -38,7 +38,7 @@ public class NflDataService {
         Pair<List<Competitor>, Set<Team>> results = getAllGameData();
         List<Competitor> allCompetitors = results.getFirst();
         Set<Team> allTeams = results.getSecond();
-        // figure out why not all of the teams are being saved everytime, inconsistent behavior
+        // TODO figure out why not all of the teams are being saved everytime, inconsistent behavior with no errors
         teamRepository.deleteAll();
         teamRepository.saveAll(allTeams);
         List<Team> updatedTeams = teamRepository.findAll();
@@ -52,7 +52,7 @@ public class NflDataService {
         competitorRepository.saveAll(allCompetitors);
     }
 
-    public Pair<List<Competitor>, Set<Team>> getAllGameData() throws Exception {
+    public Pair<List<Competitor>, Set<Team>> getAllGameData() {
         List<Competitor> allCompetitors = new ArrayList<>();
         Set<Team> allTeams = new HashSet<>();
         ObjectMapper objectMapper = new ObjectMapper();

@@ -36,6 +36,12 @@ public class User {
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
+	private Set<League> leagues = new HashSet<>();
+
+	@OneToMany(mappedBy = "leagueOwner", cascade = CascadeType.ALL)
+	private Set<League> ownedLeagues = new HashSet<>();
+
 	public User() {
 	}
 
@@ -83,5 +89,21 @@ public class User {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public Set<League> getLeagues() {
+		return leagues;
+	}
+
+	public void setLeagues(Set<League> leagues) {
+		this.leagues = leagues;
+	}
+
+	public Set<League> getOwnedLeagues() {
+		return ownedLeagues;
+	}
+
+	public void setOwnedLeagues(Set<League> ownedLeagues) {
+		this.ownedLeagues = ownedLeagues;
 	}
 }

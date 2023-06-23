@@ -60,18 +60,11 @@ public class TestController {
 
 		try {
 			NflWeek result = objectMapper.readValue(testDataFile, NflWeek.class);
-			// for debugging purposes only
-			System.out.println("Data: " + result);
-
 			if (result != null) {
 				List<Event> events = result.getEvents();
-				// for debugging purposes only
-				System.out.println("Events: " + events);
-
 				if (events != null) {
 					for (Event event : events) {
 						List<Competition> competitions = event.getCompetitions();
-
 						if (competitions != null) {
 							for (Competition competition : competitions) {
 								List<Competitor> competitors = competition.getCompetitors();

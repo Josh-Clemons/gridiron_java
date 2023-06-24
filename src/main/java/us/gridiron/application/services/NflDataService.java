@@ -34,8 +34,13 @@ public class NflDataService {
     }
 
     @Transactional
+    public List<Competitor> getAllCompetitorData() {
+        return competitorRepository.findAll();
+    }
+
+    @Transactional
     public void updateGameDataInDB() throws Exception {
-        Pair<List<Competitor>, Set<Team>> results = getAllGameData();
+        Pair<List<Competitor>, Set<Team>> results = getAllEspnData();
         List<Competitor> allCompetitors = results.getFirst();
         Set<Team> allTeams = results.getSecond();
         // TODO figure out why not all of the teams are being saved everytime, inconsistent behavior with no errors
@@ -52,7 +57,7 @@ public class NflDataService {
         competitorRepository.saveAll(allCompetitors);
     }
 
-    public Pair<List<Competitor>, Set<Team>> getAllGameData() {
+    public Pair<List<Competitor>, Set<Team>> getAllEspnData() {
         List<Competitor> allCompetitors = new ArrayList<>();
         Set<Team> allTeams = new HashSet<>();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -62,6 +67,7 @@ public class NflDataService {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.registerModule(new JavaTimeModule());
 
+        // runs a loop for each week in the season and processes data to fit the models
         for(int i = 1; i <= 17; i++) {
             final String uri = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=" + i;
             NflWeek result = restTemplate.getForObject(uri, NflWeek.class);

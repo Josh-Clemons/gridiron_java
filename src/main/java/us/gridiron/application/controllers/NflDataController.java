@@ -26,11 +26,23 @@ public class NflDataController {
 		this.nflDataService = nflDataService;
 	}
 
-	@GetMapping("/all-games")
+	@GetMapping("/competitors")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<List<Competitor>> getCompetitorData() {
+
+		try {
+			List<Competitor> allCompetitors = nflDataService.getAllCompetitorData();
+			return ResponseEntity.ok(allCompetitors);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new ArrayList<>());
+		}
+	}
+
+	@GetMapping("/espn")
 	@PreAuthorize("hasRole('MODERATOR')")
 	public ResponseEntity<List<Competitor>> getAllGameData() {
 		try{
-			Pair<List<Competitor>, Set<Team>> results = nflDataService.getAllGameData();
+			Pair<List<Competitor>, Set<Team>> results = nflDataService.getAllEspnData();
 			List<Competitor> allCompetitors = results.getFirst();
 			return ResponseEntity.ok(allCompetitors);
 		} catch (Exception e){
@@ -39,7 +51,7 @@ public class NflDataController {
 		}
 	}
 
-	@GetMapping("/updatedb")
+	@GetMapping("/update-db")
 	@PreAuthorize("hasRole('MODERATOR')")
 	public ResponseEntity<String> refreshGameDataInDB() {
 		try {

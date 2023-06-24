@@ -1,6 +1,7 @@
 package us.gridiron.application.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Team {
 	private String alternateColor;
 	private String logo;
 	@OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonBackReference
 	private List<Competitor> competitors = new ArrayList<>();
 
 	public Long getId() {

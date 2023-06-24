@@ -38,7 +38,15 @@ public class LeagueService {
     public League createLeague(String leagueName, User leagueOwner,
                                Integer maxUsers, boolean isPrivate)
     {
-        String inviteCode = generateInviteCode();
+        String inviteCode = "";
+        // confirms the invite code is unique before moving on
+        while (inviteCode.equals("")){
+            String tempCode = generateInviteCode();
+            if (leagueRepository.findByInviteCode(tempCode) == null) {
+                inviteCode = tempCode;
+            }
+        }
+
         League newLeague = new League(leagueName, leagueOwner, isPrivate, maxUsers, inviteCode);
         newLeague.addUser(leagueOwner);
         return leagueRepository.save(newLeague);
@@ -56,6 +64,17 @@ public class LeagueService {
         } else {
             leagueRepository.save(league);
             return ResponseEntity.ok("User added to the league");
+        }
+    }
+
+    @Transactional
+    public void deleteLeague(Long userId, Long leagueId) {
+        League leagueToDelete = leagueRepository.findById(leagueId)
+                .orElseThrow(() -> new RuntimeException("Error finding the league"));
+        if(userId.equals(leagueToDelete.getLeagueOwner().getId())){
+            leagueRepository.delete(leagueToDelete);
+        } else {
+            throw new RuntimeException("Unable to delete, you are not the owner");
         }
     }
 

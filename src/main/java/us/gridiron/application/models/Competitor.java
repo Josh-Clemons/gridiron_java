@@ -1,6 +1,7 @@
 package us.gridiron.application.models;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,8 +10,9 @@ public class Competitor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "team_id")
+	@JsonManagedReference
 	private Team team;
 	private boolean winner;
 	private String homeAway;

@@ -2,6 +2,7 @@ package us.gridiron.application.services;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import us.gridiron.application.models.espn.Competition;
 import us.gridiron.application.models.Competitor;
 import us.gridiron.application.models.espn.Event;
 import us.gridiron.application.models.espn.NflWeek;
+import us.gridiron.application.payload.response.CompetitorDTO;
 import us.gridiron.application.repository.CompetitorRepository;
 import us.gridiron.application.repository.TeamRepository;
 
@@ -20,22 +22,29 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class NflDataService {
 
     private final CompetitorRepository competitorRepository;
     private final TeamRepository teamRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public NflDataService(CompetitorRepository competitorRepository, TeamRepository teamRepository) {
+    public NflDataService(CompetitorRepository competitorRepository, TeamRepository teamRepository, ModelMapper modelMapper) {
         this.competitorRepository = competitorRepository;
         this.teamRepository = teamRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional
-    public List<Competitor> getAllCompetitorData() {
-        return competitorRepository.findAll();
+    public List<CompetitorDTO> getAllCompetitorData() {
+        List<Competitor> competitors = competitorRepository.findAll();
+        List<CompetitorDTO> competitorDTOs = competitors.stream()
+                .map(competitor -> modelMapper.map(competitor, CompetitorDTO.class))
+                .collect(Collectors.toList());
+        return competitorDTOs;
     }
 
     @Transactional

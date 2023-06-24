@@ -13,6 +13,7 @@ import us.gridiron.application.payload.request.JoinLeagueDTO;
 import us.gridiron.application.payload.response.LeagueResponseDTO;
 import us.gridiron.application.repository.UserRepository;
 import us.gridiron.application.services.LeagueService;
+import us.gridiron.application.services.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,12 @@ public class LeagueController {
 
     private final LeagueService leagueService;
     private final UserRepository userRepository;
+    private final UserService userService;
 
-    public LeagueController(LeagueService leagueService, UserRepository userRepository) {
+    public LeagueController(LeagueService leagueService, UserRepository userRepository, UserService userService) {
         this.leagueService = leagueService;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/all")
@@ -57,14 +60,10 @@ public class LeagueController {
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> createLeague(
-            @RequestBody CreateLeagueRequestDTO createLeagueRequestDTO,
-            @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<String> createLeague(@RequestBody CreateLeagueRequestDTO createLeagueRequestDTO) {
         try {
 
-            User loggedInUser = userRepository.findByUsername(userDetails.getUsername())
-                    .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: "
-                            + userDetails.getUsername()));
+            User loggedInUser = userService.getLoggedInUser();
             League newLeague = leagueService.createLeague(
                 createLeagueRequestDTO.getLeagueName(), loggedInUser,
                 createLeagueRequestDTO.getMaxUsers(), createLeagueRequestDTO.getIsPrivate());
@@ -80,9 +79,11 @@ public class LeagueController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> joinLeague(@RequestBody JoinLeagueDTO joinLeagueDTO) {
 
+        User loggedInUser = userService.getLoggedInUser();
+
         // TODO add way to control joining private leagues
         try {
-            return leagueService.addUserToLeague(joinLeagueDTO.getLeagueId(), joinLeagueDTO.getUserId());
+            return leagueService.addUserToLeague(joinLeagueDTO.getLeagueId(), loggedInUser);
         } catch(Exception e) {
             return ResponseEntity.badRequest()
                 .body("Failure to join league with leagueId: " + joinLeagueDTO.getLeagueId() + ", and userId: " + joinLeagueDTO.getUserId());
@@ -91,14 +92,10 @@ public class LeagueController {
 
     @DeleteMapping("/leave")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> leaveLeague(
-            @AuthenticationPrincipal UserDetails userDetails, @RequestParam Long leagueId){
-
+    public ResponseEntity<String> leaveLeague(@RequestParam Long leagueId){
 
         try {
-            User loggedInUser = userRepository.findByUsername(userDetails.getUsername())
-                    .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: "
-                            + userDetails.getUsername()));
+            User loggedInUser = userService.getLoggedInUser();
             leagueService.removeUserFromLeague(leagueId, loggedInUser);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -109,12 +106,9 @@ public class LeagueController {
 
     @DeleteMapping("/delete")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> deleteLeague(
-            @AuthenticationPrincipal UserDetails userDetails, @RequestParam Long leagueId) {
+    public ResponseEntity<String> deleteLeague(@RequestParam Long leagueId) {
 
-        User loggedInUser = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("This seems odd, but no user found with name: "
-                        + userDetails.getUsername()));
+        User loggedInUser = userService.getLoggedInUser();
 
         try {
             leagueService.deleteLeague(loggedInUser, leagueId);

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import us.gridiron.application.models.Competitor;
 import us.gridiron.application.models.Team;
+import us.gridiron.application.payload.response.CompetitorDTO;
 import us.gridiron.application.services.NflDataService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -28,10 +29,10 @@ public class NflDataController {
 
 	@GetMapping("/competitors")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<List<Competitor>> getCompetitorData() {
+	public ResponseEntity<List<CompetitorDTO>> getCompetitorData() {
 
 		try {
-			List<Competitor> allCompetitors = nflDataService.getAllCompetitorData();
+			List<CompetitorDTO> allCompetitors = nflDataService.getAllCompetitorData();
 			return ResponseEntity.ok(allCompetitors);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(new ArrayList<>());

@@ -52,9 +52,7 @@ public class LeagueService {
     }
 
     @Transactional
-    public ResponseEntity<String> addUserToLeague(Long leagueId, Long userId) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+    public ResponseEntity<String> addUserToLeague(Long leagueId, User user) {
         League league = leagueRepository.findById(leagueId)
             .orElseThrow(() -> new RuntimeException("League not found"));
         boolean isAdded = league.addUser(user);

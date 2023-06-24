@@ -11,7 +11,6 @@ import us.gridiron.application.repository.UserRepository;
 
 import java.security.SecureRandom;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -68,10 +67,28 @@ public class LeagueService {
     }
 
     @Transactional
-    public void deleteLeague(Long userId, Long leagueId) {
+    public void removeUserFromLeague(Long leagueId, User user) {
+
+        League leagueToUpdate = leagueRepository.findById(leagueId)
+                .orElseThrow(() -> new RuntimeException("Error finding the league"));
+
+        // league owner is not allowed to leave a league, they must delete it,
+        // at some point being able to transfer ownership should be considered
+        if(leagueToUpdate.getLeagueOwner().equals(user)){
+            throw new RuntimeException("Cannot remove league owner from league");
+        }else if(leagueToUpdate.getUsers().stream().noneMatch(u -> u.equals(user))){
+            throw new RuntimeException("User not in the league");
+        }
+
+        leagueToUpdate.removeUser(user);
+        leagueRepository.save(leagueToUpdate);
+    }
+
+    @Transactional
+    public void deleteLeague(User user, Long leagueId) {
         League leagueToDelete = leagueRepository.findById(leagueId)
                 .orElseThrow(() -> new RuntimeException("Error finding the league"));
-        if(userId.equals(leagueToDelete.getLeagueOwner().getId())){
+        if(user.equals(leagueToDelete.getLeagueOwner())){
             leagueRepository.delete(leagueToDelete);
         } else {
             throw new RuntimeException("Unable to delete, you are not the owner");

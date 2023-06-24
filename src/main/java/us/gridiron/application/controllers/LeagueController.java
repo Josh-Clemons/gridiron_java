@@ -58,7 +58,8 @@ public class LeagueController {
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> createLeague(
-            @RequestBody CreateLeagueRequestDTO createLeagueRequestDTO, @AuthenticationPrincipal UserDetails userDetails) {
+            @RequestBody CreateLeagueRequestDTO createLeagueRequestDTO,
+            @AuthenticationPrincipal UserDetails userDetails) {
         try {
 
             User loggedInUser = userRepository.findByUsername(userDetails.getUsername())
@@ -77,15 +78,33 @@ public class LeagueController {
 
     @PostMapping("/join")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> joinLeague(
-        @RequestBody JoinLeagueDTO joinLeagueDTO) {
+    public ResponseEntity<String> joinLeague(@RequestBody JoinLeagueDTO joinLeagueDTO) {
 
+        // TODO add way to control joining private leagues
         try {
             return leagueService.addUserToLeague(joinLeagueDTO.getLeagueId(), joinLeagueDTO.getUserId());
         } catch(Exception e) {
             return ResponseEntity.badRequest()
                 .body("Failure to join league with leagueId: " + joinLeagueDTO.getLeagueId() + ", and userId: " + joinLeagueDTO.getUserId());
         }
+    }
+
+    @DeleteMapping("/leave")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> leaveLeague(
+            @AuthenticationPrincipal UserDetails userDetails, @RequestParam Long leagueId){
+
+
+        try {
+            User loggedInUser = userRepository.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: "
+                            + userDetails.getUsername()));
+            leagueService.removeUserFromLeague(leagueId, loggedInUser);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+        return ResponseEntity.ok("Successfully left league");
     }
 
     @DeleteMapping("/delete")
@@ -98,7 +117,7 @@ public class LeagueController {
                         + userDetails.getUsername()));
 
         try {
-            leagueService.deleteLeague(loggedInUser.getId(), leagueId);
+            leagueService.deleteLeague(loggedInUser, leagueId);
             return ResponseEntity.ok("Success deleting league");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -39,7 +39,7 @@ public class NflDataService {
     }
 
     @Transactional
-    public void updateGameDataInDB() throws Exception {
+    public void updateGameDataInDB() {
         Pair<List<Competitor>, Set<Team>> results = getAllEspnData();
         List<Competitor> allCompetitors = results.getFirst();
         Set<Team> allTeams = results.getSecond();
@@ -68,7 +68,7 @@ public class NflDataService {
         objectMapper.registerModule(new JavaTimeModule());
 
         // runs a loop for each week in the season and processes data to fit the models
-        for(int i = 1; i <= 17; i++) {
+        for(int i = 1; i <= 18; i++) {
             final String uri = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=" + i;
             NflWeek result = restTemplate.getForObject(uri, NflWeek.class);
             if(result != null) {

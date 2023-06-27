@@ -14,7 +14,7 @@ public class Competitor {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "team_id")
 	private Team team;
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "competitors")
+	@OneToMany(mappedBy = "competitor", cascade = CascadeType.ALL)
 	private List<Pick> picks;
 	private boolean winner;
 	private String homeAway;

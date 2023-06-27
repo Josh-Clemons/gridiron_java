@@ -2,8 +2,6 @@ package us.gridiron.application.models;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 public class Pick {
 
@@ -16,13 +14,31 @@ public class Pick {
     @ManyToOne
     @JoinColumn(name = "league_id")
     private League league;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "picks_competitors",
-            joinColumns = @JoinColumn(name = "pick_id"),
-            inverseJoinColumns = @JoinColumn(name = "competitor_id"))
-    private List<Competitor> competitors;
-
+    @ManyToOne
+    @JoinColumn(name = "competitor_id")
+    private Competitor competitor;
     private Integer value;
+    private Integer week;
+
+    public Pick() {
+    }
+
+    public Pick(User owner, League league, Integer value, Integer week) {
+        this.owner = owner;
+        this.league = league;
+        this.value = value;
+        this.week = week;
+    }
+
+    public Pick(Long id, User owner, League league,
+                Competitor competitor, Integer value, Integer week) {
+        this.id = id;
+        this.owner = owner;
+        this.league = league;
+        this.competitor = competitor;
+        this.value = value;
+        this.week = week;
+    }
 
     public Long getId() {
         return id;
@@ -48,12 +64,12 @@ public class Pick {
         this.league = league;
     }
 
-    public List<Competitor> getCompetitor() {
-        return competitors;
+    public Competitor getCompetitor() {
+        return competitor;
     }
 
-    public void setCompetitor(List<Competitor> competitors) {
-        this.competitors = competitors;
+    public void setCompetitor(Competitor competitor) {
+        this.competitor = competitor;
     }
 
     public Integer getValue() {
@@ -62,5 +78,13 @@ public class Pick {
 
     public void setValue(Integer value) {
         this.value = value;
+    }
+
+    public Integer getWeek() {
+        return week;
+    }
+
+    public void setWeek(Integer week) {
+        this.week = week;
     }
 }

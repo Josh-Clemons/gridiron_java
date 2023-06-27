@@ -17,11 +17,13 @@ import java.util.Random;
 public class LeagueService {
     private final LeagueRepository leagueRepository;
     private final UserRepository userRepository;
+    private final PickService pickService;
 
     @Autowired
-    public LeagueService(LeagueRepository leagueRepository, UserRepository userRepository) {
+    public LeagueService(LeagueRepository leagueRepository, UserRepository userRepository, PickService pickService) {
         this.leagueRepository = leagueRepository;
         this.userRepository = userRepository;
+        this.pickService = pickService;
     }
 
     @Transactional
@@ -60,6 +62,7 @@ public class LeagueService {
             return ResponseEntity.badRequest().body("User is already in the league");
         } else {
             leagueRepository.save(league);
+            pickService.createPicksForNewUser(user, league);
             return ResponseEntity.ok("User added to the league");
         }
     }

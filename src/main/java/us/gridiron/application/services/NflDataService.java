@@ -15,6 +15,7 @@ import us.gridiron.application.models.Competitor;
 import us.gridiron.application.models.espn.Event;
 import us.gridiron.application.models.espn.NflWeek;
 import us.gridiron.application.payload.response.CompetitorDTO;
+import us.gridiron.application.payload.response.TeamDTO;
 import us.gridiron.application.repository.CompetitorRepository;
 import us.gridiron.application.repository.TeamRepository;
 
@@ -22,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class NflDataService {
@@ -41,17 +41,18 @@ public class NflDataService {
     @Transactional
     public List<CompetitorDTO> getAllCompetitorData() {
         List<Competitor> competitors = competitorRepository.findAll();
-        List<CompetitorDTO> competitorDTOs = competitors.stream()
+        return competitors.stream()
                 .map(competitor -> modelMapper.map(competitor, CompetitorDTO.class))
-                .collect(Collectors.toList());
-        return competitorDTOs;
+                .toList();
     }
 
     @Transactional
     public void updateGameDataInDB() {
-        Pair<List<Competitor>, Set<Team>> results = getAllEspnData();
-        List<Competitor> allCompetitors = results.getFirst();
-        Set<Team> allTeams = results.getSecond();
+        Pair<List<CompetitorDTO>, List<TeamDTO>> results = getAllEspnData();
+        List<Competitor> allCompetitors = results.getFirst()
+                .stream().map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class)).toList();
+        List<Team> allTeams = results.getSecond()
+                .stream().map(teamDTO -> modelMapper.map(teamDTO, Team.class)).toList();
         teamRepository.deleteAll();
         // TODO figure out why not all of the teams are being saved everytime, inconsistent behavior with no errors
         teamRepository.saveAll(allTeams);
@@ -66,7 +67,7 @@ public class NflDataService {
         competitorRepository.saveAll(allCompetitors);
     }
 
-    public Pair<List<Competitor>, Set<Team>> getAllEspnData() {
+    public Pair<List<CompetitorDTO>, List<TeamDTO>> getAllEspnData() {
         List<Competitor> allCompetitors = new ArrayList<>();
         Set<Team> allTeams = new HashSet<>();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -110,7 +111,11 @@ public class NflDataService {
                 }
             }
         }
-        return  Pair.of(allCompetitors, allTeams);
+        List<CompetitorDTO> allCompetitorsDTO = allCompetitors.stream()
+                .map(competitor -> modelMapper.map(competitor, CompetitorDTO.class)).toList();
+        List<TeamDTO> allTeamsDTO = allTeams.stream()
+                .map(team -> modelMapper.map(team, TeamDTO.class)).toList();
+        return  Pair.of(allCompetitorsDTO, allTeamsDTO);
     }
 }
 

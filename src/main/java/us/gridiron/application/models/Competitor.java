@@ -1,7 +1,6 @@
 package us.gridiron.application.models;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,7 +13,6 @@ public class Competitor {
 	private Long id;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "team_id")
-	@JsonBackReference
 	private Team team;
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "competitors")
 	private List<Pick> picks;

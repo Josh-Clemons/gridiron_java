@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -40,7 +39,6 @@ public class User {
 	private Set<Role> roles = new HashSet<>();
 
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
-	@JsonBackReference
 	private Set<League> leagues = new HashSet<>();
 
 	@OneToMany(mappedBy = "leagueOwner", cascade = CascadeType.ALL)

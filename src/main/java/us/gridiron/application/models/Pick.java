@@ -1,6 +1,5 @@
 package us.gridiron.application.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -13,11 +12,9 @@ public class Pick {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    @JsonManagedReference
     private User owner;
     @ManyToOne
     @JoinColumn(name = "league_id")
-    @JsonManagedReference
     private League league;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "picks_competitors",

@@ -2,10 +2,9 @@ package us.gridiron.application.models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Competitor {
@@ -17,6 +16,8 @@ public class Competitor {
 	@JoinColumn(name = "team_id")
 	@JsonBackReference
 	private Team team;
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "competitors")
+	private List<Pick> picks;
 	private boolean winner;
 	private String homeAway;
 	private String startDate;
@@ -79,5 +80,13 @@ public class Competitor {
 
 	public void setEventId(String eventId) {
 		this.eventId = eventId;
+	}
+
+	public List<Pick> getPicks() {
+		return picks;
+	}
+
+	public void setPicks(List<Pick> picks) {
+		this.picks = picks;
 	}
 }

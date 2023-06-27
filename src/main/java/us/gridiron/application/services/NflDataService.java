@@ -52,8 +52,8 @@ public class NflDataService {
         Pair<List<Competitor>, Set<Team>> results = getAllEspnData();
         List<Competitor> allCompetitors = results.getFirst();
         Set<Team> allTeams = results.getSecond();
-        // TODO figure out why not all of the teams are being saved everytime, inconsistent behavior with no errors
         teamRepository.deleteAll();
+        // TODO figure out why not all of the teams are being saved everytime, inconsistent behavior with no errors
         teamRepository.saveAll(allTeams);
         List<Team> updatedTeams = teamRepository.findAll();
         for (Competitor competitor : allCompetitors ){
@@ -76,7 +76,7 @@ public class NflDataService {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.registerModule(new JavaTimeModule());
 
-        // runs a loop for each week in the season and processes data to fit the models
+        // runs loops for each week in the season and processes data to fit the models
         for(int i = 1; i <= 18; i++) {
             final String uri = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=" + i;
             NflWeek result = restTemplate.getForObject(uri, NflWeek.class);
@@ -97,9 +97,7 @@ public class NflDataService {
                                                 .orElse(null);
                                         if (existingTeam == null) {
                                             allTeams.add(competitor.getTeam());
-                                            existingTeam = competitor.getTeam();
                                         }
-                                        competitor.setTeam(existingTeam);
                                         competitor.setWeek(event.getWeek().getNumber());
                                         competitor.setEventId(event.getId());
                                         competitor.setStartDate(competition.getStartDate());

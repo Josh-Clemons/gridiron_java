@@ -1,6 +1,8 @@
 package us.gridiron.application.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -43,6 +45,9 @@ public class User {
 
 	@OneToMany(mappedBy = "leagueOwner", cascade = CascadeType.ALL)
 	private Set<League> ownedLeagues = new HashSet<>();
+
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+	private List<Pick> picks = new ArrayList<>();
 
 	public User() {
 	}
@@ -107,5 +112,13 @@ public class User {
 
 	public void setOwnedLeagues(Set<League> ownedLeagues) {
 		this.ownedLeagues = ownedLeagues;
+	}
+
+	public List<Pick> getPicks() {
+		return picks;
+	}
+
+	public void setPicks(List<Pick> picks) {
+		this.picks = picks;
 	}
 }

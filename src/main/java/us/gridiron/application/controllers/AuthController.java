@@ -58,8 +58,8 @@ public class AuthController {
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+		logger.info("Post api/auth/signin, user: {}", loginRequest.getUsername());
 		try {
-
 			Authentication authentication = authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(
 							loginRequest.getUsername(), loginRequest.getPassword()));
@@ -83,6 +83,7 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+		logger.info("Post /api/auth/signup, signupRequest: {}", signUpRequest.toString());
 		try {
 			if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 				return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));

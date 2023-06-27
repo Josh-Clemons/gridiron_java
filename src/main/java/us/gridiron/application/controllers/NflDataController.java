@@ -31,7 +31,7 @@ public class NflDataController {
 	@GetMapping("/competitors")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<List<CompetitorDTO>> getCompetitorData() {
-
+		logger.info("Get /api/gamedata/competitors");
 		try {
 			List<CompetitorDTO> allCompetitors = nflDataService.getAllCompetitorData();
 			return ResponseEntity.ok(allCompetitors);
@@ -44,6 +44,7 @@ public class NflDataController {
 	@GetMapping("/espn")
 	@PreAuthorize("hasRole('MODERATOR')")
 	public ResponseEntity<List<CompetitorDTO>> getAllGameData() {
+		logger.info("Get /api/gamedata/espn");
 		try{
 			Pair<List<CompetitorDTO>, List<TeamDTO>> results = nflDataService.getAllEspnData();
 			List<CompetitorDTO> allCompetitors = results.getFirst();
@@ -57,6 +58,7 @@ public class NflDataController {
 	@GetMapping("/update-db")
 	@PreAuthorize("hasRole('MODERATOR')")
 	public ResponseEntity<String> refreshGameDataInDB() {
+		logger.info("Get /api/gamedata/update-db");
 		try {
 			nflDataService.updateGameDataInDB();
 			return ResponseEntity.ok("Success updating DB");

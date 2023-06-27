@@ -36,4 +36,13 @@ public class CreateLeagueRequestDTO {
 	public void setIsPrivate(Boolean isPrivate) {
 		this.isPrivate = isPrivate;
 	}
+
+	@Override
+	public String toString() {
+		return "CreateLeagueRequestDTO{" +
+				"leagueName='" + leagueName + '\'' +
+				", maxUsers=" + maxUsers +
+				", isPrivate=" + isPrivate +
+				'}';
+	}
 }

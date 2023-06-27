@@ -28,4 +28,13 @@ public class JoinLeagueDTO {
 	public void setInviteCode(String inviteCode) {
 		this.inviteCode = inviteCode;
 	}
+
+	@Override
+	public String toString() {
+		return "JoinLeagueDTO{" +
+				"leagueId=" + leagueId +
+				", userId=" + userId +
+				", inviteCode='" + inviteCode + '\'' +
+				'}';
+	}
 }

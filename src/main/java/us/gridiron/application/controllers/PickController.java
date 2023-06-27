@@ -28,7 +28,7 @@ public class PickController {
     @GetMapping("/my-league-picks")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Object> findMyLeaguePicks(@RequestParam Long leagueId) {
-
+        logger.info("Get /api/pick/my-league-picks, leagueId: {}", leagueId);
         try{
             User user = userService.getLoggedInUser();
             List<PickDTO> picks = pickService.findPicksByUserAndLeagueId(user, leagueId);
@@ -42,6 +42,7 @@ public class PickController {
     @GetMapping("/all-league-picks")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Object> findAllLeaguePicks(@RequestParam Long leagueId) {
+        logger.info("Get /api/pick/all-league-picks, leagueId: {}", leagueId);
         try {
             return ResponseEntity.ok(pickService.findLeaguePicks(leagueId));
         } catch(Exception e) {
@@ -53,7 +54,7 @@ public class PickController {
     @PostMapping("/update")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Object> updateLeaguePicks(@RequestBody List<PickDTO> pickDTOS){
-
+        logger.info("Post /api/pick/update ");
         try{
             User user = userService.getLoggedInUser();
             List<PickDTO> updatedPickDTOS = pickService.updateUserPicks(user, pickDTOS);

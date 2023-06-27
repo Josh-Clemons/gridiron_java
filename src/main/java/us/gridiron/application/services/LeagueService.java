@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import us.gridiron.application.models.League;
 import us.gridiron.application.models.User;
+import us.gridiron.application.payload.request.JoinLeagueDTO;
 import us.gridiron.application.repository.LeagueRepository;
 import us.gridiron.application.repository.PickRepository;
 
@@ -54,9 +55,13 @@ public class LeagueService {
     }
 
     @Transactional
-    public ResponseEntity<String> addUserToLeague(Long leagueId, User user) {
-        League league = leagueRepository.findById(leagueId)
+    public ResponseEntity<String> addUserToLeague(JoinLeagueDTO joinLeagueDTO, User user) {
+        League league = leagueRepository.findById(joinLeagueDTO.getLeagueId())
             .orElseThrow(() -> new RuntimeException("League not found"));
+        // checks if league is private and user provide a matching invite code
+        if(league.getIsPrivate() && !league.getInviteCode().equals(joinLeagueDTO.getInviteCode())){
+            throw new RuntimeException("Incorrect invite code");
+        }
         boolean isAdded = league.addUser(user);
         if(!isAdded){
             return ResponseEntity.badRequest().body("User is already in the league");

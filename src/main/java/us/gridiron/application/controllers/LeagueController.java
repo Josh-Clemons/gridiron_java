@@ -51,6 +51,7 @@ public class LeagueController {
             }
             return ResponseEntity.ok(allLeaguesDTO);
         } catch (Exception e){
+            logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().body(allLeaguesDTO);
         }
     }
@@ -68,6 +69,7 @@ public class LeagueController {
                     "League created with name: " + newLeague.getLeagueName()
                             + ", and id: " + newLeague.getId());
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -75,15 +77,12 @@ public class LeagueController {
     @PostMapping("/join")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> joinLeague(@RequestBody JoinLeagueDTO joinLeagueDTO) {
-
         User loggedInUser = userService.getLoggedInUser();
-
-        // TODO add way to control joining private leagues
         try {
-            return leagueService.addUserToLeague(joinLeagueDTO.getLeagueId(), loggedInUser);
+            return leagueService.addUserToLeague(joinLeagueDTO, loggedInUser);
         } catch(Exception e) {
-            return ResponseEntity.badRequest()
-                .body("Failure to join league with leagueId: " + joinLeagueDTO.getLeagueId() + ", and userId: " + joinLeagueDTO.getUserId());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -95,6 +94,7 @@ public class LeagueController {
             User loggedInUser = userService.getLoggedInUser();
             leagueService.removeUserFromLeague(leagueId, loggedInUser);
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
@@ -111,6 +111,7 @@ public class LeagueController {
             leagueService.deleteLeague(loggedInUser, leagueId);
             return ResponseEntity.ok("Success deleting league");
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

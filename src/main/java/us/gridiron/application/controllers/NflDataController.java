@@ -3,6 +3,8 @@ package us.gridiron.application.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +21,7 @@ import us.gridiron.application.services.NflDataService;
 @RequestMapping("/api/gamedata")
 public class NflDataController {
 
+	public static final Logger logger = LoggerFactory.getLogger(NflDataController.class);
 	private final NflDataService nflDataService;
 
 	public NflDataController(NflDataService nflDataService) {
@@ -33,6 +36,7 @@ public class NflDataController {
 			List<CompetitorDTO> allCompetitors = nflDataService.getAllCompetitorData();
 			return ResponseEntity.ok(allCompetitors);
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(new ArrayList<>());
 		}
 	}
@@ -45,7 +49,7 @@ public class NflDataController {
 			List<CompetitorDTO> allCompetitors = results.getFirst();
 			return ResponseEntity.ok(allCompetitors);
 		} catch (Exception e){
-			System.out.println("Error getting /allgames data" + e.getMessage());
+			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(new ArrayList<>());
 		}
 	}
@@ -57,7 +61,7 @@ public class NflDataController {
 			nflDataService.updateGameDataInDB();
 			return ResponseEntity.ok("Success updating DB");
 		} catch (Exception e) {
-			System.out.println(("Error getting /updatedb : " + e.getMessage()));
+			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body("Error updating DB: " + e.getMessage());
 		}
 	}

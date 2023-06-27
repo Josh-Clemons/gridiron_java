@@ -3,7 +3,6 @@ package us.gridiron.application.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import us.gridiron.application.models.Pick;
 import us.gridiron.application.models.User;
 import us.gridiron.application.payload.response.PickDTO;
 import us.gridiron.application.services.PickService;
@@ -32,6 +31,29 @@ public class PickController {
             User user = userService.getLoggedInUser();
             List<PickDTO> picks = pickService.findPicksByUserAndLeagueId(user, leagueId);
             return ResponseEntity.ok(picks);
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/all-league-picks")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Object> findAllLeaguePicks(@RequestParam Long leagueId) {
+        try {
+            return ResponseEntity.ok(pickService.findLeaguePicks(leagueId));
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body("error finding league picks");
+        }
+    }
+
+    @PostMapping("/update")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Object> updateLeaguePicks(@RequestBody List<PickDTO> pickDTOS){
+
+        try{
+            User user = userService.getLoggedInUser();
+            List<PickDTO> updatedPickDTOS = pickService.updateUserPicks(user, pickDTOS);
+            return ResponseEntity.ok(updatedPickDTOS);
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

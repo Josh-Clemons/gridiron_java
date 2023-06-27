@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import us.gridiron.application.models.League;
 import us.gridiron.application.models.User;
 import us.gridiron.application.repository.LeagueRepository;
-import us.gridiron.application.repository.UserRepository;
+import us.gridiron.application.repository.PickRepository;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -16,14 +16,14 @@ import java.util.Random;
 @Service
 public class LeagueService {
     private final LeagueRepository leagueRepository;
-    private final UserRepository userRepository;
     private final PickService pickService;
+    private final PickRepository pickRepository;
 
     @Autowired
-    public LeagueService(LeagueRepository leagueRepository, UserRepository userRepository, PickService pickService) {
+    public LeagueService(LeagueRepository leagueRepository, PickService pickService, PickRepository pickRepository) {
         this.leagueRepository = leagueRepository;
-        this.userRepository = userRepository;
         this.pickService = pickService;
+        this.pickRepository = pickRepository;
     }
 
     @Transactional
@@ -80,7 +80,8 @@ public class LeagueService {
         }else if(leagueToUpdate.getUsers().stream().noneMatch(u -> u.equals(user))){
             throw new RuntimeException("User not in the league");
         }
-
+        // remove players picks from the league
+        pickRepository.deletePicksByOwnerAndLeague(user, leagueToUpdate);
         leagueToUpdate.removeUser(user);
         leagueRepository.save(leagueToUpdate);
     }

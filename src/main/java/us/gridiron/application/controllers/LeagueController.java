@@ -1,17 +1,15 @@
 package us.gridiron.application.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import us.gridiron.application.models.League;
 import us.gridiron.application.models.User;
 import us.gridiron.application.payload.request.CreateLeagueRequestDTO;
 import us.gridiron.application.payload.request.JoinLeagueDTO;
 import us.gridiron.application.payload.response.LeagueResponseDTO;
-import us.gridiron.application.repository.UserRepository;
 import us.gridiron.application.services.LeagueService;
 import us.gridiron.application.services.UserService;
 
@@ -24,12 +22,11 @@ import java.util.List;
 public class LeagueController {
 
     private final LeagueService leagueService;
-    private final UserRepository userRepository;
     private final UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(LeagueController.class);
 
-    public LeagueController(LeagueService leagueService, UserRepository userRepository, UserService userService) {
+    public LeagueController(LeagueService leagueService, UserService userService) {
         this.leagueService = leagueService;
-        this.userRepository = userRepository;
         this.userService = userService;
     }
 
@@ -43,7 +40,7 @@ public class LeagueController {
             for (League league : allLeagues) {
                 LeagueResponseDTO leagueResponseDTO = new LeagueResponseDTO();
                 leagueResponseDTO.setId(league.getId());
-                leagueResponseDTO.setLeagueOwner(league.getLeagueOwner().getUsername());
+                leagueResponseDTO.setLeagueOwner(league.getLeagueOwner());
                 leagueResponseDTO.setUserCount(league.getUserCount());
                 leagueResponseDTO.setLeagueName(league.getLeagueName());
                 leagueResponseDTO.setIsPrivate(league.getIsPrivate());

@@ -1,5 +1,7 @@
 package us.gridiron.application.payload.response;
 
+import us.gridiron.application.models.User;
+
 public class LeagueResponseDTO {
 
 	private Long id;
@@ -22,8 +24,8 @@ public class LeagueResponseDTO {
 		return leagueOwner;
 	}
 
-	public void setLeagueOwner(String leagueOwner) {
-		this.leagueOwner = leagueOwner;
+	public void setLeagueOwner(User leagueOwner) {
+		this.leagueOwner = leagueOwner.getUsername();
 	}
 
 	public Integer getUserCount() {

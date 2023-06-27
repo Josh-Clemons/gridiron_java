@@ -47,10 +47,37 @@ public class PickService {
         // keeping it this way for now (mostly to simplify testing)
         League league = leagueRepository.findById(leagueId)
                 .orElseThrow(()-> new RuntimeException("Unable to find league"));
-
+        boolean isLeagueMember = league.getUsers().stream().anyMatch(leagueUser -> leagueUser.equals(user));
+        if(!isLeagueMember){
+            throw new RuntimeException("User not in league");
+        }
         List<Pick> picks = pickRepository.findByOwnerAndLeague(user, league);
         return picks.stream().map(pick ->
                 modelMapper.map(pick, PickDTO.class)).toList();
     }
+    @Transactional
+    public List<PickDTO> findLeaguePicks(Long leagueId) {
+
+        return pickRepository.findPicksByLeagueId(leagueId)
+                .stream().map(pick -> modelMapper.map(pick, PickDTO.class)).toList();
+
+    }
+
+    @Transactional
+    public List<PickDTO> updateUserPicks(User user, List<PickDTO> pickDTOS) {
+        // converts DTO back to entity
+        List<Pick> picks = pickDTOS.stream()
+                .map(pickDTO -> modelMapper.map(pickDTO, Pick.class)).toList();
+
+        boolean isOwner = picks.stream().noneMatch(pick -> pick.getOwner().equals(user));
+        if(!isOwner){
+            throw new RuntimeException("Those are not your picks!");
+        }
+
+        List<Pick> updatedPicks = pickRepository.saveAll(picks);
+        return updatedPicks.stream()
+                .map(pick -> modelMapper.map(pick, PickDTO.class)).toList();
+    }
+
 
 }

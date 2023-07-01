@@ -31,8 +31,12 @@ public class LeagueService {
     public List<League> getAllLeagues() {
         return leagueRepository.findAll();
     }
+    public League findLeagueById(Long leagueId) {
+        return leagueRepository.findById(leagueId)
+                .orElseThrow(() -> new RuntimeException("Error finding the league"));
+    }
 
-    public League getLeagueByLeagueName(String name){
+    public League findLeagueByLeagueName(String name){
         return leagueRepository.findByLeagueName(name);
     }
 

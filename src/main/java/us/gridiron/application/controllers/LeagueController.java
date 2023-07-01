@@ -32,7 +32,6 @@ public class LeagueController {
         this.userService = userService;
         this.modelMapper = modelMapper;
     }
-
     @GetMapping("/all")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<LeagueResponseDTO>> getAllLeagues() {
@@ -48,6 +47,19 @@ public class LeagueController {
         } catch (Exception e){
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/find-by-id")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Object> getLeagueByLeagueId(@RequestParam Long leagueId) {
+        try {
+            League league = leagueService.findLeagueById(leagueId);
+            LeagueResponseDTO leagueDto = modelMapper.map(league, LeagueResponseDTO.class);
+            return ResponseEntity.ok(leagueDto);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.badRequest().body("Error getting league by Id: " + e.getMessage());
         }
     }
 

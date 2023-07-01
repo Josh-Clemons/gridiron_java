@@ -2,7 +2,6 @@ package us.gridiron.application.payload.request;
 
 public class JoinLeagueDTO {
 	private Long leagueId;
-	private Long userId;
 	private String inviteCode;
 
 	public Long getLeagueId() {
@@ -11,14 +10,6 @@ public class JoinLeagueDTO {
 
 	public void setLeagueId(Long leagueId) {
 		this.leagueId = leagueId;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 
 	public String getInviteCode() {
@@ -33,7 +24,6 @@ public class JoinLeagueDTO {
 	public String toString() {
 		return "JoinLeagueDTO{" +
 				"leagueId=" + leagueId +
-				", userId=" + userId +
 				", inviteCode='" + inviteCode + '\'' +
 				'}';
 	}

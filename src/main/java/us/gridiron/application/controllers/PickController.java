@@ -54,7 +54,7 @@ public class PickController {
     @PostMapping("/update")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Object> updateLeaguePicks(@RequestBody List<PickDTO> pickDTOS){
-        logger.info("Post /api/pick/update ");
+        logger.info("Post /api/pick/update");
         try{
             User user = userService.getLoggedInUser();
             List<PickDTO> updatedPickDTOS = pickService.updateUserPicks(user, pickDTOS);

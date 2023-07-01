@@ -17,6 +17,7 @@ public class UserService {
 
     public User getLoggedInUser() {
         String loggedInUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
         return userRepository.findByUsername(loggedInUsername)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + loggedInUsername));
     }

@@ -5,7 +5,7 @@ function TestApi() {
   const [leagues, setLeagues] = useState(null);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState('');
-  const [leagueId, setLeagueId] = useState(0);
+  const [leagueId, setLeagueId] = useState('NA');
 
 
   const fetchLeagues = async () => {
@@ -22,6 +22,17 @@ function TestApi() {
       }).catch((error) => {
         console.log("Error fetching leagues: ", error);
       });
+  }
+
+  const fetchGameDataFromEspn = async () => {
+    console.log('fetching game data......')
+    await axios.get("http://localhost:8080/api/gamedata/espn", {
+      headers: {
+        'Authorization' : `Bearer ${token}`
+      }
+    }).then((response) => {
+      console.log(response.data);
+    }).catch(e => console.log(e));
   }
 
   const fetchLeagueById = async () => {
@@ -52,10 +63,11 @@ function TestApi() {
   return (
     <>
       <div>{JSON.stringify(leagues ? leagues : "no leagues")}</div>
-      <div>{JSON.stringify(user)}</div>
+      <div>Access token: {JSON.stringify(user?.accessToken)}</div>
       <button onClick={()=> fetchLeagues()}>Update Leagues</button>
       <button onClick={() => fetchLeagueById()}>Fetch league by id {leagueId}</button>
-      <button onClick={() => signin('user', '123456')}>Signin</button>
+      <button onClick={() => signin('josh', '123456')}>Signin</button>
+      <button onClick={() => fetchGameDataFromEspn()}>Log espn data</button>
     </>
     
   )

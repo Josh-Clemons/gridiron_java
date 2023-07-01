@@ -53,6 +53,7 @@ public class LeagueController {
     @GetMapping("/find-by-id")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Object> getLeagueByLeagueId(@RequestParam Long leagueId) {
+        logger.info("Get /api/league/find-by-id");
         try {
             League league = leagueService.findLeagueById(leagueId);
             LeagueResponseDTO leagueDto = modelMapper.map(league, LeagueResponseDTO.class);

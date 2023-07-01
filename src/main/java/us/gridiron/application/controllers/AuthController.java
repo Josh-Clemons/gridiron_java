@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.bind.annotation.*;
 
 import us.gridiron.application.models.ERole;
 import us.gridiron.application.models.Role;
@@ -30,16 +30,20 @@ import us.gridiron.application.payload.request.LoginRequest;
 import us.gridiron.application.payload.request.SignupRequest;
 import us.gridiron.application.payload.response.JwtResponse;
 import us.gridiron.application.payload.response.MessageResponse;
+import us.gridiron.application.payload.response.UserDTO;
 import us.gridiron.application.repository.RoleRepository;
 import us.gridiron.application.repository.UserRepository;
 import us.gridiron.application.security.jwt.JwtUtils;
 import us.gridiron.application.security.services.UserDetailsImpl;
+import us.gridiron.application.services.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+	private final UserService userService;
+	private final ModelMapper modelMapper;
 	AuthenticationManager authenticationManager;
 	UserRepository userRepository;
 	RoleRepository roleRepository;
@@ -48,12 +52,25 @@ public class AuthController {
 
 	@Autowired
 	public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-		RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils){
+						  RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils, UserService userService, ModelMapper modelMapper){
 		this.authenticationManager = authenticationManager;
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.encoder = encoder;
 		this.jwtUtils = jwtUtils;
+		this.userService = userService;
+		this.modelMapper = modelMapper;
+	}
+
+	@GetMapping("/current")
+	public ResponseEntity<?> getCurrentUser(){
+		try {
+			User user = userService.getLoggedInUser();
+			UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+			return ResponseEntity.ok(userDTO);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 
 	@PostMapping("/signin")

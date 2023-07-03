@@ -50,6 +50,23 @@ public class LeagueController {
         }
     }
 
+    @GetMapping("/all-by-id")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getLeaguesByUserId(@RequestParam Long userId) {
+        logger.info("Get /api/league/all-by-id?userId={}", userId);
+        try {
+            List<League> leagues = leagueService.findUsersLeagues(userId);
+            List<LeagueResponseDTO> leaguesDTO = leagues.stream()
+                .map(league -> modelMapper.map(league, LeagueResponseDTO.class))
+                .toList();
+
+            return ResponseEntity.ok(leaguesDTO);
+        }catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.badRequest().body("Error finding users's leagues");
+        }
+    }
+
     @GetMapping("/find-by-id")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Object> getLeagueByLeagueId(@RequestParam Long leagueId) {

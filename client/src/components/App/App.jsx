@@ -20,12 +20,13 @@ function App() {
       <UserProvider>
         <Router>
           <Routes>
+            {/* Unprotected routes */}
             <Route path="/" element={<Navigate replace to="/landing" />} />
-            <Route path='/login' element={<LoginPage />} />
             <Route path='/landing' element={<LandingPage />} />
-            <Route path='/home' element={<PrivateRoute><LandingPage /></PrivateRoute>} />
-            <Route path='/test' element={<PrivateRoute><TestApi /></PrivateRoute>} />
+            <Route path='/login' element={<LoginPage />} />
+            {/* Protected routes */}
             <Route path='/dashboard' element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+            <Route path='/test' element={<PrivateRoute><TestApi /></PrivateRoute>} />
           </Routes>
         </Router>
       </UserProvider>

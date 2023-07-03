@@ -40,6 +40,10 @@ public class LeagueService {
         return leagueRepository.findByLeagueName(name);
     }
 
+    public List<League> findUsersLeagues(Long userId) {
+        return leagueRepository.findAllByUserId(userId);
+    }
+
     @Transactional
     public League createLeague(String leagueName, User leagueOwner,
                                Integer maxUsers, boolean isPrivate)

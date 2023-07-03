@@ -1,6 +1,10 @@
 package us.gridiron.application.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import us.gridiron.application.models.League;
 import us.gridiron.application.models.User;
@@ -9,4 +13,7 @@ import us.gridiron.application.models.User;
 public interface LeagueRepository extends JpaRepository<League, Long> {
     League findByLeagueName(String name);
     League findByInviteCode(String inviteCode);
+
+    @Query("SELECT l FROM League l JOIN l.users u WHERE u.id = :userId")
+    List<League> findAllByUserId(@Param("userId") Long userId);
 }

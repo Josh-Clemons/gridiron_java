@@ -1,14 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 
 import { Box, Button, Typography, Stack } from '@mui/material';
-import footballPlayerShadow from './Images/football_player_shadow.jpeg';
+import background from '../../public/background.jpeg'
+import { useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 
 const LandingPage = () => {
+
+    const { signOut } = useContext(UserContext);
+
     const navigate = useNavigate();
 
     const logout = () => {
-        console.log("logging out... not!!");
-        navigate('/login');
+        signOut();
     }
 
 
@@ -16,7 +20,7 @@ const LandingPage = () => {
         <Box
             className='landingPageDiv'
             sx={{
-                backgroundImage: `url(${footballPlayerShadow})`,
+                backgroundImage: `url(${background})`,
                 backgroundColor: "teal",
                 backgroundSize: "cover",
                 height: "80vh",

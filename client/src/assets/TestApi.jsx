@@ -1,11 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { useMutation } from 'react-query'
 import axios from "axios";
+import { UserContext } from '../contexts/UserContext';
 
 function TestApi() {
   const [leagues, setLeagues] = useState(null);
-  const [user, setUser] = useState(null);
   const [token, setToken] = useState('');
+  const [sessionToken, setSessionToken] = useState('');
   const [leagueId, setLeagueId] = useState('NA');
+  const { user, setUser } = useContext(UserContext);
+
+  useEffect(()=>{
+    const tempToken = sessionStorage.getItem('access_token');
+    setSessionToken(tempToken);
+    setToken(tempToken);
+  }, [])
 
 
   const fetchLeagues = async () => {
@@ -47,6 +56,22 @@ function TestApi() {
     }).catch(e => console.log(e));
   }
 
+  const handleSignin = () => {
+    signinMutation.mutate(['josh', '123456'])
+  }
+  const signinMutation = useMutation(([username, password]) => axios
+    .post('http://localhost:8080/api/auth/signin', { username, password }), {
+    onSuccess: (data) => {
+      setUser(data.data);
+      setToken(data.data.accessToken);
+      sessionStorage.setItem('access_token', data.data.accessToken);
+      console.log('User signed in successfully: ', data);
+    },
+    onError: (error) => {
+      console.log('Error signing in: ', error)
+    }
+  })
+
   const signin = async (username, password) => {
     await axios.post("http://localhost:8080/api/auth/signin", {
       username: username,
@@ -60,14 +85,23 @@ function TestApi() {
     })
   }
 
+  const getSessionToken = () => {
+    setSessionToken(sessionStorage.getItem('access_token'));
+    console.log(sessionStorage.getItem('access_token'));
+  }
+
   return (
     <>
       <div>{JSON.stringify(leagues ? leagues : "no leagues")}</div>
-      <div>Access token: {JSON.stringify(user?.accessToken)}</div>
+      <div>Access token: {token}</div>
+      <div>Session token: {sessionToken}</div>
+      <div>{JSON.stringify(user)}</div>
       <button onClick={()=> fetchLeagues()}>Update Leagues</button>
       <button onClick={() => fetchLeagueById()}>Fetch league by id {leagueId}</button>
-      <button onClick={() => signin('josh', '123456')}>Signin</button>
+      <button onClick={() => signin('josh', '123456')}>Signin - old </button>
+      <button onClick={handleSignin}>Signin - react query</button>
       <button onClick={() => fetchGameDataFromEspn()}>Log espn data</button>
+      <button onClick={() => getSessionToken()}>Set session token</button>
     </>
     
   )

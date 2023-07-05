@@ -144,9 +144,8 @@ public class AuthController {
 			}
 
 			user.setRoles(roles);
-			userRepository.save(user);
 
-			return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+			return ResponseEntity.ok(userRepository.save(user));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(e.getMessage());

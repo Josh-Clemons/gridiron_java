@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "git": "^0.1.5"
+    "git": "^0.1.5",
+    "react-query": "^3.39.3"
   }
 }

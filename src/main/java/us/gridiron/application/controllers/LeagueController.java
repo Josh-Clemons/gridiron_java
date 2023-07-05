@@ -50,16 +50,16 @@ public class LeagueController {
         }
     }
 
-    @GetMapping("/all-by-id")
+    @GetMapping("/all-for-user")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getLeaguesByUserId(@RequestParam Long userId) {
-        logger.info("Get /api/league/all-by-id?userId={}", userId);
+    public ResponseEntity<?> getLeaguesByUserId() {
+        logger.info("Get /api/league/all-for-user");
+        User user = userService.getLoggedInUser();
         try {
-            List<League> leagues = leagueService.findUsersLeagues(userId);
+            List<League> leagues = leagueService.findUsersLeagues(user.getId());
             List<LeagueResponseDTO> leaguesDTO = leagues.stream()
                 .map(league -> modelMapper.map(league, LeagueResponseDTO.class))
                 .toList();
-
             return ResponseEntity.ok(leaguesDTO);
         }catch (Exception e) {
             logger.error(e.getMessage(), e);

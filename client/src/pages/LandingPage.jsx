@@ -1,15 +1,12 @@
-import { useNavigate } from 'react-router-dom';
 
 import { Box, Button, Typography, Stack } from '@mui/material';
-import background from '../../public/background.jpeg'
+import background from '../assets/background.jpeg';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 
 const LandingPage = () => {
 
     const { signOut } = useContext(UserContext);
-
-    const navigate = useNavigate();
 
     const logout = () => {
         signOut();

@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { UserContext } from '../../contexts/UserContext';
 
@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 
 export default function LoginForm() {
     const navigate = useNavigate();
+    const {state} = useLocation();
 
     const { signIn, signOut } = useContext(UserContext);
 
@@ -27,7 +28,7 @@ export default function LoginForm() {
 
     // alert for when login fields are empty
     const errorEmptyFields = () => {
-        window.alert('Complete all fields');
+        setErrorMessage('Complete all fields');
     };
 
     const handleSubmit = async (event) => {
@@ -36,14 +37,14 @@ export default function LoginForm() {
         // continue only if user/email are not blank
         if (username !== '' && password !== '') {
             await signIn(username, password).then(() => {
-                navigate('/dashboard');
+                navigate(state?.from || '/dashboard');
             }).catch((e) => {
                 console.log(e);
                 setErrorMessage(e.toString());
             })
         } else {
             errorEmptyFields();
-        };
+        }
     };
 
     return (

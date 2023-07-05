@@ -1,13 +1,9 @@
-import { useContext } from 'react';
-import LoginForm from '../components/LoginForm/LoginForm';
-import { UserContext } from '../contexts/UserContext';
+import { Dashboard } from '../components/Dashboard/Dashboard';
 
 const DashboardPage = () => {
 
-    const { user } = useContext(UserContext);
-
     return (
-        <div>Hello {user?.username}</div>
+        <Dashboard />
     )
 }
 

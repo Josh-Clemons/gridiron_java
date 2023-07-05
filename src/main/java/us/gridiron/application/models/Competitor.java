@@ -19,7 +19,7 @@ public class Competitor {
 	private boolean winner;
 	private String homeAway;
 	private String startDate;
-	private int week;
+	private Integer week;
 	private String eventId;
 
 
@@ -56,11 +56,11 @@ public class Competitor {
 		this.startDate = startDate;
 	}
 
-	public int getWeek() {
+	public Integer getWeek() {
 		return week;
 	}
 
-	public void setWeek(int week) {
+	public void setWeek(Integer week) {
 		this.week = week;
 	}
 

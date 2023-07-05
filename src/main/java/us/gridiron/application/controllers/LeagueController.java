@@ -50,6 +50,25 @@ public class LeagueController {
         }
     }
 
+    @GetMapping("/available")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<LeagueResponseDTO>> getAvailableLeagues() {
+        logger.info("Get /api/league/available");
+        User user = userService.getLoggedInUser();
+        try {
+            List<League> availableLeagues = leagueService.getAvailableLeagues(user);
+
+            List<LeagueResponseDTO> availableLeaguesDTO = availableLeagues.stream()
+                .map(league -> modelMapper.map(league, LeagueResponseDTO.class))
+                .toList();
+
+            return ResponseEntity.ok(availableLeaguesDTO);
+        } catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.badRequest().body(new ArrayList<>());
+        }
+    }
+
     @GetMapping("/all-for-user")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getLeaguesByUserId() {
@@ -70,7 +89,7 @@ public class LeagueController {
     @GetMapping("/find-by-id")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Object> getLeagueByLeagueId(@RequestParam Long leagueId) {
-        logger.info("Get /api/league/find-by-id");
+        logger.info("Get /api/league/find-by-id, leagueId: {}", leagueId);
         try {
             League league = leagueService.findLeagueById(leagueId);
             LeagueResponseDTO leagueDto = modelMapper.map(league, LeagueResponseDTO.class);

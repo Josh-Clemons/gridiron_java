@@ -16,4 +16,7 @@ public interface LeagueRepository extends JpaRepository<League, Long> {
 
     @Query("SELECT l FROM League l JOIN l.users u WHERE u.id = :userId")
     List<League> findAllByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT l FROM League l WHERE l.userCount <= l.maxUsers AND l.isPrivate = false AND l NOT IN (SELECT ll FROM League ll JOIN ll.users u WHERE u.id = :userId)")
+    List<League> findAvailableLeagues(@Param("userId") Long userId);
 }

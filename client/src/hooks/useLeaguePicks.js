@@ -19,6 +19,9 @@ function useLeaguePicks(leagueId) {
     }
 
     return response.data
+  }, {
+    retry: false,
+    refetchOnWindowFocus: false,
   })
 }
 

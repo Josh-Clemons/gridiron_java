@@ -9,7 +9,7 @@ const PickSelect = ({ picks, week, value, setPicks }) => {
   const { competitors } = useContext(CompetitorContext);
   const [selectOptions, setSelectOptions] = useState(null);
 
-  const pick = picks?.filter(pick => pick.week === week && pick.value === value)
+  const pick = picks?.find(pick => pick.week === week && pick.value === value);
 
   useEffect(() => {
     setSelectOptions(getSelectOptions(competitors, week))
@@ -17,7 +17,7 @@ const PickSelect = ({ picks, week, value, setPicks }) => {
 
   const handleChange = event => {
     const selectedOption = event.target.value;
-    console.log('in Select handleChange:', selectedOption)
+    console.log('in Select handleChange:', selectedOption, picks)
 
     setPicks(prev => (
       prev.map(pick => {
@@ -37,11 +37,12 @@ const PickSelect = ({ picks, week, value, setPicks }) => {
 
   return (
     <FormControl variant="standard" fullWidth>
-      <InputLabel variant="standard" shrink={pick && pick.team !== 'none'} htmlFor={`pick${week}${value}`}>
-        Team
-      </InputLabel>
+        {pick ? <InputLabel variant="standard" shrink={pick && pick.team !== 'none'} htmlFor={`pick${week}${value}`}>
+            Team
+        </InputLabel> : null}
+
       <NativeSelect
-        value={pick && pick.team != '' ? pick.team : ''}
+        value={pick?.team}
         onChange={handleChange}
         inputProps={{
           name: 'team',

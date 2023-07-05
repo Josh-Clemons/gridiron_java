@@ -31,6 +31,11 @@ public class LeagueService {
     public List<League> getAllLeagues() {
         return leagueRepository.findAll();
     }
+
+    @Transactional
+    public List<League> getAvailableLeagues(User user) {
+        return leagueRepository.findAvailableLeagues(user.getId());
+    }
     public League findLeagueById(Long leagueId) {
         return leagueRepository.findById(leagueId)
                 .orElseThrow(() -> new RuntimeException("Error finding the league"));

@@ -1,11 +1,14 @@
 package us.gridiron.application.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import us.gridiron.application.models.Pick;
 import us.gridiron.application.models.User;
+import us.gridiron.application.payload.request.PickUpdateRequest;
 import us.gridiron.application.payload.response.PickDTO;
 import us.gridiron.application.services.PickService;
 import us.gridiron.application.services.UserService;
@@ -19,10 +22,12 @@ public class PickController {
     private static final Logger logger = LoggerFactory.getLogger(PickController.class);
     private final PickService pickService;
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
-    public PickController(PickService pickService, UserService userService) {
+    public PickController(PickService pickService, UserService userService, ModelMapper modelMapper) {
         this.pickService = pickService;
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/my-league-picks")
@@ -53,12 +58,14 @@ public class PickController {
 
     @PostMapping("/update")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Object> updateLeaguePicks(@RequestBody List<PickDTO> pickDTOS){
+    public ResponseEntity<Object> updateLeaguePicks(@RequestBody List<PickUpdateRequest> pickUpdates){
         logger.info("Post /api/pick/update");
         try{
             User user = userService.getLoggedInUser();
-            List<PickDTO> updatedPickDTOS = pickService.updateUserPicks(user, pickDTOS);
-            return ResponseEntity.ok(updatedPickDTOS);
+            List<Pick> updatedPicks = pickService.convertPickUpdateRequestToPicksList(pickUpdates);
+            List<PickDTO> updatedPickDTOs = updatedPicks.stream().map(pick ->
+                modelMapper.map(pick, PickDTO.class)).toList();
+            return ResponseEntity.ok(pickService.updateUserPicks(user, updatedPickDTOs));
         } catch(Exception e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().body(e.getMessage());

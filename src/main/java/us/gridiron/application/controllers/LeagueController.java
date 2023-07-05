@@ -11,6 +11,7 @@ import us.gridiron.application.models.User;
 import us.gridiron.application.payload.request.CreateLeagueRequestDTO;
 import us.gridiron.application.payload.request.JoinLeagueDTO;
 import us.gridiron.application.payload.response.LeagueResponseDTO;
+import us.gridiron.application.payload.response.UserDTO;
 import us.gridiron.application.services.LeagueService;
 import us.gridiron.application.services.UserService;
 
@@ -22,141 +23,155 @@ import java.util.List;
 @RequestMapping("/api/league")
 public class LeagueController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LeagueController.class);
-    private final LeagueService leagueService;
-    private final UserService userService;
-    private final ModelMapper modelMapper;
+	private static final Logger logger = LoggerFactory.getLogger(LeagueController.class);
+	private final LeagueService leagueService;
+	private final UserService userService;
+	private final ModelMapper modelMapper;
 
-    public LeagueController(LeagueService leagueService, UserService userService, ModelMapper modelMapper) {
-        this.leagueService = leagueService;
-        this.userService = userService;
-        this.modelMapper = modelMapper;
-    }
-    @GetMapping("/all")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<LeagueResponseDTO>> getAllLeagues() {
-        logger.info("Get /api/league/all");
-        try {
-            List<League> allLeagues = leagueService.getAllLeagues();
+	public LeagueController(LeagueService leagueService, UserService userService, ModelMapper modelMapper) {
+		this.leagueService = leagueService;
+		this.userService = userService;
+		this.modelMapper = modelMapper;
+	}
 
-            List<LeagueResponseDTO> allLeaguesDTO = allLeagues.stream()
-                    .map(league -> modelMapper.map(league, LeagueResponseDTO.class))
-                    .toList();
+	@GetMapping("/all")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<List<LeagueResponseDTO>> getAllLeagues() {
+		logger.info("Get /api/league/all");
+		try {
+			List<League> allLeagues = leagueService.getAllLeagues();
 
-            return ResponseEntity.ok(allLeaguesDTO);
-        } catch (Exception e){
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body(new ArrayList<>());
-        }
-    }
+			List<LeagueResponseDTO> allLeaguesDTO = allLeagues.stream()
+				.map(league -> modelMapper.map(league, LeagueResponseDTO.class))
+				.toList();
 
-    @GetMapping("/available")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<LeagueResponseDTO>> getAvailableLeagues() {
-        logger.info("Get /api/league/available");
-        User user = userService.getLoggedInUser();
-        try {
-            List<League> availableLeagues = leagueService.getAvailableLeagues(user);
+			return ResponseEntity.ok(allLeaguesDTO);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body(new ArrayList<>());
+		}
+	}
 
-            List<LeagueResponseDTO> availableLeaguesDTO = availableLeagues.stream()
-                .map(league -> modelMapper.map(league, LeagueResponseDTO.class))
-                .toList();
+	@GetMapping("/available")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<List<LeagueResponseDTO>> getAvailableLeagues() {
+		logger.info("Get /api/league/available");
+		User user = userService.getLoggedInUser();
+		try {
+			List<League> availableLeagues = leagueService.getAvailableLeagues(user);
 
-            return ResponseEntity.ok(availableLeaguesDTO);
-        } catch (Exception e){
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body(new ArrayList<>());
-        }
-    }
+			List<LeagueResponseDTO> availableLeaguesDTO = availableLeagues.stream()
+				.map(league -> modelMapper.map(league, LeagueResponseDTO.class))
+				.toList();
 
-    @GetMapping("/all-for-user")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getLeaguesByUserId() {
-        logger.info("Get /api/league/all-for-user");
-        User user = userService.getLoggedInUser();
-        try {
-            List<League> leagues = leagueService.findUsersLeagues(user.getId());
-            List<LeagueResponseDTO> leaguesDTO = leagues.stream()
-                .map(league -> modelMapper.map(league, LeagueResponseDTO.class))
-                .toList();
-            return ResponseEntity.ok(leaguesDTO);
-        }catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body("Error finding users's leagues");
-        }
-    }
+			return ResponseEntity.ok(availableLeaguesDTO);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body(new ArrayList<>());
+		}
+	}
 
-    @GetMapping("/find-by-id")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Object> getLeagueByLeagueId(@RequestParam Long leagueId) {
-        logger.info("Get /api/league/find-by-id, leagueId: {}", leagueId);
-        try {
-            League league = leagueService.findLeagueById(leagueId);
-            LeagueResponseDTO leagueDto = modelMapper.map(league, LeagueResponseDTO.class);
-            return ResponseEntity.ok(leagueDto);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body("Error getting league by Id: " + e.getMessage());
-        }
-    }
+	@GetMapping("/all-for-user")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> getLeaguesByUserId() {
+		logger.info("Get /api/league/all-for-user");
+		User user = userService.getLoggedInUser();
+		try {
+			List<League> leagues = leagueService.findUsersLeagues(user.getId());
+			List<LeagueResponseDTO> leaguesDTO = leagues.stream()
+				.map(league -> modelMapper.map(league, LeagueResponseDTO.class))
+				.toList();
+			return ResponseEntity.ok(leaguesDTO);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body("Error finding users's leagues");
+		}
+	}
 
-    @PostMapping("/create")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> createLeague(@RequestBody CreateLeagueRequestDTO createLeagueRequestDTO) {
-        logger.info("Post /api/league/create, createLeagueRequestDTO: {}", createLeagueRequestDTO.toString());
-        try {
-            User loggedInUser = userService.getLoggedInUser();
-            League newLeague = leagueService.createLeague(
-                createLeagueRequestDTO.getLeagueName(), loggedInUser,
-                createLeagueRequestDTO.getMaxUsers(), createLeagueRequestDTO.getIsPrivate());
-            return ResponseEntity.ok(
-                    "League created with name: " + newLeague.getLeagueName()
-                            + ", and id: " + newLeague.getId());
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+	@GetMapping("/get-users")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> getUsersInLeague(@RequestParam Long leagueId) {
+		logger.info("Get /api/league/get-users, leagueId: {}", leagueId);
+		try {
+			List<User> users = leagueService.findUsersByLeagueId(leagueId);
+			return ResponseEntity.ok(users.stream().map(user -> modelMapper.map(user, UserDTO.class)));
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body("Error getting users from league: " + leagueId);
+		}
+	}
 
-    @PostMapping("/join")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> joinLeague(@RequestBody JoinLeagueDTO joinLeagueDTO) {
-        logger.info("Post /api/league/join, joinLeagueDTO: {}", joinLeagueDTO.toString());
-        try {
-            User loggedInUser = userService.getLoggedInUser();
-            return leagueService.addUserToLeague(joinLeagueDTO, loggedInUser);
-        } catch(Exception e) {
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+	@GetMapping("/find-by-id")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<Object> getLeagueByLeagueId(@RequestParam Long leagueId) {
+		logger.info("Get /api/league/find-by-id, leagueId: {}", leagueId);
+		try {
+			League league = leagueService.findLeagueById(leagueId);
+			LeagueResponseDTO leagueDto = modelMapper.map(league, LeagueResponseDTO.class);
+			return ResponseEntity.ok(leagueDto);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body("Error getting league by Id: " + e.getMessage());
+		}
+	}
 
-    @DeleteMapping("/leave")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> leaveLeague(@RequestParam Long leagueId){
-        logger.info("Delete /api/league/leave, leagueId: {}", leagueId);
-        try {
-            User loggedInUser = userService.getLoggedInUser();
-            leagueService.removeUserFromLeague(leagueId, loggedInUser);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+	@PostMapping("/create")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<String> createLeague(@RequestBody CreateLeagueRequestDTO createLeagueRequestDTO) {
+		logger.info("Post /api/league/create, createLeagueRequestDTO: {}", createLeagueRequestDTO.toString());
+		try {
+			User loggedInUser = userService.getLoggedInUser();
+			League newLeague = leagueService.createLeague(
+				createLeagueRequestDTO.getLeagueName(), loggedInUser,
+				createLeagueRequestDTO.getMaxUsers(), createLeagueRequestDTO.getIsPrivate());
+			return ResponseEntity.ok(
+				"League created with name: " + newLeague.getLeagueName()
+					+ ", and id: " + newLeague.getId());
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
 
-        return ResponseEntity.ok("Successfully left league");
-    }
+	@PostMapping("/join")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<String> joinLeague(@RequestBody JoinLeagueDTO joinLeagueDTO) {
+		logger.info("Post /api/league/join, joinLeagueDTO: {}", joinLeagueDTO.toString());
+		try {
+			User loggedInUser = userService.getLoggedInUser();
+			return leagueService.addUserToLeague(joinLeagueDTO, loggedInUser);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
 
-    @DeleteMapping("/delete")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> deleteLeague(@RequestParam Long leagueId) {
-        logger.info("Delete /api/league/delete, leagueId: {}", leagueId);
-        try {
-            User loggedInUser = userService.getLoggedInUser();
-            leagueService.deleteLeague(loggedInUser, leagueId);
-            return ResponseEntity.ok("Success deleting league");
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+	@DeleteMapping("/leave")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<String> leaveLeague(@RequestParam Long leagueId) {
+		logger.info("Delete /api/league/leave, leagueId: {}", leagueId);
+		try {
+			User loggedInUser = userService.getLoggedInUser();
+			leagueService.removeUserFromLeague(leagueId, loggedInUser);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+
+		return ResponseEntity.ok("Successfully left league");
+	}
+
+	@DeleteMapping("/delete")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<String> deleteLeague(@RequestParam Long leagueId) {
+		logger.info("Delete /api/league/delete, leagueId: {}", leagueId);
+		try {
+			User loggedInUser = userService.getLoggedInUser();
+			leagueService.deleteLeague(loggedInUser, leagueId);
+			return ResponseEntity.ok("Success deleting league");
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
 }

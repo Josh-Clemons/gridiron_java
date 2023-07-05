@@ -49,6 +49,7 @@ const LeagueDetailsPage = () => {
                 </div>
             ))}
             <div>League Details: {JSON.stringify(leagueDetails)}</div>
+            <div>League Details: {JSON.stringify(picks)}</div>
         </>
     )
 }

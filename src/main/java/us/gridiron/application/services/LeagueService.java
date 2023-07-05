@@ -16,114 +16,119 @@ import java.util.Random;
 
 @Service
 public class LeagueService {
-    private final LeagueRepository leagueRepository;
-    private final PickService pickService;
-    private final PickRepository pickRepository;
+	private final LeagueRepository leagueRepository;
+	private final PickService pickService;
+	private final PickRepository pickRepository;
 
-    @Autowired
-    public LeagueService(LeagueRepository leagueRepository, PickService pickService, PickRepository pickRepository) {
-        this.leagueRepository = leagueRepository;
-        this.pickService = pickService;
-        this.pickRepository = pickRepository;
-    }
+	@Autowired
+	public LeagueService(LeagueRepository leagueRepository, PickService pickService, PickRepository pickRepository) {
+		this.leagueRepository = leagueRepository;
+		this.pickService = pickService;
+		this.pickRepository = pickRepository;
+	}
 
-    @Transactional
-    public List<League> getAllLeagues() {
-        return leagueRepository.findAll();
-    }
+	@Transactional
+	public List<League> getAllLeagues() {
+		return leagueRepository.findAll();
+	}
 
-    @Transactional
-    public List<League> getAvailableLeagues(User user) {
-        return leagueRepository.findAvailableLeagues(user.getId());
-    }
-    public League findLeagueById(Long leagueId) {
-        return leagueRepository.findById(leagueId)
-                .orElseThrow(() -> new RuntimeException("Error finding the league"));
-    }
+	@Transactional
+	public List<League> getAvailableLeagues(User user) {
+		return leagueRepository.findAvailableLeagues(user.getId());
+	}
 
-    public League findLeagueByLeagueName(String name){
-        return leagueRepository.findByLeagueName(name);
-    }
+	public League findLeagueById(Long leagueId) {
+		return leagueRepository.findById(leagueId)
+			.orElseThrow(() -> new RuntimeException("Error finding the league"));
+	}
 
-    public List<League> findUsersLeagues(Long userId) {
-        return leagueRepository.findAllByUserId(userId);
-    }
+	public List<User> findUsersByLeagueId(Long leagueId) {
+		return leagueRepository.findUsersByLeagueId(leagueId);
+	}
 
-    @Transactional
-    public League createLeague(String leagueName, User leagueOwner,
-                               Integer maxUsers, boolean isPrivate)
-    {
-        String inviteCode = "";
-        // confirms the invite code is unique before moving on
-        while (inviteCode.equals("")){
-            String tempCode = generateInviteCode();
-            if (leagueRepository.findByInviteCode(tempCode) == null) {
-                inviteCode = tempCode;
-            }
-        }
+	public League findLeagueByLeagueName(String name) {
+		return leagueRepository.findByLeagueName(name);
+	}
 
-        League newLeague = new League(leagueName, leagueOwner, isPrivate, maxUsers, inviteCode);
-        newLeague.addUser(leagueOwner);
-        return leagueRepository.save(newLeague);
-    }
+	public List<League> findUsersLeagues(Long userId) {
+		return leagueRepository.findAllByUserId(userId);
+	}
 
-    @Transactional
-    public ResponseEntity<String> addUserToLeague(JoinLeagueDTO joinLeagueDTO, User user) {
-        League league = leagueRepository.findById(joinLeagueDTO.getLeagueId())
-            .orElseThrow(() -> new RuntimeException("League not found"));
-        // checks if league is private and user provide a matching invite code
-        if(league.getIsPrivate() && !league.getInviteCode().equals(joinLeagueDTO.getInviteCode())){
-            throw new RuntimeException("Incorrect invite code");
-        }
-        boolean isAdded = league.addUser(user);
-        if(!isAdded){
-            return ResponseEntity.badRequest().body("User is already in the league");
-        } else {
-            leagueRepository.save(league);
-            pickService.createPicksForNewUser(user, league);
-            return ResponseEntity.ok("User added to the league");
-        }
-    }
+	@Transactional
+	public League createLeague(
+		String leagueName, User leagueOwner,
+		Integer maxUsers, boolean isPrivate) {
+		String inviteCode = "";
+		// confirms the invite code is unique before moving on
+		while(inviteCode.equals("")) {
+			String tempCode = generateInviteCode();
+			if(leagueRepository.findByInviteCode(tempCode) == null) {
+				inviteCode = tempCode;
+			}
+		}
 
-    @Transactional
-    public void removeUserFromLeague(Long leagueId, User user) {
+		League newLeague = new League(leagueName, leagueOwner, isPrivate, maxUsers, inviteCode);
+		newLeague.addUser(leagueOwner);
+		return leagueRepository.save(newLeague);
+	}
 
-        League leagueToUpdate = leagueRepository.findById(leagueId)
-                .orElseThrow(() -> new RuntimeException("Error finding the league"));
+	@Transactional
+	public ResponseEntity<String> addUserToLeague(JoinLeagueDTO joinLeagueDTO, User user) {
+		League league = leagueRepository.findById(joinLeagueDTO.getLeagueId())
+			.orElseThrow(() -> new RuntimeException("League not found"));
+		// checks if league is private and user provide a matching invite code
+		if(league.getIsPrivate() && !league.getInviteCode().equals(joinLeagueDTO.getInviteCode())) {
+			throw new RuntimeException("Incorrect invite code");
+		}
+		boolean isAdded = league.addUser(user);
+		if(!isAdded) {
+			return ResponseEntity.badRequest().body("User is already in the league");
+		} else {
+			leagueRepository.save(league);
+			pickService.createPicksForNewUser(user, league);
+			return ResponseEntity.ok("User added to the league");
+		}
+	}
 
-        // league owner is not allowed to leave a league, they must delete it,
-        // at some point being able to transfer ownership should be considered
-        if(leagueToUpdate.getLeagueOwner().equals(user)){
-            throw new RuntimeException("Cannot remove league owner from league");
-        }else if(leagueToUpdate.getUsers().stream().noneMatch(u -> u.equals(user))){
-            throw new RuntimeException("User not in the league");
-        }
-        // remove players picks from the league
-        pickRepository.deletePicksByOwnerAndLeague(user, leagueToUpdate);
-        leagueToUpdate.removeUser(user);
-        leagueRepository.save(leagueToUpdate);
-    }
+	@Transactional
+	public void removeUserFromLeague(Long leagueId, User user) {
 
-    @Transactional
-    public void deleteLeague(User user, Long leagueId) {
-        League leagueToDelete = leagueRepository.findById(leagueId)
-                .orElseThrow(() -> new RuntimeException("Error finding the league"));
-        if(user.equals(leagueToDelete.getLeagueOwner())){
-            leagueRepository.delete(leagueToDelete);
-        } else {
-            throw new RuntimeException("Unable to delete, you are not the owner");
-        }
-    }
+		League leagueToUpdate = leagueRepository.findById(leagueId)
+			.orElseThrow(() -> new RuntimeException("Error finding the league"));
 
-    public String generateInviteCode() {
-        Random random = new SecureRandom();
-        String alphanumberic = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        int codeLength = 6;
+		// league owner is not allowed to leave a league, they must delete it,
+		// at some point being able to transfer ownership should be considered
+		if(leagueToUpdate.getLeagueOwner().equals(user)) {
+			throw new RuntimeException("Cannot remove league owner from league");
+		} else if(leagueToUpdate.getUsers().stream().noneMatch(u -> u.equals(user))) {
+			throw new RuntimeException("User not in the league");
+		}
+		// remove players picks from the league
+		pickRepository.deletePicksByOwnerAndLeague(user, leagueToUpdate);
+		leagueToUpdate.removeUser(user);
+		leagueRepository.save(leagueToUpdate);
+	}
 
-        StringBuilder codeBuilder = new StringBuilder(codeLength);
-        for(int i=0; i<codeLength; i++){
-            codeBuilder.append(alphanumberic.charAt(random.nextInt(alphanumberic.length())));
-        }
-        return codeBuilder.toString();
-    }
+	@Transactional
+	public void deleteLeague(User user, Long leagueId) {
+		League leagueToDelete = leagueRepository.findById(leagueId)
+			.orElseThrow(() -> new RuntimeException("Error finding the league"));
+		if(user.equals(leagueToDelete.getLeagueOwner())) {
+			leagueRepository.delete(leagueToDelete);
+		} else {
+			throw new RuntimeException("Unable to delete, you are not the owner");
+		}
+	}
+
+	public String generateInviteCode() {
+		Random random = new SecureRandom();
+		String alphanumberic = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+		int codeLength = 6;
+
+		StringBuilder codeBuilder = new StringBuilder(codeLength);
+		for(int i = 0; i < codeLength; i++) {
+			codeBuilder.append(alphanumberic.charAt(random.nextInt(alphanumberic.length())));
+		}
+		return codeBuilder.toString();
+	}
 }

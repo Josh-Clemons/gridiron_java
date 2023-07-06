@@ -5,16 +5,21 @@ import {UserContext} from "../contexts/UserContext";
 import WeeklyPicks from "../components/WeeklyPicks/WeeklyPicks";
 import useSavePicks from "../hooks/useSavePicks.js";
 import {useQuery} from "react-query";
-import {fetchAvailableLeagues, fetchLeagueDetails} from "../utils/api.js";
+import {fetchLeagueDetails} from "../utils/api.js";
+import {CompetitorContext} from "../contexts/CompetitorContext.jsx";
 
 const LeagueDetailsPage = () => {
 
     const {leagueId} = useParams()
     const {user} = useContext(UserContext);
+    const {competitors, isLoadingCompetitors} = useContext(CompetitorContext);
 
-    const {data: picks, isLoading, isError, error} = useLeaguePicks(leagueId);
+    const {data: picks, isLoadingPicks, isError, error} = useLeaguePicks(leagueId);
     const {data: leagueDetails}
-        = useQuery(['leagueDetails', {accessToken: user.accessToken, leagueId: leagueId}], fetchLeagueDetails);
+        = useQuery(['leagueDetails', {
+        accessToken: user.accessToken,
+        leagueId: leagueId
+    }], fetchLeagueDetails, {refetchOnWindowFocus: false});
     const [myPicks, setMyPicks] = useState();
     const savePicksMutation = useSavePicks();
 
@@ -36,6 +41,10 @@ const LeagueDetailsPage = () => {
         savePicksMutation.mutate(picks);
     };
 
+    if (isLoadingPicks || isLoadingCompetitors) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <>
             <h2>LeagueId: {JSON.stringify(leagueId)}</h2>
@@ -45,7 +54,7 @@ const LeagueDetailsPage = () => {
             {Array.from({length: 18}, (_, i) => (
                 <div key={i}>
                     <h3>Week: {i + 1}</h3>
-                    <WeeklyPicks week={i + 1} picks={myPicks} setPicks={setMyPicks}/>
+                    <WeeklyPicks competitors={competitors} week={i + 1} picks={myPicks} setPicks={setMyPicks}/>
                 </div>
             ))}
             <div>League Details: {JSON.stringify(leagueDetails)}</div>

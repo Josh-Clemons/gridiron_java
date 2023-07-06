@@ -101,6 +101,18 @@ public class LeagueController {
 		}
 	}
 
+	@GetMapping("/get-scores")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> getLeagueScores(@RequestParam Long leagueId) {
+		logger.info("Get /api/league/get-scores, leagueId: {}", leagueId);
+		try {
+			return ResponseEntity.ok("good job");
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body("Error getting league scores");
+		}
+	}
+
 	@GetMapping("/find-by-id")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Object> getLeagueByLeagueId(@RequestParam Long leagueId) {

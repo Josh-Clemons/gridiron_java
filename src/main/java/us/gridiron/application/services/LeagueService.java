@@ -27,12 +27,10 @@ public class LeagueService {
 		this.pickRepository = pickRepository;
 	}
 
-	@Transactional
 	public List<League> getAllLeagues() {
 		return leagueRepository.findAll();
 	}
 
-	@Transactional
 	public List<League> getAvailableLeagues(User user) {
 		return leagueRepository.findAvailableLeagues(user.getId());
 	}

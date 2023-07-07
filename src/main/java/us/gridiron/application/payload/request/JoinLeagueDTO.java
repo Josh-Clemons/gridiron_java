@@ -4,6 +4,11 @@ public class JoinLeagueDTO {
 	private Long leagueId;
 	private String inviteCode;
 
+	public JoinLeagueDTO(Long leagueId, String inviteCode) {
+		this.leagueId = leagueId;
+		this.inviteCode = inviteCode;
+	}
+
 	public Long getLeagueId() {
 		return leagueId;
 	}

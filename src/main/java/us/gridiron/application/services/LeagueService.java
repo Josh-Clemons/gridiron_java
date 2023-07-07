@@ -67,7 +67,9 @@ public class LeagueService {
 
 		League newLeague = new League(leagueName, leagueOwner, isPrivate, maxUsers, inviteCode);
 		newLeague.addUser(leagueOwner);
-		return leagueRepository.save(newLeague);
+		League savedLeague =  leagueRepository.save(newLeague);
+		pickService.createPicksForNewUser(leagueOwner, savedLeague);
+		return savedLeague;
 	}
 
 	@Transactional

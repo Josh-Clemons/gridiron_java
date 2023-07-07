@@ -14,6 +14,5 @@ export function getSelectOptions(competitors, week) {
 
   options.unshift({ value: '', label: 'Select...', isDisabled: false })
 
-  console.log("options", options);
   return options;
 }

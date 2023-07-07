@@ -129,16 +129,15 @@ public class LeagueController {
 
 	@PostMapping("/create")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<String> createLeague(@RequestBody CreateLeagueRequestDTO createLeagueRequestDTO) {
+	public ResponseEntity<?> createLeague(@RequestBody CreateLeagueRequestDTO createLeagueRequestDTO) {
 		logger.info("Post /api/league/create, createLeagueRequestDTO: {}", createLeagueRequestDTO.toString());
 		try {
 			User loggedInUser = userService.getLoggedInUser();
 			League newLeague = leagueService.createLeague(
 				createLeagueRequestDTO.getLeagueName(), loggedInUser,
 				createLeagueRequestDTO.getMaxUsers(), createLeagueRequestDTO.getIsPrivate());
-			return ResponseEntity.ok(
-				"League created with name: " + newLeague.getLeagueName()
-					+ ", and id: " + newLeague.getId());
+			LeagueResponseDTO leagueDTO = modelMapper.map(newLeague, LeagueResponseDTO.class);
+			return ResponseEntity.ok(leagueDTO);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(e.getMessage());

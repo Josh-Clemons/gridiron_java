@@ -3,6 +3,8 @@ import {UserContext} from "../../contexts/UserContext";
 import {Box, Paper, Typography} from "@mui/material";
 import useLeaguesByUser from '../../hooks/useLeaguesByUser';
 import {useNavigate} from "react-router-dom";
+import FindLeagueButton from "../Buttons/FindLeagueButton.jsx";
+import CreateLeagueButton from "../Buttons/CreateLeagueButton.jsx";
 
 
 export const Dashboard = () => {
@@ -86,6 +88,8 @@ export const Dashboard = () => {
                     :
                     null
                 }
+                <FindLeagueButton width={250}/>
+                <CreateLeagueButton width={250}/>
             </Box>
         </Box>
     )

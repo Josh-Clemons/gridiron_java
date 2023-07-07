@@ -4,6 +4,7 @@ import {Box, Typography} from "@mui/material";
 import {useContext} from "react";
 import {UserContext} from "../contexts/UserContext.jsx";
 import {useNavigate} from "react-router-dom";
+import CreateLeagueButton from "../components/Buttons/CreateLeagueButton.jsx";
 
 
 const FindLeaguePage = () => {
@@ -21,7 +22,6 @@ const FindLeaguePage = () => {
     return (
         <Box
             sx={{
-
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -33,6 +33,7 @@ const FindLeaguePage = () => {
             }}
         >
             <Typography variant="h4" color='primary.main'>Find a New League</Typography>
+            <CreateLeagueButton width={250}/>
             <Typography variant='h6' color='primary.main' sx={{textDecoration: 'underline'}}>Public
                 Leagues:</Typography>
             <Box height={"75vh"} width={"92%"}>

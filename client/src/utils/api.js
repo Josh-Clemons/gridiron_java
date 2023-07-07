@@ -25,3 +25,4 @@ export const fetchLeagueDetails = async ({queryKey}) => {
     }
     return response.data;
 };
+

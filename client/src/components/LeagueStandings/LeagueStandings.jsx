@@ -9,19 +9,21 @@ import {
     TableHead,
     TableRow,
     TableCell,
-    Typography,
+    Typography
 } from "@mui/material";
+import styled from '@emotion/styled';
 
 const LeagueStandings = ({leagueScores}) => {
     // styles for the table rows
-    // const StyledTableRow = styled(TableRow)(() => ({
-    //     '&:nth-of-type(odd)': {
-    //         backgroundColor: "#1C2541",
-    //     },
-    //     '&:nth-of-type(even)': {
-    //         backgroundColor: "#242f53",
-    //     },
-    // }));
+    const StyledTableRow = styled(TableRow)(() => ({
+        '&:nth-of-type(odd)': {
+            backgroundColor: "#1C2541",
+        },
+        '&:nth-of-type(even)': {
+            backgroundColor: "#242f53",
+        },
+    }));
+
 
 
     return (
@@ -38,12 +40,12 @@ const LeagueStandings = ({leagueScores}) => {
                     <TableBody>
                         {leagueScores?.map((score, i) => {
                             return (
-                                <TableRow key={i}>
+                                <StyledTableRow key={i}>
                                     <TableCell width={20}>{i + 1}</TableCell>
                                     <TableCell><Typography variant='body1'
                                                            noWrap={true}>{score.username}</Typography></TableCell>
                                     <TableCell align='right'>{score.score}</TableCell>
-                                </TableRow>)
+                                </StyledTableRow>)
                         })}
                     </TableBody>
                 </Table>

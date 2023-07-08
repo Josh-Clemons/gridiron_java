@@ -22,13 +22,10 @@ const PickSelect = ({ picks, week, value, setPicks }) => {
 
   const handleChange = event => {
     const selectedOption = event.target.value;
-    console.log('in Select handleChange:', selectedOption, picks)
-
     setPicks(prev => (
       prev.map(pick => {
         // if the pick matches the current week and value, update the team
         if (pick.week === week && pick.value === value) {
-          console.log('pick matched! updating with ' + selectedOption)
           return {
             ...pick,
             team: selectedOption,

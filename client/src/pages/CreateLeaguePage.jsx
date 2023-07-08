@@ -42,8 +42,7 @@ const CreateLeaguePage = () => {
             headers: {
                 'Authorization': `Bearer ${user.accessToken}`
             }
-        }).then((data) => {
-            console.log(data);
+        }).then(() => {
             navigate('/dashboard');
         })
     };

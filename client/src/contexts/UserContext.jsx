@@ -16,7 +16,6 @@ export const UserProvider = ({children}) => {
             setUser(data.data);
             setToken(data.data.accessToken);
             sessionStorage.setItem('user', JSON.stringify(data.data));
-            console.log('User signed in successfully: ', data);
             return data.data;
         },
         onError: (error) => {
@@ -35,7 +34,6 @@ export const UserProvider = ({children}) => {
             });
     }, {
         onSuccess: async (data) => {
-            console.log('User created: ', data.data);
             try {
                 await signIn(data.credentials.username, data.credentials.password);
             } catch (error) {

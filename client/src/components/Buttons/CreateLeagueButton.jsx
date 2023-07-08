@@ -1,6 +1,5 @@
 import {Button} from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
-import React from 'react';
 import {useNavigate} from 'react-router-dom';
 import PropTypes from 'prop-types';
 

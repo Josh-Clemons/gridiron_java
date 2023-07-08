@@ -1,16 +1,16 @@
 
-import { Box, Button, Typography, Stack } from '@mui/material';
+import { Box, Typography, Stack } from '@mui/material';
 import background from '../assets/background.jpeg';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
+import LoginButton from '../components/Buttons/LoginButton';
+import DashboardButton from '../components/Buttons/DashboardButton';
+import LogoutButton from '../components/Buttons/LogoutButton';
+import RegisterButton from '../components/Buttons/RegisterButton';
 
 const LandingPage = () => {
 
-    const { signOut } = useContext(UserContext);
-
-    const logout = () => {
-        signOut();
-    }
+    const { user } = useContext(UserContext);
 
 
     return (
@@ -37,20 +37,19 @@ const LandingPage = () => {
             <br />
             <br />
             <Stack spacing={1} direction="column">
-                <Button variant="contained" onClick={logout}>Logout</Button>
-                {/* button options change if user is logged in */}
-                {/* {!store.user.id
-                    ?
+                {user ?
                     <>
-                        <Button variant="contained" color="success" onClick={() => navigate('/login')} sx={{ width: "250px" }}>Login<LoginIcon sx={{ ml: 2 }} /></Button>
-                        <Button variant="contained" color="info" onClick={() => navigate('/register')} sx={{ width: "250px" }}>Register<HowToRegIcon sx={{ ml: 2 }} /></Button>
+                        <DashboardButton width={250} />
+                        <LogoutButton width={250} />
                     </>
                     :
                     <>
-                        <Button variant="contained" color="success" onClick={() => navigate('/dashboard')} sx={{ width: "250px" }}>Dashboard<GridViewIcon sx={{ ml: 2 }} /></Button>
-                        <Button variant="contained" color="error" onClick={logout} sx={{ width: "250px" }}>Logout<LogoutIcon sx={{ ml: 2 }} /></Button>
+                        <LoginButton width={250} />
+                        <RegisterButton width={250} />
                     </>
                 }
+                {/* button options change if user is logged in */}
+                {/*
                 <ModalRules size={'medium'} variant={'contained'} width={'250px'} /> */}
             </Stack>
         </Box>

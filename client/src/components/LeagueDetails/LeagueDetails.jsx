@@ -1,35 +1,18 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, ClickAwayListener, Stack, Tooltip, Typography } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useContext, useState } from 'react';
-import axios from 'axios';
-import { UserContext } from '../../contexts/UserContext';
+import {useState} from 'react';
+import JoinLeagueButton from '../Buttons/JoinLeagueButton';
+import RulesButton from '../Buttons/RulesButton';
 
 const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
   const [openCopied, setOpenCopied] = useState(false);
 
 
-  // anyone can join
-  const joinLeague = async () => {
-    await axios.post('http://localhost:8080/api/league/join',
-      { leagueId: leagueDetails.id },
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`
-        }
-      })
-      .then(() => {
-        navigate(0);
-      }).catch(() => {
-        window.alert('error joining league');
-      })
-  }
 
   const handleTooltipClose = () => {
     setOpenCopied(false);
@@ -67,7 +50,7 @@ const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
           color: 'white' // TODO remove me
         }}
       >
-        <Typography textAlign={'center'} variant='h6' fontSize={'16'}>League Name: <Box fontSize={30} m={1}>{leagueDetails?.name}</Box></Typography>
+        <Typography textAlign={'center'} variant='h6' fontSize={'16'}>League Name: <Box fontSize={30} m={1}>{leagueDetails?.leagueName}</Box></Typography>
         <Stack
           direction="row"
           sx={{
@@ -86,6 +69,7 @@ const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
             </>
             :
             <>
+              <JoinLeagueButton width={125} size={'small'} leagueDetails={leagueDetails} />
               <Button variant="outlined" onClick={() => navigate(-1)} size='small' sx={{ width: 125, m: 1, borderWidth: 2, '&:hover': { borderWidth: '2px' } }}>Back<ArrowBackIcon sx={{ ml: 2 }} /></Button>
             </>
           }
@@ -102,11 +86,7 @@ const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
         </AccordionSummary>
         <AccordionDetails>
           <Stack direction={'row'}>
-            {/* <ModalRules variant={'outlined'} size={'small'} width={125} margin={8} /> */}
-            {!isMember && !isOwner
-              ? <Button variant="outlined" color='success' onClick={joinLeague} size='small' sx={{ width: 125, m: 1, borderWidth: 2 }}>Join<AddIcon sx={{ ml: 2 }} /></Button>
-              : null
-            }
+            <RulesButton variant={'outlined'} size={'small'} width={125} margin={8} />
             {/* {isMember ? <ModalLeaveLeague /> : null} */}
           </Stack>
           <Box>

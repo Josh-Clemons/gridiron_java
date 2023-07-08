@@ -12,14 +12,12 @@ function TestApi() {
 
 
   const fetchLeagues = async () => {
-    console.log('bearer token: ', token);
     await axios.get("http://localhost:8080/api/league/all", {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     }).then((response) => {
       let randomIndex = Math.floor(Math.random() * response.data.length);
-      console.log('trying to get league Id: ', response.data[randomIndex].id)
       setLeagueId(response.data[randomIndex].id);
       setLeagues(response.data);
     }).catch((error) => {
@@ -39,17 +37,15 @@ function TestApi() {
   }
 
   const fetchLeagueById = async () => {
-    console.log(`league id: ${leagueId}`)
     await axios.get("http://localhost:8080/api/league/find-by-id?leagueId=" + leagueId, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     }).then((response) => {
-      console.log(response.data)
       setLeagues([response.data]);
     }).catch(e => console.log(e));
   }
-
+``
   const handleSignin = () => {
     signIn('josh', '123456')
   }

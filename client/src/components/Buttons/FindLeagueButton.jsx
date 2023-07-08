@@ -1,6 +1,5 @@
 import {Button} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import React from 'react';
 import {useNavigate} from 'react-router-dom';
 import PropTypes from 'prop-types';
 

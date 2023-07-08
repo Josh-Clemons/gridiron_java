@@ -29,8 +29,6 @@ const RulesButton = ({ size, width, variant, margin }) => {
     const handleClose = () => { setOpen(false) };
 
 
-    // the rules do not match Mark's original rules exactly, mostly because there is additional functionality
-    // that would need to be implemented for those rules to apply
     return (
         <Box>
             <Button variant={variant} onClick={handleOpen} color={'secondary'} size={size} sx={{ width: { width }, margin: { margin }, borderWidth: 2, '&:hover': { borderWidth: '2px' } }}>Rules<GavelIcon sx={{ ml: 2 }} /></Button>

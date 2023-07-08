@@ -1,23 +1,19 @@
 import {useQuery} from "react-query";
 import {fetchAvailableLeagues} from "../utils/api.js";
-import {Box, Paper, Typography} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import {useContext} from "react";
 import {UserContext} from "../contexts/UserContext.jsx";
-import {useNavigate} from "react-router-dom";
 import CreateLeagueButton from "../components/Buttons/CreateLeagueButton.jsx";
+import LeagueItem from "../components/LeagueItem/LeagueItem.jsx";
 
 
 const FindLeaguePage = () => {
-    const navigate = useNavigate();
     const {user} = useContext(UserContext);
 
     const {data: availableLeagues, error, isLoading, isError}
         = useQuery(['availableLeagues', {accessToken: user.accessToken}], fetchAvailableLeagues);
 
 
-    const leagueClick = (league) => {
-        navigate(`/league-detail/${league.id}`)
-    };
 
     return (
         <Box
@@ -42,24 +38,7 @@ const FindLeaguePage = () => {
                 {availableLeagues && availableLeagues.length > 0 ?
                     availableLeagues?.map(league => {
                         return (
-                            <Box
-                                key={league.id}
-                                component={Paper}
-                                elevation={20}
-                                sx={{
-                                    height: '2em',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    mt: 2,
-                                    mb: 2,
-                                    "&:hover": {
-                                        cursor: 'pointer',
-                                    },
-                                }}
-                            >
-                                {league.leagueName}
-                            </Box>
+                            <LeagueItem key={league.id} league={league} />
                         )
                     })
                     :

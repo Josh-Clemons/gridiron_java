@@ -4,9 +4,11 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {useState} from 'react';
+import { useState } from 'react';
 import JoinLeagueButton from '../Buttons/JoinLeagueButton';
 import RulesButton from '../Buttons/RulesButton';
+import DeleteLeagueButton from '../Buttons/DeleteLeagueButton';
+import LeaveLeagueButton from '../Buttons/LeaveLeagueButton';
 
 const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
   const navigate = useNavigate();
@@ -46,8 +48,7 @@ const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
           alignItems: "center",
           justifyContent: "center",
           borderRadius: 2,
-          bgcolor: "#1C2541",
-          color: 'white' // TODO remove me
+          bgcolor: "#1C2541"
         }}
       >
         <Typography textAlign={'center'} variant='h6' fontSize={'16'}>League Name: <Box fontSize={30} m={1}>{leagueDetails?.leagueName}</Box></Typography>
@@ -62,14 +63,14 @@ const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
             m: 1
           }}
         >
-          {isOwner || isMember
+          {(isOwner || isMember)
             ?
             <>
               <Button variant="outlined" onClick={() => navigate(-1)} size='small' sx={{ width: 125, m: 1, borderWidth: 2, '&:hover': { borderWidth: '2px' } }}>Back<ArrowBackIcon sx={{ ml: 2 }} /></Button>
             </>
             :
             <>
-              <JoinLeagueButton width={125} size={'small'} leagueDetails={leagueDetails} />
+              {(leagueDetails?.maxUsers > leagueDetails?.userCount) && <JoinLeagueButton width={125} size={'small'} leagueDetails={leagueDetails} />}
               <Button variant="outlined" onClick={() => navigate(-1)} size='small' sx={{ width: 125, m: 1, borderWidth: 2, '&:hover': { borderWidth: '2px' } }}>Back<ArrowBackIcon sx={{ ml: 2 }} /></Button>
             </>
           }
@@ -87,14 +88,13 @@ const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
         <AccordionDetails>
           <Stack direction={'row'}>
             <RulesButton variant={'outlined'} size={'small'} width={125} margin={8} />
-            {/* {isMember ? <ModalLeaveLeague /> : null} */}
+            {isMember && <LeaveLeagueButton leagueDetails={leagueDetails} />}
           </Stack>
           <Box>
             <Typography variant={'body1'} sx={{ fontSize: 18, mt: 2, mb: 1 }}>Commissioner: {leagueDetails?.leagueOwner}</Typography>
             <Typography variant={'body1'} sx={{ fontSize: 18, mb: 1 }}>Members: {leagueDetails?.userCount} / {leagueDetails?.maxUsers}</Typography>
             <Typography variant={'body1'} sx={{ fontSize: 18, mb: 1 }}>Availability: {leagueDetails?.isPrivate ? "Private" : "Public"} </Typography>
-            {isOwner || !leagueDetails?.isPrivate
-              ?
+            {(isOwner || !leagueDetails?.isPrivate) &&
               <Box>
                 {/* tooltip and listener for the copying the invite code */}
                 <ClickAwayListener onClickAway={handleTooltipClose}>
@@ -118,9 +118,9 @@ const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
                     </Tooltip>
                   </div>
                 </ClickAwayListener>
-              </Box> : null
+              </Box>
             }
-            {/* {isOwner ? <Stack direction='row'><ModalDeleteLeague /> <ModalRenameLeague /></Stack> : null} */}
+            {isOwner && <DeleteLeagueButton leagueDetails={leagueDetails} />}
           </Box>
         </AccordionDetails>
       </Accordion>

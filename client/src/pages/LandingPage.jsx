@@ -7,6 +7,7 @@ import LoginButton from '../components/Buttons/LoginButton';
 import DashboardButton from '../components/Buttons/DashboardButton';
 import LogoutButton from '../components/Buttons/LogoutButton';
 import RegisterButton from '../components/Buttons/RegisterButton';
+import RulesButton from '../components/Buttons/RulesButton';
 
 const LandingPage = () => {
 
@@ -41,11 +42,13 @@ const LandingPage = () => {
                     <>
                         <DashboardButton width={250} />
                         <LogoutButton width={250} />
+                        <RulesButton variant={"contained"} size={'medium'} margin={2}  width={250} />
                     </>
                     :
                     <>
                         <LoginButton width={250} />
                         <RegisterButton width={250} />
+                        <RulesButton variant={"contained"} size={'medium'} margin={2}  width={250} />
                     </>
                 }
                 {/* button options change if user is logged in */}

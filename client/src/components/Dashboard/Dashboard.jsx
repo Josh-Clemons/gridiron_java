@@ -2,13 +2,12 @@ import {useContext, useEffect, useState} from "react";
 import {UserContext} from "../../contexts/UserContext";
 import {Box, Paper, Typography} from "@mui/material";
 import useLeaguesByUser from '../../hooks/useLeaguesByUser';
-import {useNavigate} from "react-router-dom";
 import FindLeagueButton from "../Buttons/FindLeagueButton.jsx";
 import CreateLeagueButton from "../Buttons/CreateLeagueButton.jsx";
+import LeagueItem from "../LeagueItem/LeagueItem";
 
 
 export const Dashboard = () => {
-    const navigate = useNavigate();
 
     const {user} = useContext(UserContext);
     const {data: leagues, isLoading, isError, error} = useLeaguesByUser(user);
@@ -24,11 +23,6 @@ export const Dashboard = () => {
             setOthersLeagues(othersLeaguesData);
         }
     }, [leagues, user.username]);
-
-    // redirects to league detail page when a user clicks on a league item
-    const leagueClick = (league) => {
-        navigate(`/league-detail/${league.id}`)
-    };
 
     return (
 
@@ -57,11 +51,7 @@ export const Dashboard = () => {
                         <Box sx={{mb: 2}}>
                             {myLeagues.map(league => {
                                 return (
-                                    <Box onClick={() => {
-                                        leagueClick(league)
-                                    }} key={league.id}>
-                                        <h2>{league.leagueName}</h2>
-                                    </Box>
+                                    <LeagueItem key={league.id} league={league}/>
                                 )
                             })}
                         </Box>
@@ -76,11 +66,7 @@ export const Dashboard = () => {
                         <Box mb={6}>
                             {othersLeagues.map(league => {
                                 return (
-                                    <Box onClick={() => {
-                                        leagueClick(league)
-                                    }} key={league.id}>
-                                        <h2>{league.leagueName}</h2>
-                                    </Box>
+                                    <LeagueItem key={league.id} league={league}/>
                                 )
                             })}
                         </Box>

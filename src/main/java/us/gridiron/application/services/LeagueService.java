@@ -76,6 +76,10 @@ public class LeagueService {
 	public ResponseEntity<String> addUserToLeague(JoinLeagueDTO joinLeagueDTO, User user) {
 		League league = leagueRepository.findById(joinLeagueDTO.getLeagueId())
 			.orElseThrow(() -> new RuntimeException("League not found"));
+		// not allowed to join full leagues
+		if(league.getMaxUsers() <= league.getUserCount()) {
+			throw new RuntimeException("League is full");
+		}
 		// checks if league is private and user provide a matching invite code
 		if(league.getIsPrivate() && !league.getInviteCode().equals(joinLeagueDTO.getInviteCode())) {
 			throw new RuntimeException("Incorrect invite code");
@@ -113,7 +117,9 @@ public class LeagueService {
 	public void deleteLeague(User user, Long leagueId) {
 		League leagueToDelete = leagueRepository.findById(leagueId)
 			.orElseThrow(() -> new RuntimeException("Error finding the league"));
+
 		if(user.equals(leagueToDelete.getLeagueOwner())) {
+			pickRepository.deleteAllByLeague(leagueToDelete);
 			leagueRepository.delete(leagueToDelete);
 		} else {
 			throw new RuntimeException("Unable to delete, you are not the owner");

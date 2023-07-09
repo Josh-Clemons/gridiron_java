@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { ButtonGroup, Button } from '@mui/material';
+import { Box, ButtonGroup, Button } from '@mui/material';
 
 // Internal module imports
 import { UserContext } from "../contexts/UserContext";
@@ -64,7 +64,9 @@ const LeagueDetailsPage = () => {
                 team: pick.competitor ? pick.competitor.team.abbreviation : "",
                 leagueId: pick.league?.id,
                 value: pick.value,
-                week: pick.week
+                week: pick.week,
+                startDate: pick.competitor ? pick.competitor.startDate : "",
+                isWinner: pick.competitor ? pick.competitor.winner : false
             })
         }));
 
@@ -86,7 +88,7 @@ const LeagueDetailsPage = () => {
     }
 
     return (
-        <>
+        <Box m={.5}>
             <LeagueDetails isMember={isLeagueMember} isOwner={isLeagueOwner} leagueDetails={leagueDetails} />
             {/*Button group is for selecting the component being rendered on league details page*/}
             <ButtonGroup
@@ -110,12 +112,14 @@ const LeagueDetailsPage = () => {
 
             </ButtonGroup>
 
+            <Box p={1} maxWidth={'700px'}>
             {/* Shows a different component contingent on the choice the user makes, starts at league standings */}
             {viewState === 'standings' && <LeagueStandings leagueScores={leagueScores} />}
             {(viewState === 'Picks' && (isLeagueMember || isLeagueOwner)) && <PickSelections picks={myPicks} setPicks={setMyPicks} />}
             {/*{(viewState === 'Picks' && isLeagueOwner) && <PicksCommissioner />}*/}
             {viewState === 'overview' && <LeagueOverview picks={picks} />}
-        </>
+            </Box>
+        </Box>
     )
 }
 

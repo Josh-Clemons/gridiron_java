@@ -88,7 +88,6 @@ const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
         <AccordionDetails>
           <Stack direction={'row'}>
             <RulesButton variant={'outlined'} size={'small'} width={125} margin={8} />
-            {isMember && <LeaveLeagueButton leagueDetails={leagueDetails} />}
           </Stack>
           <Box>
             <Typography variant={'body1'} sx={{ fontSize: 18, mt: 2, mb: 1 }}>Commissioner: {leagueDetails?.leagueOwner}</Typography>
@@ -121,6 +120,7 @@ const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
               </Box>
             }
             {isOwner && <DeleteLeagueButton leagueDetails={leagueDetails} />}
+            {isMember && <LeaveLeagueButton leagueDetails={leagueDetails} />}
           </Box>
         </AccordionDetails>
       </Accordion>

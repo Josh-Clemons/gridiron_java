@@ -45,37 +45,38 @@ export const Dashboard = () => {
                     alignItems: "left",
                 }}
             >
-                {myLeagues.length > 0 &&
-                    <>
-                        <Typography variant='h6'>Leagues I Manage:</Typography>
-                        <Box sx={{ mb: 2 }}>
-                            {myLeagues.map(league => {
-                                return (
-                                    <LeagueItem key={league.id} league={league} />
-                                )
-                            })}
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    {myLeagues.length > 0 &&
+                        <Box sx={{width: '100%'}}>
+                            <Typography variant='h6'>Leagues I Manage:</Typography>
+                            <Box sx={{ mb: 2 }}>
+                                {myLeagues.map(league => {
+                                    return (
+                                        <LeagueItem key={league.id} league={league} />
+                                    )
+                                })}
+                            </Box>
                         </Box>
-                    </>
-                }
-
-                {othersLeagues.length > 0 &&
-                    <>
-                        <Typography variant='h6'>Leagues I am in:</Typography>
-                        <Box mb={6}>
-                            {othersLeagues.map(league => {
-                                return (
-                                    <LeagueItem key={league.id} league={league} />
-                                )
-                            })}
+                    }
+                    {othersLeagues.length > 0 &&
+                        <Box sx={{width: '100%'}}>
+                            <Typography variant='h6'>Leagues I am in:</Typography>
+                            <Box mb={6}>
+                                {othersLeagues.map(league => {
+                                    return (
+                                        <LeagueItem key={league.id} league={league} />
+                                    )
+                                })}
+                            </Box>
                         </Box>
-                    </>
-                }
-                { leagues?.length <= 4 &&
-                    <>
-                        <FindLeagueButton width={250} />
-                        <CreateLeagueButton width={250} />
-                    </>
-                }
+                    }
+                    {leagues?.length <= 4 &&
+                        <>
+                            <FindLeagueButton width={250} />
+                            <CreateLeagueButton width={250} />
+                        </>
+                    }
+                </Box>
             </Box>
         </Box>
     )

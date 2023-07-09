@@ -11,6 +11,7 @@ import Modal from '@mui/material/Modal';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import PropTypes from 'prop-types';
+import { errorAlert, infoAlert } from '../../utils/ToastAlerts';
 
 
 const style = {
@@ -45,9 +46,10 @@ const DeleteLeagueButton = ({leagueDetails}) => {
         }
       })
       .then(() => {
+        infoAlert('League deleted');
         navigate('/dashboard');
       }).catch(() => {
-        window.alert('error deleting league');
+        errorAlert('Error deleting league');
       })
     };
 

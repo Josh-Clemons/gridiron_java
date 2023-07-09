@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import { Switch } from '@mui/material';
 import axios from 'axios';
 import { UserContext } from '../contexts/UserContext';
+import { successAlert } from '../utils/ToastAlerts';
 
 
 const CreateLeaguePage = () => {
@@ -43,6 +44,7 @@ const CreateLeaguePage = () => {
                 'Authorization': `Bearer ${user.accessToken}`
             }
         }).then(() => {
+            successAlert('League created');
             navigate('/dashboard');
         })
     };

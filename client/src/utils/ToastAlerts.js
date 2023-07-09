@@ -29,3 +29,33 @@ export const errorAlert = (message) => {
     })
   )
 }
+
+export const infoAlert = (message ) => {
+  return (
+    toast.info(message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      })
+  )
+}
+
+export const warningAlert = (message ) => {
+  return (
+    toast.warning(message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      })
+  )
+}

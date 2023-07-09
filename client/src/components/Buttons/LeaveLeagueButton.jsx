@@ -10,6 +10,7 @@ import Modal from '@mui/material/Modal';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import PropTypes from 'prop-types';
+import { errorAlert, infoAlert } from '../../utils/ToastAlerts';
 
 
 const style = {
@@ -45,8 +46,9 @@ const LeaveLeagueButton = ({leagueDetails}) => {
       })
       .then(() => {
         navigate('/dashboard');
+        infoAlert('League left');
       }).catch(() => {
-        window.alert('error leaving league');
+        errorAlert('Error leaving league');
       })
     };
 

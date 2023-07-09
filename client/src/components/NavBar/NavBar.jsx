@@ -133,11 +133,11 @@ export default function NavBar() {
                         <MenuIcon sx={{ fontSize: "35px" }} />
                     </IconButton>
                     <Typography variant="h5" noWrap component="div" sx={{ flexGrow: 1 }}>
-                        Grid Iron Pickem
+                        GridIron
                     </Typography>
                     {user &&
                         <Typography variant="h6">
-                            Hello {user.username}
+                            Hi {user.username}
                         </Typography>}
                 </Toolbar>
                 <Drawer

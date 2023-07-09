@@ -8,7 +8,6 @@ import { ButtonGroup, Button } from '@mui/material';
 import { UserContext } from "../contexts/UserContext";
 import { fetchLeagueDetails } from "../utils/api.js";
 import useLeaguePicks from "../hooks/useLeaguePicks";
-import useSavePicks from "../hooks/useSavePicks.js";
 import LeagueStandings from "../components/LeagueStandings/LeagueStandings.jsx";
 import LeagueDetails from "../components/LeagueDetails/LeagueDetails";
 import PickSelections from "../components/PickSelections/PickSelections";
@@ -17,19 +16,18 @@ import LeagueOverview from "../components/LeagueOverview/LeagueOverview";
 
 const LeagueDetailsPage = () => {
     // Parameters
-    const { leagueId } = useParams();
+    const { inviteCode } = useParams();
 
     // Context
     const { user } = useContext(UserContext);
 
     // Hooks
-    const { data: picks, isLoadingPicks } = useLeaguePicks(leagueId);
+    const { data: picks, isLoadingPicks } = useLeaguePicks(inviteCode);
     const { data: leagueDetails } = useQuery(
-        ['leagueDetails', { accessToken: user.accessToken, leagueId }],
+        ['leagueDetails', { accessToken: user.accessToken, inviteCode }],
         fetchLeagueDetails,
         { refetchOnWindowFocus: false }
     );
-    const savePicksMutation = useSavePicks();
 
     // State Variables
     const [myPicks, setMyPicks] = useState();
@@ -37,10 +35,6 @@ const LeagueDetailsPage = () => {
     const [isLeagueOwner, setIsLeagueOwner] = useState(false);
     const [isLeagueMember, setIsLeagueMember] = useState(false);
     const [viewState, setViewState] = useState('standings');
-
-    const savePicks = (updatedPicks) => {
-        savePicksMutation.mutate(updatedPicks);
-    };
 
     useEffect(() => {
         let leagueScores = [];
@@ -116,12 +110,9 @@ const LeagueDetailsPage = () => {
 
             </ButtonGroup>
 
-
-            <button onClick={() => savePicks(myPicks)}>Save</button>
             {/* Shows a different component contingent on the choice the user makes, starts at league standings */}
             {viewState === 'standings' && <LeagueStandings leagueScores={leagueScores} />}
-            {(viewState === 'Picks' && (isLeagueMember || isLeagueOwner)) &&
-                <PickSelections picks={myPicks} setPicks={setMyPicks} />}
+            {(viewState === 'Picks' && (isLeagueMember || isLeagueOwner)) && <PickSelections picks={myPicks} setPicks={setMyPicks} />}
             {/*{(viewState === 'Picks' && isLeagueOwner) && <PicksCommissioner />}*/}
             {viewState === 'overview' && <LeagueOverview picks={picks} />}
         </>

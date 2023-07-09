@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import styled from '@emotion/styled';
 
-const LeagueStandings = ({leagueScores}) => {
+const LeagueStandings = ({ leagueScores }) => {
     // styles for the table rows
     const StyledTableRow = styled(TableRow)(() => ({
         '&:nth-of-type(odd)': {
@@ -28,8 +28,8 @@ const LeagueStandings = ({leagueScores}) => {
 
     return (
         <Box width={'100%'} mb={'80px'}>
-            <TableContainer component={Paper} sx={{width: '100%'}}>
-                <Table size='small' sx={{width: '100%'}}>
+            <TableContainer component={Paper} sx={{ width: '100%' }}>
+                <Table size='small' sx={{ width: '100%' }}>
                     <TableHead>
                         <TableRow>
                             <TableCell width={20}>Rank</TableCell>
@@ -43,7 +43,7 @@ const LeagueStandings = ({leagueScores}) => {
                                 <StyledTableRow key={i}>
                                     <TableCell width={20}>{i + 1}</TableCell>
                                     <TableCell><Typography variant='body1'
-                                                           noWrap={true}>{score.username}</Typography></TableCell>
+                                        noWrap={true}>{score.username}</Typography></TableCell>
                                     <TableCell align='right'>{score.score}</TableCell>
                                 </StyledTableRow>)
                         })}

@@ -5,17 +5,17 @@ import { useNavigate } from 'react-router-dom';
 
 // returns a Box (list item) for each league being mapped
 const LeagueItem = ({ league }) => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const leagueClick = (league) => {
-    navigate(`/league-detail/${league.id}`)
-};
+    const leagueClick = (league) => {
+        navigate(`/league-detail/${league.inviteCode}`)
+    };
 
     return (
         <Box
             component={Paper}
             elevation={20}
-            onClick={()=> leagueClick(league)}
+            onClick={() => leagueClick(league)}
             sx={{
                 height: '2em',
                 display: 'flex',
@@ -34,7 +34,7 @@ const LeagueItem = ({ league }) => {
 };
 
 LeagueItem.propTypes = {
-  league: PropTypes.object
+    league: PropTypes.object
 }
 
 export default LeagueItem;

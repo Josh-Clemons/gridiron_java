@@ -51,9 +51,6 @@ const LandingPage = () => {
                         <RulesButton variant={"contained"} size={'medium'} margin={2}  width={250} />
                     </>
                 }
-                {/* button options change if user is logged in */}
-                {/*
-                <ModalRules size={'medium'} variant={'contained'} width={'250px'} /> */}
             </Stack>
         </Box>
     )

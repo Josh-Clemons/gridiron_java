@@ -1,28 +1,33 @@
 import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import axios from 'axios';
+import { useQueryClient } from 'react-query';
+import { errorAlert, successAlert } from '../../utils/ToastAlerts';
 
 const JoinLeagueButton = ({ width, size, leagueDetails }) => {
-  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { user } = useContext(UserContext);
 
-  // TODO update so invite codes work
   const joinLeague = async () => {
     await axios.post('http://localhost:8080/api/league/join',
-      { leagueId: leagueDetails.id },
+      {
+        leagueId: leagueDetails.id,
+        inviteCode: leagueDetails.inviteCode
+      },
       {
         headers: {
           'Authorization': `Bearer ${user.accessToken}`
         }
       })
       .then(() => {
-        navigate(0);
+        successAlert('League joined!')
+        queryClient.invalidateQueries('leaguePicks');
+        queryClient.invalidateQueries('leagueDetails');
       }).catch(() => {
-        window.alert('error joining league');
+        errorAlert("Error joining league...");
       })
   }
 
@@ -34,7 +39,7 @@ const JoinLeagueButton = ({ width, size, leagueDetails }) => {
 }
 JoinLeagueButton.propTypes = {
   width: PropTypes.number,
-  size:PropTypes.string,
+  size: PropTypes.string,
   leagueDetails: PropTypes.object
 }
 export default JoinLeagueButton;

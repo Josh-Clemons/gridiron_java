@@ -5,6 +5,7 @@ import {useContext} from "react";
 import {UserContext} from "../contexts/UserContext.jsx";
 import CreateLeagueButton from "../components/Buttons/CreateLeagueButton.jsx";
 import LeagueItem from "../components/LeagueItem/LeagueItem.jsx";
+import JoinLeagueByCodeButton from "../components/Buttons/JoinLeagueByCodeButton.jsx";
 
 
 const FindLeaguePage = () => {
@@ -30,6 +31,7 @@ const FindLeaguePage = () => {
         >
             <Typography variant="h4" color='primary.main'>Find a New League</Typography>
             <CreateLeagueButton width={250}/>
+            <JoinLeagueByCodeButton />
             <Typography variant='h6' color='primary.main' sx={{textDecoration: 'underline'}}>Public
                 Leagues:</Typography>
             <Box height={"75vh"} width={"92%"}>

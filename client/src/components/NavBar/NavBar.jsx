@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {useNavigate} from 'react-router-dom';
-import {Toolbar, IconButton, Typography, Stack} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Toolbar, IconButton, Typography, Stack } from '@mui/material';
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Box from '@mui/material/Box';
@@ -16,15 +16,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import {UserContext} from '../../contexts/UserContext';
+import { UserContext } from '../../contexts/UserContext';
 
 
 export default function NavBar() {
 
     const navigate = useNavigate();
-    const {user, signOut} = React.useContext(UserContext);
+    const { user, signOut } = React.useContext(UserContext);
 
-    const [state, setState] = React.useState({left: false});
+    const [state, setState] = React.useState({ left: false });
 
     const logout = () => {
         signOut();
@@ -40,12 +40,12 @@ export default function NavBar() {
             ) {
                 return;
             }
-            setState({left: open});
+            setState({ left: open });
         };
 
     const list = () => (
         <Box
-            sx={{width: 250}}
+            sx={{ width: 250 }}
             role="presentation"
             onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}
@@ -54,9 +54,9 @@ export default function NavBar() {
                 <ListItem disablePadding>
                     <ListItemButton onClick={() => navigate('/')}>
                         <ListItemIcon>
-                            <HomeIcon/>
+                            <HomeIcon />
                         </ListItemIcon>
-                        <ListItemText primary='Home'/>
+                        <ListItemText primary='Home' />
                     </ListItemButton>
                 </ListItem>
 
@@ -66,25 +66,25 @@ export default function NavBar() {
                         <ListItem disablePadding>
                             <ListItemButton onClick={() => navigate('/dashboard')}>
                                 <ListItemIcon>
-                                    <GridViewIcon/>
+                                    <GridViewIcon />
                                 </ListItemIcon>
-                                <ListItemText primary='Dashboard'/>
+                                <ListItemText primary='Dashboard' />
                             </ListItemButton>
                         </ListItem>
                         <ListItem disablePadding>
                             <ListItemButton onClick={() => navigate('/find-league')}>
                                 <ListItemIcon>
-                                    <SearchIcon/>
+                                    <SearchIcon />
                                 </ListItemIcon>
-                                <ListItemText primary='Find a League'/>
+                                <ListItemText primary='Find a League' />
                             </ListItemButton>
                         </ListItem>
                         <ListItem disablePadding>
                             <ListItemButton onClick={() => navigate('/create')}>
                                 <ListItemIcon>
-                                    <AddCircleIcon/>
+                                    <AddCircleIcon />
                                 </ListItemIcon>
-                                <ListItemText primary='Create a League'/>
+                                <ListItemText primary='Create a League' />
                             </ListItemButton>
                         </ListItem>
                     </>
@@ -93,26 +93,26 @@ export default function NavBar() {
                 }
 
             </List>
-            <Divider/>
+            <Divider />
 
             {user ?
                 <Stack spacing={1} direction="column">
-                    <Button size='large' sx={{justifyContent: 'flex-start'}} onClick={() => logout()}>
+                    <Button size='large' sx={{ justifyContent: 'flex-start' }} onClick={() => logout()}>
                         Logout
                     </Button>
-                    <Button size='large' sx={{justifyContent: 'flex-start'}} onClick={() => navigate('/about')}>
+                    <Button size='large' sx={{ justifyContent: 'flex-start' }} onClick={() => navigate('/about')}>
                         About
                     </Button>
                 </Stack>
                 :
                 <Stack spacing={1} direction="column">
-                    <Button size='large' sx={{justifyContent: 'flex-start'}} onClick={() => navigate('/login')}>
+                    <Button size='large' sx={{ justifyContent: 'flex-start' }} onClick={() => navigate('/login')}>
                         Login
                     </Button>
-                    <Button size='large' sx={{justifyContent: 'flex-start'}} onClick={() => navigate('/register')}>
+                    <Button size='large' sx={{ justifyContent: 'flex-start' }} onClick={() => navigate('/register')}>
                         Register
                     </Button>
-                    <Button size='large' sx={{justifyContent: 'flex-start'}} onClick={() => navigate('/about')}>
+                    <Button size='large' sx={{ justifyContent: 'flex-start' }} onClick={() => navigate('/about')}>
                         About
                     </Button>
                 </Stack>
@@ -130,11 +130,15 @@ export default function NavBar() {
                         edge="start"
                         onClick={toggleDrawer(true)}
                     >
-                        <MenuIcon sx={{fontSize: "35px"}}/>
+                        <MenuIcon sx={{ fontSize: "35px" }} />
                     </IconButton>
-                    <Typography variant="h5" noWrap component="div">
+                    <Typography variant="h5" noWrap component="div" sx={{ flexGrow: 1 }}>
                         Grid Iron Pickem
                     </Typography>
+                    {user &&
+                        <Typography variant="h6">
+                            Hello {user.username}
+                        </Typography>}
                 </Toolbar>
                 <Drawer
                     anchor='left'

@@ -40,6 +40,10 @@ public class LeagueService {
 			.orElseThrow(() -> new RuntimeException("Error finding the league"));
 	}
 
+	public League findLeagueByInviteCode(String inviteCode) {
+		return leagueRepository.findByInviteCode(inviteCode);
+	}
+
 	public List<User> findUsersByLeagueId(Long leagueId) {
 		return leagueRepository.findUsersByLeagueId(leagueId);
 	}
@@ -74,8 +78,7 @@ public class LeagueService {
 
 	@Transactional
 	public ResponseEntity<String> addUserToLeague(JoinLeagueDTO joinLeagueDTO, User user) {
-		League league = leagueRepository.findById(joinLeagueDTO.getLeagueId())
-			.orElseThrow(() -> new RuntimeException("League not found"));
+		League league = leagueRepository.findByInviteCode(joinLeagueDTO.getInviteCode());
 		// not allowed to join full leagues
 		if(league.getMaxUsers() <= league.getUserCount()) {
 			throw new RuntimeException("League is full");

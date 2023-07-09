@@ -127,6 +127,20 @@ public class LeagueController {
 		}
 	}
 
+	@GetMapping("/find-by-code")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<Object> getLeagueByInviteCode(@RequestParam String inviteCode) {
+		logger.info("Get /api/league/find-by-code, inviteCode: {}", inviteCode);
+		try {
+			League league = leagueService.findLeagueByInviteCode(inviteCode);
+			LeagueResponseDTO leagueDto = modelMapper.map(league, LeagueResponseDTO.class);
+			return ResponseEntity.ok(leagueDto);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body("Error getting league by Id: " + e.getMessage());
+		}
+	}
+
 	@PostMapping("/create")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> createLeague(@RequestBody CreateLeagueRequestDTO createLeagueRequestDTO) {

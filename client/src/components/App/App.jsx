@@ -1,10 +1,12 @@
 import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
+import { ToastContainer, Zoom } from 'react-toastify';
 
 import { UserProvider } from '../../contexts/UserContext';
 
 import CssBaseline from '@mui/material/CssBaseline';
+import 'react-toastify/dist/ReactToastify.css';
 
 import PrivateRoute from '../PrivateRoute/PrivateRoute.jsx'
 import TestApi from "../../assets/TestApi"
@@ -29,7 +31,7 @@ function App() {
         <CompetitorProvider>
           <CssBaseline />
           <Router>
-          <NavBar />
+            <NavBar />
             <Routes>
               {/* Unprotected routes */}
               <Route path="/" element={<Navigate replace to="/landing" />} />
@@ -39,10 +41,23 @@ function App() {
               {/* Protected routes */}
               <Route path='/dashboard' element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
               <Route path='/test' element={<PrivateRoute><TestApi /></PrivateRoute>} />
-              <Route path='/league-detail/:leagueId' element={<PrivateRoute><LeagueDetailsPage /></PrivateRoute>} />
+              <Route path='/league-detail/:inviteCode' element={<PrivateRoute><LeagueDetailsPage /></PrivateRoute>} />
               <Route path='/find-league' element={<PrivateRoute><FindLeaguePage /></PrivateRoute>} />
               <Route path='/create' element={<PrivateRoute><CreateLeaguePage /></PrivateRoute>} />
             </Routes>
+            <ToastContainer
+              position="top-right"
+              transition={Zoom}
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            />
           </Router>
         </CompetitorProvider>
       </UserProvider>

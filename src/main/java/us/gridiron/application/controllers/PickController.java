@@ -46,10 +46,10 @@ public class PickController {
 
     @GetMapping("/all-league-picks")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Object> findAllLeaguePicks(@RequestParam Long leagueId) {
-        logger.info("Get /api/pick/all-league-picks, leagueId: {}", leagueId);
+    public ResponseEntity<Object> findAllLeaguePicks(@RequestParam String inviteCode) {
+        logger.info("Get /api/pick/all-league-picks, inviteCode: {}", inviteCode);
         try {
-            return ResponseEntity.ok(pickService.findLeaguePicks(leagueId));
+            return ResponseEntity.ok(pickService.findLeaguePicks(inviteCode));
         } catch(Exception e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().body("error finding league picks");

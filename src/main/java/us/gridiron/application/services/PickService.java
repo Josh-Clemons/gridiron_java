@@ -68,9 +68,9 @@ public class PickService {
                 modelMapper.map(pick, PickDTO.class)).toList();
     }
     @Transactional
-    public List<PickDTO> findLeaguePicks(Long leagueId) {
+    public List<PickDTO> findLeaguePicks(String inviteCode) {
 
-        return pickRepository.findPicksByLeagueId(leagueId)
+        return pickRepository.findPicksByLeagueInviteCode(inviteCode)
                 .stream().map(pick -> modelMapper.map(pick, PickDTO.class)).toList();
 
     }

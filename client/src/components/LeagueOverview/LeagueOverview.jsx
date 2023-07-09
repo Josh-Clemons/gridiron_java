@@ -85,7 +85,7 @@ const LeagueOverview = ({ picks }) => {
 
     // sorting the array by username in alphabetical order
     results.sort((a, b) => a.user.localeCompare(b.user));
-
+    console.log(results)
     return results;
   }
 
@@ -125,9 +125,9 @@ const LeagueOverview = ({ picks }) => {
             <TableHead>
               <TableRow>
                 <TableCell sx={{ padding: '6px', maxWidth: '30vw' }}>User</TableCell>
-                <TableCell sx={{ padding: '6px' }}>5 Pts</TableCell>
-                <TableCell sx={{ padding: '6px' }}>3 Pts</TableCell>
                 <TableCell sx={{ padding: '6px' }}>1 Pt</TableCell>
+                <TableCell sx={{ padding: '6px' }}>3 Pts</TableCell>
+                <TableCell sx={{ padding: '6px' }}>5 Pts</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -135,9 +135,9 @@ const LeagueOverview = ({ picks }) => {
                 return (
                   <StyledTableRow key={pick.user}>
                     <TableCell sx={{ pl: 1, pr: 1, maxWidth: '30vw' }}><Typography variant='body1' noWrap={true} >{pick.user}</Typography></TableCell>
-                    <TableCell>{pick.valueFive}</TableCell>
-                    <TableCell>{pick.valueThree}</TableCell>
                     <TableCell>{pick.valueOne}</TableCell>
+                    <TableCell>{pick.valueThree}</TableCell>
+                    <TableCell>{pick.valueFive}</TableCell>
                   </StyledTableRow>
                 )
               })}
@@ -145,7 +145,6 @@ const LeagueOverview = ({ picks }) => {
           </Table>
         </TableContainer>
       </Box>
-      {JSON.stringify(weeklyPicks)}
     </Box>
   )
 }

@@ -3,11 +3,11 @@ import {useQuery} from "react-query";
 import {UserContext} from "../contexts/UserContext";
 import axios from 'axios';
 
-function useLeaguePicks(leagueId) {
+function useLeaguePicks(code) {
     const {user} = useContext(UserContext);
 
-    return useQuery(['leaguePicks', leagueId], async () => {
-        const response = await axios.get(`http://localhost:8080/api/pick/all-league-picks?leagueId=${leagueId}`, {
+    return useQuery(['leaguePicks', code], async () => {
+        const response = await axios.get(`http://localhost:8080/api/pick/all-league-picks?inviteCode=${code}`, {
             headers: {
                 'Authorization': `Bearer ${user.accessToken}`
             }

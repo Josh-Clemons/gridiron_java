@@ -9,10 +9,6 @@ add toast alerts back in
 update tables to display better and consistent with eachother
 <br>
 including not showing a user someone else's future picks
-<br/>
-redo save button
-<br>
-invite code logic works correctly
 <br>
 add logic to pick validation to ensure two teams from the same game in a week are not picked
 

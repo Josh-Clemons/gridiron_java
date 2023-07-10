@@ -11,23 +11,12 @@ import {
     TableCell,
     Typography
 } from "@mui/material";
-import styled from '@emotion/styled';
+import { StyledTableRow } from '../../styles/SharedStyles';
 
 const LeagueStandings = ({ leagueScores }) => {
-    // styles for the table rows
-    const StyledTableRow = styled(TableRow)(() => ({
-        '&:nth-of-type(odd)': {
-            backgroundColor: "#1C2541",
-        },
-        '&:nth-of-type(even)': {
-            backgroundColor: "#242f53",
-        },
-    }));
-
-
 
     return (
-        <Box width={'100%'} mb={'80px'}>
+        <Box width={'100%'}>
             <TableContainer component={Paper} sx={{ width: '100%' }}>
                 <Table size='small' sx={{ width: '100%' }}>
                     <TableHead>

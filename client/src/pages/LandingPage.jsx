@@ -39,17 +39,17 @@ const LandingPage = () => {
             <br />
             <Stack spacing={1} direction="column">
                 {user ?
-                    <>
+                    <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
                         <DashboardButton width={250} />
                         <LogoutButton width={250} />
                         <RulesButton variant={"contained"} size={'medium'} margin={2}  width={250} />
-                    </>
+                    </Box>
                     :
-                    <>
+                    <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
                         <LoginButton width={250} />
                         <RegisterButton width={250} />
                         <RulesButton variant={"contained"} size={'medium'} margin={2}  width={250} />
-                    </>
+                    </Box>
                 }
             </Stack>
         </Box>

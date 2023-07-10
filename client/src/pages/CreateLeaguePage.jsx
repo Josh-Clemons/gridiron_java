@@ -63,10 +63,11 @@ const CreateLeaguePage = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "flex-start",
                 padding: "10px",
                 textAlign: "center",
-                maxWidth: 600
+                maxWidth: 600,
+                minHeight: '100vh'
             }}
         >
             <Typography variant="h4">Create a New League</Typography>

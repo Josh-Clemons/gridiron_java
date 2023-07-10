@@ -1,4 +1,4 @@
-import { NativeSelect, FormControl, InputLabel } from '@mui/material';
+import { NativeSelect, FormControl } from '@mui/material';
 import PropTypes from 'prop-types';
 import { getSelectOptions } from '../../utils/PickUtils';
 import { useContext, useEffect, useState } from 'react';
@@ -40,11 +40,6 @@ const PickSelect = ({ picks, week, value, setPicks }) => {
 
   return (
     <FormControl variant="standard" fullWidth>
-      {pick ?
-        <InputLabel variant="standard" shrink={pick && pick.team !== 'none'} htmlFor={`pick${week}${value}`}>
-          Team
-        </InputLabel> : null}
-
       <NativeSelect
         value={pick?.team}
         onChange={handleChange}

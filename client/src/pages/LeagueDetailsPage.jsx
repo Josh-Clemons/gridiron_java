@@ -88,7 +88,7 @@ const LeagueDetailsPage = () => {
     }
 
     return (
-        <Box m={.5}>
+        <Box m={.5} pb={15} display={'flex'} flexDirection={'column'} alignItems={'center'}>
             <LeagueDetails isMember={isLeagueMember} isOwner={isLeagueOwner} leagueDetails={leagueDetails} />
             {/*Button group is for selecting the component being rendered on league details page*/}
             <ButtonGroup
@@ -112,10 +112,10 @@ const LeagueDetailsPage = () => {
 
             </ButtonGroup>
 
-            <Box p={1} maxWidth={'700px'}>
+            <Box p={1} maxWidth={'700px'} width={'100%'}  display={'flex'} flexDirection={'column'} alignItems={'center'}>
             {/* Shows a different component contingent on the choice the user makes, starts at league standings */}
             {viewState === 'standings' && <LeagueStandings leagueScores={leagueScores} />}
-            {(viewState === 'Picks' && (isLeagueMember || isLeagueOwner)) && <PickSelections picks={myPicks} setPicks={setMyPicks} />}
+            {viewState === 'Picks' && <PickSelections picks={myPicks} setPicks={setMyPicks} />}
             {/*{(viewState === 'Picks' && isLeagueOwner) && <PicksCommissioner />}*/}
             {viewState === 'overview' && <LeagueOverview picks={picks} />}
             </Box>

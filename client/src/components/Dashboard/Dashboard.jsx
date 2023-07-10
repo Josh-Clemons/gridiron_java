@@ -27,12 +27,20 @@ export const Dashboard = () => {
     return (
 
         <Box
-            sx={{ maxWidth: 600, display: 'flex', flexDirection: 'column', margin: 'auto', alignItems: 'center' }}
+            sx={{
+                maxWidth: 600,
+                display: 'flex',
+                flexDirection: 'column',
+                margin: 'auto',
+                alignItems: 'center',
+                minHeight: '100vh'
+            }}
         >
             {isLoading && <h1>hold up</h1>}
             {isError && <h1>shit is no bueno: {error.message}</h1>}
             <Typography sx={{ m: 2 }} variant="h4">Dashboard</Typography>
             <Box
+                overflow={'auto'}
                 width={"100%"}
                 height={"75vh"}
                 component={Paper}
@@ -47,7 +55,7 @@ export const Dashboard = () => {
             >
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     {myLeagues.length > 0 &&
-                        <Box sx={{width: '100%'}}>
+                        <Box sx={{ width: '100%' }}>
                             <Typography variant='h6'>Leagues I Manage:</Typography>
                             <Box sx={{ mb: 2 }}>
                                 {myLeagues.map(league => {
@@ -59,7 +67,7 @@ export const Dashboard = () => {
                         </Box>
                     }
                     {othersLeagues.length > 0 &&
-                        <Box sx={{width: '100%'}}>
+                        <Box sx={{ width: '100%' }}>
                             <Typography variant='h6'>Leagues I am in:</Typography>
                             <Box mb={6}>
                                 {othersLeagues.map(league => {

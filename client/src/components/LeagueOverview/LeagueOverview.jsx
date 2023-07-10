@@ -1,10 +1,9 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import Select from 'react-select';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,8 +11,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material';
 import { UserContext } from '../../contexts/UserContext';
+import { StyledTableRow } from '../../styles/SharedStyles';
+import { NativeSelect, FormControl } from '@mui/material';
+
 
 
 
@@ -22,27 +23,17 @@ const LeagueOverview = ({ picks }) => {
   const { user } = useContext(UserContext);
   const [weeklyPicks, setWeeklyPicks] = useState([]);
 
-  // style for the react-select week chooser
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      width: '100px',
-      backgroundColor: '#F8F8F8',
-    })
-  };
+  const handleWeekChange = (event) => {
+    const week = Number(event.target.value);
+    setWeeklyPicks(getPicksByWeek(week, picks, user));
+  }
 
-  // styles for the table rows
-  const StyledTableRow = styled(TableRow)(() => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: "#1C2541",
-    },
-    '&:nth-of-type(even)': {
-      backgroundColor: "#242f53",
-    }
-  }));
+  const weekOptions = [...generateWeekOptions()].map(option =>
+    <option key={option.value} value={option.value}>{option.label}</option>
+  );
 
   function generateWeekOptions() {
-    let options = [{ value: 0, label: 'Select...' }];
+    let options = [];
 
     for (let i = 1; i <= 18; i++) {
       options.push({ value: i, label: i.toString() });
@@ -53,7 +44,6 @@ const LeagueOverview = ({ picks }) => {
 
   function getPicksByWeek(week, picks, user) {
     const picksByWeek = picks.filter(pick => pick.week === week);
-
     let results = [];
 
     picksByWeek.forEach(pick => {
@@ -80,7 +70,6 @@ const LeagueOverview = ({ picks }) => {
         // only show other players picks if now is after the start date
         const startDate = new Date(pick.competitor.startDate)
         const now = new Date();
-        console.log(pick.owner.username, '&', user.username)
         if (now > startDate || pick.owner.username === user.username) {
           if (results[index] && pick.value === 1) {
             results[index].valueOne = team;
@@ -89,21 +78,32 @@ const LeagueOverview = ({ picks }) => {
           } else if (results[index] && pick.value === 3) {
             results[index].valueThree = team;
             results[index].isThreeWinner = pick.competitor.winner;
-            pick.competitor.winner && (results[index].weeklyScore = results[index].weeklyScore + 3);
+            pick.competitor.winner && (results[index].weeklyScore += 3);
           } else if (results[index] && pick.value === 5) {
             results[index].valueFive = team;
             results[index].isFiveWinner = pick.competitor.winner;
-            pick.competitor.winner && (results[index].weeklyScore = results[index].weeklyScore + 5);
+            pick.competitor.winner && (results[index].weeklyScore += 5);
           }
         }
       }
     });
+
+    // add 2 bonus points if a user has all 3 selections correct in the given week
+    for (let result of results) {
+      if (result.isOneWinner && result.isThreeWinner && result.isFiveWinner) {
+        result.weeklyScore += 2;
+      }
+    }
 
     // sorting the array by username in alphabetical order
     results.sort((a, b) => a.owner.localeCompare(b.owner));
     console.log(results)
     return results;
   }
+
+  useEffect(() => {
+    setWeeklyPicks(getPicksByWeek(1, picks, user));
+  }, [picks, user])
 
   return (
     <Box width={"100%"} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -114,26 +114,13 @@ const LeagueOverview = ({ picks }) => {
       }}
       >
         <Typography variant='h6' sx={{ mr: 3 }}>Week: </Typography>
-        <Select
-          className='week'
-          name={"week"}
-          isSearchable={false}
-          options={generateWeekOptions()}
-          styles={customStyles}
-          onChange={(choice) => setWeeklyPicks(getPicksByWeek(choice.value, picks, user))}
-          theme={(theme) => ({
-            ...theme,
-            colors: {
-              ...theme.colors,
-              primary: '#1C2541',
-              primary25: '#1C2541',
-              neutral0: '#1C2541',
-              neutral20: '#0B132B',
-              neutral40: 'black',
-              neutral50: 'black',
-            },
-          })}
-        />
+        <FormControl variant="filled" style={{ width: '100px' }}>
+          <NativeSelect
+            onChange={handleWeekChange}
+          >
+            {weekOptions}
+          </NativeSelect>
+        </FormControl>
       </Box>
       <Box width={'100%'} mb={'80px'} >
         <TableContainer component={Paper} sx={{ marginTop: '20px' }}>

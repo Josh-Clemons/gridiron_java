@@ -5,9 +5,9 @@ WIP items so I know where I left off:
 -
 
 <br>
-update tables to display better and consistent with eachother
-<br>
 add helper tooltips
+<br>
+lock picks after game starts
 <br>
 add logic to pick validation to ensure two teams from the same game in a week are not picked
 

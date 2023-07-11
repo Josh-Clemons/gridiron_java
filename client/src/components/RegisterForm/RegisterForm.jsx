@@ -1,7 +1,6 @@
 import { useContext, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
@@ -38,8 +37,8 @@ export default function RegisterForm() {
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <Box
+        minHeight={'100vh'}
         sx={{
           marginTop: 8,
           display: 'flex',
@@ -74,7 +73,6 @@ export default function RegisterForm() {
             label="email"
             name="email"
             autoComplete="email"
-            autoFocus
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />

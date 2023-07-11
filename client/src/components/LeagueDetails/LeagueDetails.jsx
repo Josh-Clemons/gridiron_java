@@ -27,7 +27,8 @@ const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
 
   return (
     <Box
-      minWidth={'60vw'}
+      width={'100%'}
+      maxWidth={'700px'}
       sx={{
         display: "flex",
         flexDirection: "column",

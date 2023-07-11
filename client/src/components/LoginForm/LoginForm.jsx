@@ -51,6 +51,7 @@ export default function LoginForm() {
         <Container component="main" maxWidth="xs">
 
             <Box
+                minHeight={'100vh'}
                 sx={{
                     marginTop: 8,
                     display: 'flex',

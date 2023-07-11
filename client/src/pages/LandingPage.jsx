@@ -16,6 +16,7 @@ const LandingPage = () => {
 
     return (
         <Box
+            minHeight={'100vh'}
             className='landingPageDiv'
             sx={{
                 backgroundImage: `url(${background})`,

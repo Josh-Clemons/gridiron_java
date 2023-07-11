@@ -59,7 +59,8 @@ const LeagueOverview = ({ picks }) => {
           isThreeWinner: false,
           valueFive: "-",
           isFiveWinner: false,
-          weeklyScore: 0
+          weeklyScore: 0,
+          disableBorder: true
         });
         index = results.length - 1;
       }
@@ -71,6 +72,7 @@ const LeagueOverview = ({ picks }) => {
         const startDate = new Date(pick.competitor.startDate)
         const now = new Date();
         if (now > startDate || pick.owner.username === user.username) {
+          results[index].disableBorder = false;
           if (results[index] && pick.value === 1) {
             results[index].valueOne = team;
             results[index].isOneWinner = pick.competitor.winner;
@@ -143,7 +145,7 @@ const LeagueOverview = ({ picks }) => {
                     <TableCell>
                       <Box
                         border={
-                          pick.valueOne === "-"
+                          (pick.disableBorder || pick.valueOne === '-')
                             ? "none"
                             : pick.isOneWinner
                               ? "1px solid green"
@@ -158,7 +160,7 @@ const LeagueOverview = ({ picks }) => {
                     <TableCell>
                       <Box
                         border={
-                          pick.valueThree === "-"
+                          (pick.disableBorder || pick.valueOne === '-')
                             ? "none"
                             : pick.isThreeWinner
                               ? "1px solid green"
@@ -173,7 +175,7 @@ const LeagueOverview = ({ picks }) => {
                     <TableCell>
                       <Box
                         border={
-                          pick.valueFive === "-"
+                          (pick.disableBorder || pick.valueOne === '-')
                             ? "none"
                             : pick.isFiveWinner
                               ? "1px solid green"

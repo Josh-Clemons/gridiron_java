@@ -12,6 +12,7 @@ import LeagueStandings from "../components/LeagueStandings/LeagueStandings.jsx";
 import LeagueDetails from "../components/LeagueDetails/LeagueDetails";
 import PickSelections from "../components/PickSelections/PickSelections";
 import LeagueOverview from "../components/LeagueOverview/LeagueOverview";
+import {ThreeCircles} from "react-loader-spinner";
 
 
 const LeagueDetailsPage = () => {
@@ -85,7 +86,16 @@ const LeagueDetailsPage = () => {
 
 
     if (isLoadingPicks) {
-        return <div>Loading...</div>;
+        return (
+            <Box sx={{display: 'flex', height: '100vh', mt: 5}}>
+                <ThreeCircles
+                    type="ThreeDots"
+                    color="#5BC0BE"
+                    height={100}
+                    width={100}
+                />
+            </Box>
+        )
     }
 
     return (

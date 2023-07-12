@@ -10,6 +10,7 @@ const PickSelect = ({picks, week, value, setPicks}) => {
     const [selectOptions, setSelectOptions] = useState(null);
     const [pick, setPick] = useState(null);
 
+
     useEffect(() => {
         if (picks != null) {
             setPick(picks?.find(pick => pick.value === value && pick.week === week));
@@ -18,14 +19,20 @@ const PickSelect = ({picks, week, value, setPicks}) => {
 
     useEffect(() => {
         setSelectOptions(getSelectOptions(competitors, week, pick?.team))
+
     }, [competitors, week, pick])
 
     const handleChange = event => {
         const selectedOption = event.target.value;
+        const selectedCompetitor = competitors.find(c => c.week === week && c.team.abbreviation === selectedOption)
 
-        // TODO data validation is going to take more work
-        if (validateEventId(selectedOption)) {
+        if (validateEventId(selectedCompetitor)) {
             errorAlert("Can't have two teams from the same game in a given week");
+            return;
+        }
+
+        if (validateTeamForValue(selectedOption)) {
+            errorAlert(`Can't pick ${selectedOption} twice for value ${value}`);
             return;
         }
 
@@ -35,7 +42,9 @@ const PickSelect = ({picks, week, value, setPicks}) => {
                 if (pick.week === week && pick.value === value) {
                     return {
                         ...pick,
-                        team: selectedOption,
+                        team: selectedCompetitor.team.abbreviation,
+                        event: selectedCompetitor.eventId,
+                        startDate: selectedCompetitor.startDate
                     };
                 }
                 // otherwise, return the pick as is
@@ -45,18 +54,21 @@ const PickSelect = ({picks, week, value, setPicks}) => {
     };
 
     const isPickStartDatePast = () => {
-        if (pick && pick.startDate) {
-            const pickDate = new Date(pick.startDate);
-            const currentDate = new Date();
-
-            return pickDate < currentDate;
-        }
+        // if (pick && pick.startDate) {
+        //     const pickDate = new Date(pick.startDate);
+        //     const currentDate = new Date();
+        //
+        //     return pickDate < currentDate;
+        // }
+        return false;
     }
 
-    const validateEventId = (selectedEventId) => {
-        return picks.some(pick =>
-            pick.week === week && pick.eventId === selectedEventId
+    const validateEventId = (selectedCompetitor) => {
+        const isValidEvent = picks.some(pick =>
+            pick.week === week && pick.event === selectedCompetitor.eventId
         );
+
+        return isValidEvent;
     }
 
     const validateTeamForValue = (selectedTeam) => {
@@ -65,17 +77,11 @@ const PickSelect = ({picks, week, value, setPicks}) => {
         );
     }
 
-    const ValidateTeamForWeek = (selectedTeam) => {
-        return picks.some(pick =>
-            pick.week === week && pick.team === selectedTeam
-        );
-    }
-
 
     return (
         <FormControl variant="standard" fullWidth>
             <NativeSelect
-                value={pick?.team}
+                value={pick ? pick.team : ""}
                 disabled={isPickStartDatePast()}
                 onChange={handleChange}
                 inputProps={{
@@ -83,8 +89,8 @@ const PickSelect = ({picks, week, value, setPicks}) => {
                     id: `pick${week}${value}`,
                 }}
             >
-                {selectOptions && selectOptions.map(option => (
-                    <option key={option.value} value={option.value}>
+                {selectOptions && selectOptions.map((option, i) => (
+                    <option key={i} value={option.value}>
                         {option.label}
                     </option>
                 ))}
@@ -98,7 +104,7 @@ PickSelect.propTypes = {
     week: PropTypes.number,
     value: PropTypes.number,
     setPicks: PropTypes.func,
-    competitors: PropTypes.array
+    competitors: PropTypes.array,
 };
 
 export default PickSelect;

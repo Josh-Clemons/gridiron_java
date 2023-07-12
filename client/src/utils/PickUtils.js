@@ -20,8 +20,6 @@ export function getSelectOptions(competitors, week, team) {
         options.push({value: team, label: team, isDisabled: false});
     }
 
-    // options.unshift({value: '', label: 'Select...', isDisabled: false})
-
-
+    options.unshift({value: '', label: '...', isDisabled: false})
     return options;
 }

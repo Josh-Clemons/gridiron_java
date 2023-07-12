@@ -2,7 +2,7 @@ package us.gridiron.application.payload.response;
 
 public class PickDTO {
     private Long id;
-    private UserDTO owner;
+    private String owner;
     private LeagueResponseDTO league;
     private CompetitorDTO competitor;
     private Integer value;
@@ -16,11 +16,11 @@ public class PickDTO {
         this.id = id;
     }
 
-    public UserDTO getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(UserDTO owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 

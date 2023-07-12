@@ -12,6 +12,7 @@ import LeagueStandings from "../components/LeagueStandings/LeagueStandings.jsx";
 import LeagueDetails from "../components/LeagueDetails/LeagueDetails";
 import PickSelections from "../components/PickSelections/PickSelections";
 import LeagueOverview from "../components/LeagueOverview/LeagueOverview";
+import { CompetitorContext } from "../contexts/CompetitorContext";
 
 
 const LeagueDetailsPage = () => {
@@ -20,6 +21,7 @@ const LeagueDetailsPage = () => {
 
     // Context
     const {user} = useContext(UserContext);
+    const {competitors} = useContext(CompetitorContext);
 
     // Hooks
     const {data: picks, isLoadingPicks} = useLeaguePicks(inviteCode);
@@ -57,19 +59,7 @@ const LeagueDetailsPage = () => {
 
         setLeagueScores(leagueScores);
 
-        setMyPicks(picks?.filter(pick => pick.owner.id === user.id).map(pick => {
-            return ({
-                id: pick.id,
-                ownerId: user.id,
-                team: pick.competitor ? pick.competitor.team.abbreviation : "",
-                event: pick.competitor ? pick.competitor.eventId : "",
-                leagueId: pick.league?.id,
-                value: pick.value,
-                week: pick.week,
-                startDate: pick.competitor ? pick.competitor.startDate : "",
-                isWinner: pick.competitor ? pick.competitor.winner : false
-            })
-        }));
+        setMyPicks(picks?.filter(pick => pick.owner.id === user.id));
 
         if (picks?.length > 0) {
             if (picks[0].league.leagueOwner === user.username) {
@@ -120,6 +110,7 @@ const LeagueDetailsPage = () => {
                 {viewState === 'Picks' && <PickSelections picks={myPicks} setPicks={setMyPicks}/>}
                 {/*{(viewState === 'Picks' && isLeagueOwner) && <PicksCommissioner />}*/}
                 {viewState === 'overview' && <LeagueOverview picks={picks}/>}
+                <div>{myPicks && JSON.stringify(myPicks[0])}</div>
             </Box>
         </Box>
     )

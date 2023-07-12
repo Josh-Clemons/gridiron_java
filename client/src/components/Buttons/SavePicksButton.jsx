@@ -19,6 +19,7 @@ const SavePicksButton = ({ width, updatedPicks }) => {
         sx={{ width: width, mt: 2, mb: 2, borderWidth: '2px', '&:hover': { borderWidth: '2px' } }}>
         Save Picks<DoneAllIcon sx={{ ml: 2 }} />
       </Button>
+      <div>{JSON.stringify(updatedPicks)}</div>
     </>
   )
 }

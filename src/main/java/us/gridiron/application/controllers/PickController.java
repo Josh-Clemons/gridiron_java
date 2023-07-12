@@ -58,12 +58,12 @@ public class PickController {
 
     @PostMapping("/update")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Object> updateLeaguePicks(@RequestBody List<PickUpdateRequest> pickUpdates){
+    public ResponseEntity<Object> updateLeaguePicks(@RequestBody List<PickDTO> pickUpdates){
         logger.info("Post /api/pick/update");
         try{
             User user = userService.getLoggedInUser();
-            List<Pick> updatedPicks = pickService.convertPickUpdateRequestToPicksList(pickUpdates);
-            List<PickDTO> updatedPickDTOs = updatedPicks.stream().map(pick ->
+//            List<Pick> updatedPicks = pickService.convertPickUpdateRequestToPicksList(pickUpdates);
+            List<PickDTO> updatedPickDTOs = pickUpdates.stream().map(pick ->
                 modelMapper.map(pick, PickDTO.class)).toList();
             return ResponseEntity.ok(pickService.updateUserPicks(user, updatedPickDTOs));
         } catch(Exception e) {

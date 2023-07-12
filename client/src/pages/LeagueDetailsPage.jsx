@@ -13,6 +13,7 @@ import LeagueDetails from "../components/LeagueDetails/LeagueDetails";
 import PickSelections from "../components/PickSelections/PickSelections";
 import LeagueOverview from "../components/LeagueOverview/LeagueOverview";
 import {ThreeCircles} from "react-loader-spinner";
+import axios from 'axios';
 
 
 const LeagueDetailsPage = () => {
@@ -100,6 +101,25 @@ const LeagueDetailsPage = () => {
 
     return (
         <Box minHeight={'100vh'} m={.5} pb={15} display={'flex'} flexDirection={'column'} alignItems={'center'}>
+            <button onClick={() => {
+                axios.post(`http://localhost:8080/api/email/test`, {
+                        to: "mrjoshc@gmail.com",
+                        subject: "oh heeeey",
+                        text: "this is a test message"
+                    },
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${user.accessToken}`
+                        }
+                    })
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            }}>send test email
+            </button>
             <LeagueDetails isMember={isLeagueMember} isOwner={isLeagueOwner} leagueDetails={leagueDetails}/>
             {/*Button group is for selecting the component being rendered on league details page*/}
             <ButtonGroup

@@ -7,21 +7,31 @@ WIP items so I know where I left off:
 <br>
 add helper tooltips
 <br>
-lock picks after game starts
-<br>
-add logic to pick validation to ensure two teams from the same game in a week are not picked
-
+add email service (to account for prev option to invite by email and new ideas, like password recovery)
+--Test mail sever at home
 
 ***
 These are items I want to do and likely won't happen has I get this project
 stood back up to where it was previously.
 
-[] loading spinners
+[x] loading spinners
 
-[] password recovery
+[] password recovery (need email)
 
 [] Store accessToken in cookie instead of context
 
 [] Make better exception handling
 
-[] Add isWinner data to overview page so scores/winners are shown
+[x] Add isWinner data to overview page so scores/winners are shown
+
+[] add pick validation to back-end
+
+
+
+***
+
+For deployment:
+
+[] switch PickUtils so it only grabs games after current date
+
+[] uncomment isValidDate in PickSelect

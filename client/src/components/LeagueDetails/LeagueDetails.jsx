@@ -20,6 +20,7 @@ import RulesButton from '../Buttons/RulesButton';
 import DeleteLeagueButton from '../Buttons/DeleteLeagueButton';
 import LeaveLeagueButton from '../Buttons/LeaveLeagueButton';
 import {ThreeCircles} from 'react-loader-spinner';
+import InviteMemberButton from "../Buttons/InviteMemberButton.jsx";
 
 const LeagueDetails = ({isMember, isOwner, leagueDetails}) => {
     const navigate = useNavigate();
@@ -138,6 +139,7 @@ const LeagueDetails = ({isMember, isOwner, leagueDetails}) => {
                             fontSize: 18,
                             mb: 1
                         }}>Members: {leagueDetails?.userCount} / {leagueDetails?.maxUsers}</Typography>
+                        {isOwner && <InviteMemberButton/>}
                         <Typography variant={'body1'} sx={{
                             fontSize: 18,
                             mb: 1

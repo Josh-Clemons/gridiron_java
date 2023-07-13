@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios';
+import {errorAlert, successAlert} from "./ToastAlerts.js";
 
 export const fetchAvailableLeagues = async ({queryKey}) => {
     const [_key, {accessToken}] = queryKey;
@@ -37,10 +38,11 @@ export const inviteNewMember = ((to, inviteCode, accessToken) => {
                 'Authorization': `Bearer ${accessToken}`
             }
         })
-        .then(response => {
-            console.log(response);
+        .then(() => {
+            successAlert("Email sent!")
         })
         .catch(error => {
+            errorAlert("Error sending email, try again later")
             console.log(error);
         })
 })

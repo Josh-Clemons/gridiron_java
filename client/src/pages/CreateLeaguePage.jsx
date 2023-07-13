@@ -83,6 +83,9 @@ const CreateLeaguePage = () => {
                     placeholder="League Name"
                     value={leagueName}
                     onChange={(e) => setLeagueName(e.target.value)}
+                    inputProps={{
+                        maxLength: 30,
+                    }}
                     sx={{
                         backgroundColor: 'black',
                         margin: 2.5,

@@ -2,29 +2,45 @@ import { Button } from '@mui/material';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import PropTypes from 'prop-types';
 import useSavePicks from '../../hooks/useSavePicks';
+import {ThreeCircles} from "react-loader-spinner";
 
 const SavePicksButton = ({ width, updatedPicks }) => {
-  const savePicksMutation = useSavePicks();
+  const { mutate, isLoading } = useSavePicks();
 
   const savePicks = (updatedPicks) => {
-    savePicksMutation.mutate(updatedPicks);
+    mutate(updatedPicks);
   }
 
   return (
     <>
-      <Button variant='outlined'
-        size='large'
-        color='success'
-        onClick={() => savePicks(updatedPicks)}
-        sx={{ width: width, mt: 2, mb: 2, borderWidth: '2px', '&:hover': { borderWidth: '2px' } }}>
-        Save Picks<DoneAllIcon sx={{ ml: 2 }} />
-      </Button>
+      {isLoading ? (
+        <ThreeCircles 
+          color="#5BC0BE"
+          height={76}
+          width={70}
+        />
+      ) : (
+        <Button variant='outlined'
+          size='large'
+          color='success'
+          onClick={() => savePicks(updatedPicks)}
+          sx={{ width: width, mt: 2, mb: 2, borderWidth: '2px', '&:hover': { borderWidth: '2px' } }}>
+          Save Picks<DoneAllIcon sx={{ ml: 2 }} />
+        </Button>
+      )}
     </>
   )
 }
+
 SavePicksButton.propTypes = {
   width: PropTypes.number,
   size: PropTypes.string,
   updatedPicks: PropTypes.array
 }
+
 export default SavePicksButton;
+
+
+
+
+

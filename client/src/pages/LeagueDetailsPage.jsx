@@ -103,9 +103,9 @@ const LeagueDetailsPage = () => {
         <Box minHeight={'100vh'} m={.5} pb={15} display={'flex'} flexDirection={'column'} alignItems={'center'}>
             <button onClick={() => {
                 axios.post(`http://localhost:8080/api/email/test`, {
-                        to: "mrjoshc@gmail.com",
+                        to: "jenni.cordes@hotmail.com",
                         subject: "oh heeeey",
-                        text: "this is a test message"
+                        text: "grid iron pickems is stalking you!!! :)"
                     },
                     {
                         headers: {

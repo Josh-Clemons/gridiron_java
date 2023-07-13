@@ -14,16 +14,34 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {useNavigate} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import JoinLeagueButton from '../Buttons/JoinLeagueButton';
 import RulesButton from '../Buttons/RulesButton';
 import DeleteLeagueButton from '../Buttons/DeleteLeagueButton';
 import LeaveLeagueButton from '../Buttons/LeaveLeagueButton';
+import {ThreeCircles} from 'react-loader-spinner';
 
 const LeagueDetails = ({isMember, isOwner, leagueDetails}) => {
     const navigate = useNavigate();
     const [openCopied, setOpenCopied] = useState(false);
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        if (leagueDetails) setLoading(false);
+    }, [leagueDetails]);
+
+    if (loading) {
+        return (
+            <Box sx={{display: 'flex', height: '100vh', mt: 5}}>
+                <ThreeCircles
+                    type="ThreeDots"
+                    color="#5BC0BE"
+                    height={100}
+                    width={100}
+                />
+            </Box>
+        );
+    }
 
     const handleTooltipClose = () => {
         setOpenCopied(false);

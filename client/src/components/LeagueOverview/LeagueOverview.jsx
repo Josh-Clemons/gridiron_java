@@ -135,9 +135,9 @@ const LeagueOverview = ({picks}) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {weeklyPicks && weeklyPicks.map((pick) => {
+                            {weeklyPicks && weeklyPicks.map((pick, i) => {
                                 return (
-                                    <StyledTableRow key={pick.owner}>
+                                    <StyledTableRow key={i}>
                                         <TableCell sx={{pl: 1, pr: 1, maxWidth: '30vw'}}><Typography variant='body1'
                                                                                                      noWrap={true}>{pick.owner}</Typography></TableCell>
                                         <TableCell>{pick.weeklyScore}</TableCell>

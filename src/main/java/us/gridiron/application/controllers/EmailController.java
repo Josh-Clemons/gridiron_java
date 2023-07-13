@@ -26,12 +26,13 @@ public class EmailController {
 		this.emailService = emailService;
 	}
 
-	@PostMapping("/test")
+	@PostMapping("/invite")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<String> sendTest(@RequestBody EmailDTO emailDto) {
 
 		try {
-			emailService.sendSimpleMessage(emailDto.getTo(), emailDto.getSubject(), emailDto.getText());
+			emailService.sendLeagueInvite(emailDto.getTo(), emailDto.getInviteCode());
+			//			emailService.sendSimpleMessage(emailDto.getTo(), emailDto.getSubject(), emailDto.getText());
 			return ResponseEntity.ok("Message sent");
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);

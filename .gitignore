@@ -32,4 +32,4 @@ build/
 
 /node_modules
 package-lock.json
-/src/main/resources/application-dev.properties
+!**/src/main/resources/application-dev.properties

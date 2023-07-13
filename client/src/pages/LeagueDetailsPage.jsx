@@ -6,7 +6,7 @@ import {Box, ButtonGroup, Button} from '@mui/material';
 
 // Internal module imports
 import {UserContext} from "../contexts/UserContext";
-import {fetchLeagueDetails} from "../utils/api.js";
+import {fetchLeagueDetails, inviteNewMember} from "../utils/api.js";
 import useLeaguePicks from "../hooks/useLeaguePicks";
 import LeagueStandings from "../components/LeagueStandings/LeagueStandings.jsx";
 import LeagueDetails from "../components/LeagueDetails/LeagueDetails";
@@ -101,24 +101,7 @@ const LeagueDetailsPage = () => {
 
     return (
         <Box minHeight={'100vh'} m={.5} pb={15} display={'flex'} flexDirection={'column'} alignItems={'center'}>
-            <button onClick={() => {
-                axios.post(`http://localhost:8080/api/email/test`, {
-                        to: "jenni.cordes@hotmail.com",
-                        subject: "oh heeeey",
-                        text: "grid iron pickems is stalking you!!! :)"
-                    },
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${user.accessToken}`
-                        }
-                    })
-                    .then(response => {
-                        console.log(response);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
-            }}>send test email
+            <button onClick={() => inviteNewMember("mrjoshc@gmail.com", inviteCode, user.accessToken)}>send test email
             </button>
             <LeagueDetails isMember={isLeagueMember} isOwner={isLeagueOwner} leagueDetails={leagueDetails}/>
             {/*Button group is for selecting the component being rendered on league details page*/}

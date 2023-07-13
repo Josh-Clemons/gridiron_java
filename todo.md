@@ -7,8 +7,6 @@ WIP items so I know where I left off:
 <br>
 add helper tooltips
 <br>
-add loading spinner to save picks button (changes while picks are being saved)
-<br>
 add email service (to account for prev option to invite by email and new ideas, like password recovery)
 --Test mail sever at home
 

@@ -4,6 +4,7 @@ public class EmailDTO {
 	private String to;
 	private String subject;
 	private String text;
+	private String inviteCode;
 
 	public String getTo() {
 		return to;
@@ -27,5 +28,13 @@ public class EmailDTO {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public String getInviteCode() {
+		return inviteCode;
+	}
+
+	public void setInviteCode(String inviteCode) {
+		this.inviteCode = inviteCode;
 	}
 }

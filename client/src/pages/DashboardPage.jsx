@@ -1,9 +1,10 @@
-import { Dashboard } from '../components/Dashboard/Dashboard';
+import {Dashboard} from '../components/Dashboard/Dashboard';
+import useScrollToTop from "../hooks/useScrollToTop.js";
 
 const DashboardPage = () => {
-
+    useScrollToTop();
     return (
-        <Dashboard />
+        <Dashboard/>
     )
 }
 

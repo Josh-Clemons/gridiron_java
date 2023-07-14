@@ -1,10 +1,11 @@
-
 # Todo list
 
 ***
 
 
 [] add helper tooltips (league standings - how are scores calculated)
+
+[x] login with either email or username
 
 [x] loading spinners
 
@@ -18,19 +19,10 @@
 
 [] add pick validation to back-end
 
-
-Notes from Jen:
-
-add weekly score to picks page (maybe cumulative as well if it makes sense)
-
-also check into highlighting native-select red/green border for pick.competitor.winner boolean
-
-switch value order to 5, 3, 1
-
 ***
 
 For deployment:
 
 [] switch PickUtils so it only grabs games after current date
 
-[] uncomment isValidDate in PickSelect
+[] Fix borders/disables in PickSelect

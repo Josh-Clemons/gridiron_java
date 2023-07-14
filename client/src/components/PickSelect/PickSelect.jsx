@@ -1,4 +1,4 @@
-import {NativeSelect, FormControl} from '@mui/material';
+import {Box, NativeSelect, FormControl} from '@mui/material';
 import PropTypes from 'prop-types';
 import {getSelectOptions} from '../../utils/PickUtils';
 import {useContext, useEffect, useState} from 'react';
@@ -10,7 +10,6 @@ const PickSelect = ({picks, week, value, setPicks}) => {
     const [selectOptions, setSelectOptions] = useState(null);
     const [pick, setPick] = useState(null);
 
-
     useEffect(() => {
         if (picks != null) {
             setPick(picks?.find(pick => pick.value === value && pick.week === week));
@@ -18,22 +17,23 @@ const PickSelect = ({picks, week, value, setPicks}) => {
     }, [picks, value, week])
 
     useEffect(() => {
-        setSelectOptions(getSelectOptions(competitors, week, pick?.team))
-
+        setSelectOptions(getSelectOptions(competitors, week, pick?.team));
     }, [competitors, week, pick])
 
     const handleChange = event => {
         const selectedOption = event.target.value;
         const selectedCompetitor = competitors.find(c => c.week === week && c.team.abbreviation === selectedOption)
 
-        if (validateEventId(selectedCompetitor)) {
-            errorAlert("Can't have two teams from the same game in a given week");
-            return;
-        }
+        if (selectedOption != "") {
+            if (validateEventId(selectedCompetitor)) {
+                errorAlert("Can't have two teams from the same game in a given week");
+                return;
+            }
 
-        if (validateTeamForValue(selectedOption)) {
-            errorAlert(`Can't pick ${selectedOption} twice for value ${value}`);
-            return;
+            if (validateTeamForValue(selectedOption)) {
+                errorAlert(`Can't pick ${selectedOption} twice for value ${value}`);
+                return;
+            }
         }
 
         setPicks(prev => (
@@ -42,9 +42,9 @@ const PickSelect = ({picks, week, value, setPicks}) => {
                 if (pick.week === week && pick.value === value) {
                     return {
                         ...pick,
-                        team: selectedCompetitor.team.abbreviation,
-                        event: selectedCompetitor.eventId,
-                        startDate: selectedCompetitor.startDate
+                        team: selectedCompetitor ? selectedCompetitor?.team?.abbreviation : "",
+                        event: selectedCompetitor?.eventId || "",
+                        startDate: selectedCompetitor?.startDate || ""
                     };
                 }
                 // otherwise, return the pick as is
@@ -53,8 +53,9 @@ const PickSelect = ({picks, week, value, setPicks}) => {
         ));
     };
 
+    // TODO take away the '&& pick.week < 9' for deployment
     const isPickStartDatePast = () => {
-        // if (pick && pick.startDate) {
+        // if (pick && pick.startDate && pick.week < 9) {
         //     const pickDate = new Date(pick.startDate);
         //     const currentDate = new Date();
         //
@@ -77,25 +78,39 @@ const PickSelect = ({picks, week, value, setPicks}) => {
         );
     }
 
+    const getBorderColor = (pick) => {
+        const startDate = new Date(pick.startDate);
+        // TODO take away the '|| pick.week > 9' for deployment
+        if (startDate > new Date() || pick.team === "" || pick.week > 9) {
+            return {border: "none",}
+        } else {
+            return {
+                border: pick.isWinner ? "1px solid green" : "1px solid darkred",
+            }
+        }
+    }
+
 
     return (
-        <FormControl variant="standard" fullWidth>
-            <NativeSelect
-                value={pick ? pick.team : ""}
-                disabled={isPickStartDatePast()}
-                onChange={handleChange}
-                inputProps={{
-                    name: 'team',
-                    id: `pick${week}${value}`,
-                }}
-            >
-                {selectOptions && selectOptions.map((option, i) => (
-                    <option key={i} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </NativeSelect>
-        </FormControl>
+        <Box border={pick && getBorderColor(pick)} p={.5} m={-.5} sx={{borderRadius: 1}}>
+            <FormControl variant="standard" fullWidth>
+                <NativeSelect
+                    value={pick ? pick.team : ""}
+                    disabled={isPickStartDatePast()}
+                    onChange={handleChange}
+                    inputProps={{
+                        name: 'team',
+                        id: `pick${week}${value}`,
+                    }}
+                >
+                    {selectOptions && selectOptions.map((option, i) => (
+                        <option key={i} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </NativeSelect>
+            </FormControl>
+        </Box>
     );
 };
 

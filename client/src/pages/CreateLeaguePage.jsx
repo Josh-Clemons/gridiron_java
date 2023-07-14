@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useContext, useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -10,15 +10,17 @@ import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { Switch } from '@mui/material';
+import {Switch} from '@mui/material';
 import axios from 'axios';
-import { UserContext } from '../contexts/UserContext';
-import { successAlert } from '../utils/ToastAlerts';
+import {UserContext} from '../contexts/UserContext';
+import {successAlert} from '../utils/ToastAlerts';
+import useScrollToTop from "../hooks/useScrollToTop.js";
 
 
 const CreateLeaguePage = () => {
+    useScrollToTop();
     const navigate = useNavigate();
-    const { user } = useContext(UserContext);
+    const {user} = useContext(UserContext);
 
     const [leagueName, setLeagueName] = useState('');
     const [isPrivate, setIsPrivate] = useState(false);
@@ -104,14 +106,32 @@ const CreateLeaguePage = () => {
                     />
                     {error && <FormHelperText>Value must be between 2 and 100</FormHelperText>}
                 </FormControl>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', mb: 2 }}>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                    mb: 2
+                }}>
                     <Typography variant='body1'>Set to Private:</Typography>
-                    <Switch checked={isPrivate} onClick={handleIsPrivate} />
+                    <Switch checked={isPrivate} onClick={handleIsPrivate}/>
                     <Typography variant='body1' width={30}>{isPrivate ? 'Yes' : 'No'}</Typography>
                 </Box>
-                <Button variant="outlined" color="warning" type="submit" disabled={error} sx={{ width: "250px", marginTop: "10px", marginBottom: "8px", borderWidth: 2, '&:hover': { borderWidth: '2px' } }}>Create<AddCircleIcon sx={{ ml: 2 }} /></Button>
+                <Button variant="outlined" color="warning" type="submit" disabled={error} sx={{
+                    width: "250px",
+                    marginTop: "10px",
+                    marginBottom: "8px",
+                    borderWidth: 2,
+                    '&:hover': {borderWidth: '2px'}
+                }}>Create<AddCircleIcon sx={{ml: 2}}/></Button>
             </Box>
-            <Button variant="outlined" onClick={() => navigate('/dashboard')} sx={{ width: "250px", position: "fixed", bottom: 60, borderWidth: 2, '&:hover': { borderWidth: '2px' } }}>My Leagues<ArrowBackIcon sx={{ ml: 2 }} /></Button>
+            <Button variant="outlined" onClick={() => navigate('/dashboard')} sx={{
+                width: "250px",
+                position: "fixed",
+                bottom: 60,
+                borderWidth: 2,
+                '&:hover': {borderWidth: '2px'}
+            }}>My Leagues<ArrowBackIcon sx={{ml: 2}}/></Button>
         </Container>
     )
 }

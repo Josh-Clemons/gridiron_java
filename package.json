@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
     "git": "^0.1.5",
     "react-query": "^3.39.3"
   }

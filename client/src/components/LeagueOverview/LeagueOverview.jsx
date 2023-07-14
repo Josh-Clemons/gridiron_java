@@ -104,6 +104,14 @@ const LeagueOverview = ({picks}) => {
         setWeeklyPicks(getPicksByWeek(1, picks, user));
     }, [picks, user])
 
+    const getBorderStyle = (value, isWinner, disableBorder) => {
+        if (disableBorder || value === '-') {
+            return "none";
+        } else {
+            return isWinner ? "1px solid green" : "1px solid darkred";
+        }
+    };
+
     return (
         <Box width={"100%"} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Box sx={{
@@ -128,9 +136,9 @@ const LeagueOverview = ({picks}) => {
                             <TableRow>
                                 <TableCell sx={{padding: '6px', maxWidth: '30vw'}}>User</TableCell>
                                 <TableCell sx={{padding: '6px', pl: 1}}>Score</TableCell>
-                                <TableCell sx={{padding: '6px', pl: 3}}>1 Pt</TableCell>
-                                <TableCell sx={{padding: '6px', pl: 3}}>3 Pts</TableCell>
                                 <TableCell sx={{padding: '6px', pl: 3}}>5 Pts</TableCell>
+                                <TableCell sx={{padding: '6px', pl: 3}}>3 Pts</TableCell>
+                                <TableCell sx={{padding: '6px', pl: 3}}>1 Pt</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -142,28 +150,16 @@ const LeagueOverview = ({picks}) => {
                                         <TableCell>{pick.weeklyScore}</TableCell>
                                         <TableCell>
                                             <Box
-                                                border={
-                                                    (pick.disableBorder || pick.valueOne === '-')
-                                                        ? "none"
-                                                        : pick.isOneWinner
-                                                            ? "1px solid green"
-                                                            : "1px solid darkred"
-                                                }
+                                                border={getBorderStyle(pick.valueFive, pick.isFiveWinner, pick.disableBorder)}
                                                 borderRadius={1}
                                                 p={.5}
                                             >
-                                                {pick.valueOne}
+                                                {pick.valueFive}
                                             </Box>
                                         </TableCell>
                                         <TableCell>
                                             <Box
-                                                border={
-                                                    (pick.disableBorder || pick.valueThree === '-')
-                                                        ? "none"
-                                                        : pick.isThreeWinner
-                                                            ? "1px solid green"
-                                                            : "1px solid darkred"
-                                                }
+                                                border={getBorderStyle(pick.valueThree, pick.isThreeWinner, pick.disableBorder)}
                                                 borderRadius={1}
                                                 p={.5}
                                             >
@@ -172,17 +168,11 @@ const LeagueOverview = ({picks}) => {
                                         </TableCell>
                                         <TableCell>
                                             <Box
-                                                border={
-                                                    (pick.disableBorder || pick.valueFive === '-')
-                                                        ? "none"
-                                                        : pick.isFiveWinner
-                                                            ? "1px solid green"
-                                                            : "1px solid darkred"
-                                                }
+                                                border={getBorderStyle(pick.valueOne, pick.isOneWinner, pick.disableBorder)}
                                                 borderRadius={1}
                                                 p={.5}
                                             >
-                                                {pick.valueFive}
+                                                {pick.valueOne}
                                             </Box>
                                         </TableCell>
                                     </StyledTableRow>

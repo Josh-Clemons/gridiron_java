@@ -1,19 +1,20 @@
-import { useQuery } from "react-query";
-import { fetchAvailableLeagues } from "../utils/api.js";
-import { Box, Typography } from "@mui/material";
-import { useContext } from "react";
-import { UserContext } from "../contexts/UserContext.jsx";
+import {useQuery} from "react-query";
+import {fetchAvailableLeagues} from "../utils/api.js";
+import {Box, Typography} from "@mui/material";
+import {useContext} from "react";
+import {UserContext} from "../contexts/UserContext.jsx";
 import CreateLeagueButton from "../components/Buttons/CreateLeagueButton.jsx";
 import LeagueItem from "../components/LeagueItem/LeagueItem.jsx";
 import JoinLeagueByCodeButton from "../components/Buttons/JoinLeagueByCodeButton.jsx";
+import useScrollToTop from "../hooks/useScrollToTop.js";
 
 
 const FindLeaguePage = () => {
-    const { user } = useContext(UserContext);
+    useScrollToTop();
+    const {user} = useContext(UserContext);
 
-    const { data: availableLeagues, error, isLoading, isError }
-        = useQuery(['availableLeagues', { accessToken: user.accessToken }], fetchAvailableLeagues);
-
+    const {data: availableLeagues, error, isLoading, isError}
+        = useQuery(['availableLeagues', {accessToken: user.accessToken}], fetchAvailableLeagues);
 
 
     return (
@@ -31,9 +32,9 @@ const FindLeaguePage = () => {
             }}
         >
             <Typography variant="h4" color='primary.main'>Find a New League</Typography>
-            <CreateLeagueButton width={250} />
-            <JoinLeagueByCodeButton />
-            <Typography variant='h6' color='primary.main' sx={{ textDecoration: 'underline' }}>Public
+            <CreateLeagueButton width={250}/>
+            <JoinLeagueByCodeButton/>
+            <Typography variant='h6' color='primary.main' sx={{textDecoration: 'underline'}}>Public
                 Leagues:</Typography>
             <Box width={"92%"}>
                 {isLoading && <div>Loading....</div>}
@@ -41,7 +42,7 @@ const FindLeaguePage = () => {
                 {availableLeagues && availableLeagues.length > 0 ?
                     availableLeagues?.map(league => {
                         return (
-                            <LeagueItem key={league.id} league={league} />
+                            <LeagueItem key={league.id} league={league}/>
                         )
                     })
                     :

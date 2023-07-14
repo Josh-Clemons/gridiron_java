@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import us.gridiron.application.models.User;
 import us.gridiron.application.repository.UserRepository;
 
-
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
@@ -18,9 +17,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	@Transactional
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username)
-			.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+	public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+		User user = userRepository.findByUsername(usernameOrEmail)
+			.orElseGet(() -> userRepository.findByEmail(usernameOrEmail)
+				.orElseThrow(
+					() -> new UsernameNotFoundException("User Not Found with username or email: " + usernameOrEmail)));
 
 		return UserDetailsImpl.build(user);
 	}

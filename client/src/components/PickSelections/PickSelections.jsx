@@ -1,14 +1,21 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
 import SavePicksButton from "../Buttons/SavePicksButton";
 import Box from '@mui/material/Box'
 import {StyledTableRow} from "../../styles/SharedStyles";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
 import {ThreeCircles} from 'react-loader-spinner';
 import PickSelect from "../PickSelect/PickSelect";
+import {UserContext} from "../../contexts/UserContext.jsx";
 
-const PickSelections = ({picks, setPicks}) => {
+const PickSelections = ({picks, setPicks, leagueScores}) => {
+    const {user} = useContext(UserContext);
     const [loading, setLoading] = useState(true);
+    const [myScore, setMyScore] = useState(0);
+
+    useEffect(() => {
+        setMyScore(leagueScores.find(score => score.username === user.username));
+    }, [leagueScores])
 
     useEffect(() => {
         if (picks) setLoading(false);
@@ -30,14 +37,16 @@ const PickSelections = ({picks, setPicks}) => {
     return (
         <Box width={'100%'} display={'flex'} flexDirection={'column'} alignItems={'center'}>
             <SavePicksButton updatedPicks={picks} width={250}/>
+            <Typography variant={'h6'}>Total Score: {myScore.score}</Typography>
             <TableContainer component={Paper}>
                 <Table size='small' sx={{width: '100%'}}>
                     <TableHead>
                         <TableRow>
                             <TableCell>Week</TableCell>
-                            <TableCell>1 pt</TableCell>
-                            <TableCell>3 pts</TableCell>
                             <TableCell>5 pts</TableCell>
+                            <TableCell>3 pts</TableCell>
+                            <TableCell>1 pt</TableCell>
+                            <TableCell>Score</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -45,13 +54,20 @@ const PickSelections = ({picks, setPicks}) => {
                             <StyledTableRow key={i}>
                                 <TableCell>{i + 1}</TableCell>
                                 <TableCell>
-                                    <PickSelect week={i + 1} picks={picks} setPicks={setPicks} value={1}/>
+                                    <PickSelect week={i + 1} picks={picks} setPicks={setPicks} value={5}/>
                                 </TableCell>
                                 <TableCell>
                                     <PickSelect week={i + 1} picks={picks} setPicks={setPicks} value={3}/>
                                 </TableCell>
                                 <TableCell>
-                                    <PickSelect week={i + 1} picks={picks} setPicks={setPicks} value={5}/>
+                                    <PickSelect week={i + 1} picks={picks} setPicks={setPicks} value={1}/>
+                                </TableCell>
+                                <TableCell>
+                                    {picks.filter(p => p.week === i + 1 && p.isWinner)
+                                        .reduce((total, pick) => total + pick.value,
+                                            (picks.filter(p => p.week === i + 1 && p.isWinner).length === 3 ? 2 : 0)
+                                        )
+                                    }
                                 </TableCell>
                             </StyledTableRow>
                         ))}
@@ -65,7 +81,8 @@ const PickSelections = ({picks, setPicks}) => {
 
 PickSelections.propTypes = {
     picks: PropTypes.array,
-    setPicks: PropTypes.func
+    setPicks: PropTypes.func,
+    leagueScores: PropTypes.array
 }
 
 export default PickSelections;

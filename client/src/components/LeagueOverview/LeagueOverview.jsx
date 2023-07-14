@@ -97,7 +97,6 @@ const LeagueOverview = ({picks}) => {
 
         // sorting the array by username in alphabetical order
         results.sort((a, b) => a.owner.localeCompare(b.owner));
-        console.log(results)
         return results;
     }
 

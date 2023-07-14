@@ -1,32 +1,31 @@
-Todo list
+
+# Todo list
 
 ***
-WIP items so I know where I left off:
--
 
-<br>
-add helper tooltips
-<br>
-add email service (to account for prev option to invite by email and new ideas, like password recovery)
---Test mail sever at home
 
-***
-These are items I want to do and likely won't happen has I get this project
-stood back up to where it was previously.
+[] add helper tooltips (league standings - how are scores calculated)
 
 [x] loading spinners
 
-[] password recovery (need email)
+[] password recovery
 
 [] Store accessToken in cookie instead of context
 
-[] Make better exception handling
+[] Make better exception handling (register/login page fo shizzle)
 
 [x] Add isWinner data to overview page so scores/winners are shown
 
 [] add pick validation to back-end
 
 
+Notes from Jen:
+
+add weekly score to picks page (maybe cumulative as well if it makes sense)
+
+also check into highlighting native-select red/green border for pick.competitor.winner boolean
+
+switch value order to 5, 3, 1
 
 ***
 

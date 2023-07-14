@@ -70,6 +70,7 @@ const ModalEmailInvite = () => {
                         id="inviteEmailAddress"
                         label="Email Address"
                         placeholder="example@gmail.com"
+                        autoFocus
                         value={emailAddress}
                         onChange={(e) => setEmailAddress(e.target.value)}
                         sx={{

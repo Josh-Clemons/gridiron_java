@@ -1,7 +1,6 @@
-import {useContext, useEffect, useState} from 'react';
+// Libraries
+import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
-
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -11,14 +10,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import {UserContext} from '../../contexts/UserContext';
-import {StyledTableRow} from '../../styles/SharedStyles';
-import {NativeSelect, FormControl} from '@mui/material';
+import { NativeSelect, FormControl } from '@mui/material';
+import { UserContext } from '../../contexts/UserContext';
+import { StyledTableRow } from '../../styles/SharedStyles';
 
-
-// returns a component that allows users to see picks by week for everyone in the league
-const LeagueOverview = ({picks}) => {
-    const {user} = useContext(UserContext);
+const LeagueOverview = ({ picks }) => {
+    // Hooks
+    const { user } = useContext(UserContext);
     const [weeklyPicks, setWeeklyPicks] = useState([]);
 
     const handleWeekChange = (event) => {

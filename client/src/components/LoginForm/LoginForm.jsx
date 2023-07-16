@@ -1,8 +1,6 @@
+// Libraries
 import { useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import { UserContext } from '../../contexts/UserContext';
-
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -13,20 +11,19 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+// Contexts
+import { UserContext } from '../../contexts/UserContext';
 
 export default function LoginForm() {
+    // Hooks
     const navigate = useNavigate();
-    const {state} = useLocation();
-
+    const { state } = useLocation();
     const { signIn, signOut } = useContext(UserContext);
-
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState(null);
 
-
-
-    // alert for when login fields are empty
+    // Functions
     const errorEmptyFields = () => {
         setErrorMessage('Complete all fields');
     };

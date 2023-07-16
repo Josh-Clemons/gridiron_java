@@ -1,18 +1,24 @@
-// External library imports
+// Libraries
 import {useContext, useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {useQuery} from "react-query";
 import {Box, ButtonGroup, Button} from '@mui/material';
 
-// Internal module imports
-import {UserContext} from "../contexts/UserContext";
-import {fetchLeagueDetails} from "../utils/api.js";
-import useLeaguePicks from "../hooks/useLeaguePicks";
+// Components
 import LeagueStandings from "../components/LeagueStandings/LeagueStandings.jsx";
 import LeagueDetails from "../components/LeagueDetails/LeagueDetails";
 import PickSelections from "../components/PickSelections/PickSelections";
 import LeagueOverview from "../components/LeagueOverview/LeagueOverview";
 import {ThreeCircles} from "react-loader-spinner";
+
+// APIs
+import {fetchLeagueDetails} from "../utils/api.js";
+
+// Contexts
+import {UserContext} from "../contexts/UserContext";
+
+// Hooks
+import useLeaguePicks from "../hooks/useLeaguePicks";
 import useScrollToTop from "../hooks/useScrollToTop.js";
 
 

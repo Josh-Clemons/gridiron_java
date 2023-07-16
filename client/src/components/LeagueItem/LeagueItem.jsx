@@ -1,14 +1,16 @@
+// Libraries
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
 
-// returns a Box (list item) for each league being mapped
 const LeagueItem = ({ league }) => {
+    // Hooks
     const navigate = useNavigate();
 
+    // Functions
     const leagueClick = (league) => {
-        navigate(`/league-detail/${league.inviteCode}`)
+        navigate(`/league-detail/${league.inviteCode}`);
     };
 
     return (
@@ -34,7 +36,7 @@ const LeagueItem = ({ league }) => {
 };
 
 LeagueItem.propTypes = {
-    league: PropTypes.object
-}
+    league: PropTypes.object,
+};
 
 export default LeagueItem;

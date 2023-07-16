@@ -1,20 +1,30 @@
+// Libraries
 import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../contexts/UserContext";
 import { Box, Paper, Typography } from "@mui/material";
+
+// Contexts
+import { UserContext } from "../../contexts/UserContext";
+
+// Hooks
 import useLeaguesByUser from '../../hooks/useLeaguesByUser';
+
+// Components
 import FindLeagueButton from "../Buttons/FindLeagueButton.jsx";
 import CreateLeagueButton from "../Buttons/CreateLeagueButton.jsx";
 import LeagueItem from "../LeagueItem/LeagueItem";
 
-
 export const Dashboard = () => {
-
+    // Contexts
     const { user } = useContext(UserContext);
-    const { data: leagues, isLoading, isError, error } = useLeaguesByUser(user);
 
+    // State
     const [myLeagues, setMyLeagues] = useState([]);
     const [othersLeagues, setOthersLeagues] = useState([]);
 
+    // Hooks
+    const { data: leagues, isLoading, isError, error } = useLeaguesByUser(user);
+
+    // Effects
     useEffect(() => {
         if (leagues) {
             const myLeaguesData = leagues.filter(league => league.leagueOwner === user.username);

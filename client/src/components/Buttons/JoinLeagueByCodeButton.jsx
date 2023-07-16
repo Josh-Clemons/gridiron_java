@@ -1,12 +1,13 @@
-import {useState} from 'react';
+// Libraries
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { TextField } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
-import Modal from '@mui/material/Modal';
-import { useNavigate } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 const style = {
     position: 'absolute',
@@ -21,15 +22,14 @@ const style = {
     p: 4,
 };
 
-// takes the old league name as a prop to pre-populate input text
 const JoinLeagueByCodeButton = () => {
     const navigate = useNavigate();
 
     const [inviteCode, setInviteCode] = useState('');
     const [open, setOpen] = useState(false);
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
 
     const handleSubmit = (event) => {
         event.preventDefault();

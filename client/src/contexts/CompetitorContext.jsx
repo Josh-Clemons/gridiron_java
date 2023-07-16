@@ -1,14 +1,19 @@
-import {createContext, useContext} from 'react';
-import PropTypes from 'prop-types';
-import {useQuery} from 'react-query';
+// Libraries
 import axios from 'axios';
+import PropTypes from 'prop-types';
+import {createContext, useContext} from 'react';
+import {useQuery} from 'react-query';
+
+// Contexts
 import {UserContext} from './UserContext';
 
 export const CompetitorContext = createContext();
 
 export const CompetitorProvider = ({children}) => {
+    // Contexts
     const {user} = useContext(UserContext);
 
+    // Functions
     const fetchCompetitors = async () => {
         const {data} = await axios.get('http://localhost:8080/api/gamedata/competitors', {
             headers: {
@@ -18,6 +23,7 @@ export const CompetitorProvider = ({children}) => {
         return data;
     }
 
+    // Query
     const {data: competitors, isError, error, isLoading, refetch} = useQuery('competitors', fetchCompetitors, {
         refetchOnWindowFocus: false,
     });

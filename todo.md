@@ -2,6 +2,9 @@
 
 ***
 
+[] there is a bug in score calculation that adds 2 if there are less than 3 selections but all are correct
+
+[] league item updates, total members, picks complete?, fix height so it resizes correctly
 
 [] add helper tooltips (league standings - how are scores calculated)
 

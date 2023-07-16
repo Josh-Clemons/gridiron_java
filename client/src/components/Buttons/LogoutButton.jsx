@@ -1,8 +1,11 @@
+// Libraries
 import {Button} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import PropTypes from 'prop-types';
-import { UserContext } from '../../contexts/UserContext';
+import SearchIcon from '@mui/icons-material/Search';
 import { useContext } from 'react';
+
+// Contexts
+import { UserContext } from '../../contexts/UserContext';
 
 const LogoutButton = ({width}) => {
 

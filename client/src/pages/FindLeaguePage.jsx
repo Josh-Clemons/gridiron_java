@@ -1,21 +1,30 @@
-import {useQuery} from "react-query";
-import {fetchAvailableLeagues} from "../utils/api.js";
-import {Box, Typography} from "@mui/material";
-import {useContext} from "react";
-import {UserContext} from "../contexts/UserContext.jsx";
+// Libraries
+import { useQuery } from "react-query";
+import { useContext } from "react";
+import { Box, Typography } from "@mui/material";
+
+// Contexts
+import { UserContext } from "../contexts/UserContext.jsx";
+
+// Hooks
+import useScrollToTop from "../hooks/useScrollToTop.js";
+
+// API
+import { fetchAvailableLeagues } from "../utils/api.js";
+
+// Components
 import CreateLeagueButton from "../components/Buttons/CreateLeagueButton.jsx";
 import LeagueItem from "../components/LeagueItem/LeagueItem.jsx";
 import JoinLeagueByCodeButton from "../components/Buttons/JoinLeagueByCodeButton.jsx";
-import useScrollToTop from "../hooks/useScrollToTop.js";
-
 
 const FindLeaguePage = () => {
+    // Hooks
     useScrollToTop();
-    const {user} = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
-    const {data: availableLeagues, error, isLoading, isError}
-        = useQuery(['availableLeagues', {accessToken: user.accessToken}], fetchAvailableLeagues);
-
+    // Query
+    const { data: availableLeagues, error, isLoading, isError }
+        = useQuery(['availableLeagues', { accessToken: user.accessToken }], fetchAvailableLeagues);
 
     return (
         <Box

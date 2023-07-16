@@ -1,12 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
+// Libraries
 import React from 'react'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import GavelIcon from '@mui/icons-material/Gavel';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
 import Modal from '@mui/material/Modal';
 import PropTypes from 'prop-types';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 
 const style = {

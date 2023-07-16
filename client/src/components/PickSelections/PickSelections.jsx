@@ -1,23 +1,34 @@
+// Libraries
 import {useState, useEffect, useContext} from 'react';
-import PropTypes from 'prop-types';
-import SavePicksButton from "../Buttons/SavePicksButton";
-import Box from '@mui/material/Box'
-import {StyledTableRow} from "../../styles/SharedStyles";
+import Box from '@mui/material/Box';
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
+import PropTypes from 'prop-types';
 import {ThreeCircles} from 'react-loader-spinner';
-import PickSelect from "../PickSelect/PickSelect";
+
+// Contexts
 import {UserContext} from "../../contexts/UserContext.jsx";
 
+// Components
+import PickSelect from "../PickSelect/PickSelect";
+import SavePicksButton from "../Buttons/SavePicksButton";
+
+// Styles
+import {StyledTableRow} from "../../styles/SharedStyles";
+
 const PickSelections = ({picks, setPicks, leagueScores}) => {
+    // Hooks
     const {user} = useContext(UserContext);
     const [loading, setLoading] = useState(true);
     const [myScore, setMyScore] = useState(0);
 
+    // Side Effects
     useEffect(() => {
+        // Update the user's score whenever leagueScores changes
         setMyScore(leagueScores.find(score => score.username === user.username));
-    }, [leagueScores])
+    }, [leagueScores]);
 
     useEffect(() => {
+        // Stop the loading state once picks have been loaded
         if (picks) setLoading(false);
     }, [picks]);
 

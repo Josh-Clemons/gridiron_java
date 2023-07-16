@@ -1,31 +1,32 @@
+// Libraries
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Toolbar, IconButton, Typography, Stack } from '@mui/material';
-
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
 import GridViewIcon from '@mui/icons-material/GridView';
 import HomeIcon from '@mui/icons-material/Home';
+import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+
+// Contexts
 import { UserContext } from '../../contexts/UserContext';
 
-
 export default function NavBar() {
-
+    // Hooks
     const navigate = useNavigate();
     const { user, signOut } = React.useContext(UserContext);
-
     const [state, setState] = React.useState({ left: false });
 
+    // Functions
     const logout = () => {
         signOut();
         navigate('/');

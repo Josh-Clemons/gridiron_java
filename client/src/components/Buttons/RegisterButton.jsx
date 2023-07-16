@@ -1,7 +1,8 @@
+// Libraries
 import {Button} from '@mui/material';
+import PropTypes from 'prop-types';
 import SearchIcon from '@mui/icons-material/Search';
 import {useNavigate} from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 const RegisterButton = ({width}) => {
     const navigate = useNavigate();

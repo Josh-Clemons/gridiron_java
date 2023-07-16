@@ -1,18 +1,25 @@
-import React, { useContext } from 'react';
+// Libraries
 import axios from 'axios';
-import Box from '@mui/material/Box';
-
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Button from '@mui/material/Button';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import Modal from '@mui/material/Modal';
-import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
 import PropTypes from 'prop-types';
-import { errorAlert, infoAlert } from '../../utils/ToastAlerts';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+// UI Components
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
+// Icons
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+
+// Contexts
+import { UserContext } from '../../contexts/UserContext';
+
+// Utils
+import { errorAlert, infoAlert } from '../../utils/ToastAlerts';
 
 const style = {
     position: 'absolute',
@@ -27,35 +34,43 @@ const style = {
     p: 4,
 };
 
-const DeleteLeagueButton = ({leagueDetails}) => {
+const DeleteLeagueButton = ({ leagueDetails }) => {
+    const { user } = useContext(UserContext);
     const navigate = useNavigate();
-    const {user} = useContext(UserContext);
 
-    // open, handleOpen/Close are all used to control the modal
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    // sends league ID as payload to know what to delete, server confirms user making request is league owner
     const handleSubmit = async (event) => {
         event.preventDefault();
         await axios.delete(`http://localhost:8080/api/league/delete?leagueId=${leagueDetails.id}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`
-        }
-      })
-      .then(() => {
-        infoAlert('League deleted');
-        navigate('/dashboard');
-      }).catch(() => {
-        errorAlert('Error deleting league');
-      })
+            {
+                headers: {
+                    'Authorization': `Bearer ${user.accessToken}`
+                }
+            })
+            .then(() => {
+                infoAlert('League deleted');
+                navigate('/dashboard');
+            }).catch(() => {
+                errorAlert('Error deleting league');
+            })
     };
 
     return (
         <Box>
-            <Button variant="outlined" onClick={handleOpen} color={'error'} size='small' sx={{ width: 125, m: 1, borderWidth: 2, '&:hover': { borderWidth: '2px' } }}>DELETE<DeleteOutlineOutlinedIcon sx={{ ml: 2 }} /></Button>
+            <Button
+                variant="outlined"
+                onClick={handleOpen}
+                color='error'
+                size='small'
+                sx={{ width: 125, m: 1, borderWidth: 2, '&:hover': { borderWidth: '2px' } }}
+            >
+                DELETE
+                <DeleteOutlineOutlinedIcon sx={{ ml: 2 }} />
+            </Button>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -65,8 +80,24 @@ const DeleteLeagueButton = ({leagueDetails}) => {
                         Are you sure you want to delete?
                     </Typography>
                     <Stack spacing={1} p={2} direction='row-reverse'>
-                        <Button variant='outlined' color={'error'} onClick={handleSubmit} sx={{ minWidth: 80, borderWidth: 2 }}>Yes<DeleteOutlineOutlinedIcon sx={{ ml: 1 }} /></Button>
-                        <Button variant='outlined' color={'warning'} onClick={handleClose} sx={{ minWidth: 80, borderWidth: 2 }}>Cancel<ArrowBackIcon sx={{ ml: 1 }} /></Button>
+                        <Button
+                            variant='outlined'
+                            color='error'
+                            onClick={handleSubmit}
+                            sx={{ minWidth: 80, borderWidth: 2 }}
+                        >
+                            Yes
+                            <DeleteOutlineOutlinedIcon sx={{ ml: 1 }} />
+                        </Button>
+                        <Button
+                            variant='outlined'
+                            color='warning'
+                            onClick={handleClose}
+                            sx={{ minWidth: 80, borderWidth: 2 }}
+                        >
+                            Cancel
+                            <ArrowBackIcon sx={{ ml: 1 }} />
+                        </Button>
                     </Stack>
                 </Box>
             </Modal>
@@ -75,7 +106,7 @@ const DeleteLeagueButton = ({leagueDetails}) => {
 }
 
 DeleteLeagueButton.propTypes = {
-  leagueDetails: PropTypes.object
-}
+    leagueDetails: PropTypes.object.isRequired,
+};
 
 export default DeleteLeagueButton;

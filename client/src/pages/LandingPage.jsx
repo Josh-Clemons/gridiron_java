@@ -1,7 +1,14 @@
-import {Box, Typography, Stack} from '@mui/material';
+// Libraries
+import { Box, Typography, Stack } from '@mui/material';
+import { useContext } from 'react';
+
+// Contexts
+import { UserContext } from '../contexts/UserContext';
+
+// Assets
 import background from '../assets/background.jpeg';
-import {useContext} from 'react';
-import {UserContext} from '../contexts/UserContext';
+
+// Components
 import LoginButton from '../components/Buttons/LoginButton';
 import DashboardButton from '../components/Buttons/DashboardButton';
 import LogoutButton from '../components/Buttons/LogoutButton';
@@ -9,9 +16,8 @@ import RegisterButton from '../components/Buttons/RegisterButton';
 import RulesButton from '../components/Buttons/RulesButton';
 
 const LandingPage = () => {
-
-    const {user} = useContext(UserContext);
-
+    // Contexts
+    const { user } = useContext(UserContext);
 
     return (
         <Box

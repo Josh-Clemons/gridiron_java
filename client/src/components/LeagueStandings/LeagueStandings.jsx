@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-
+// Libraries
 import {
     Box,
     Paper,
@@ -11,6 +10,7 @@ import {
     TableCell,
     Typography
 } from "@mui/material";
+import PropTypes from 'prop-types';
 import { StyledTableRow } from '../../styles/SharedStyles';
 
 const LeagueStandings = ({ leagueScores }) => {

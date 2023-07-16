@@ -1,24 +1,31 @@
+// Libraries
 import {Box, NativeSelect, FormControl} from '@mui/material';
 import PropTypes from 'prop-types';
-import {getSelectOptions} from '../../utils/PickUtils';
 import {useContext, useEffect, useState} from 'react';
+
+// Contexts
 import {CompetitorContext} from '../../contexts/CompetitorContext';
+
+// Utils
+import {getSelectOptions} from '../../utils/PickUtils';
 import {errorAlert} from "../../utils/ToastAlerts.js";
 
 const PickSelect = ({picks, week, value, setPicks}) => {
+    // Hooks
     const {competitors} = useContext(CompetitorContext);
     const [selectOptions, setSelectOptions] = useState(null);
     const [pick, setPick] = useState(null);
 
+    // Side Effects
     useEffect(() => {
-        if (picks != null) {
-            setPick(picks?.find(pick => pick.value === value && pick.week === week));
-        }
-    }, [picks, value, week])
+        // Set pick whenever picks, value, or week changes
+        setPick(picks?.find(pick => pick.value === value && pick.week === week));
+    }, [picks, value, week]);
 
     useEffect(() => {
+        // Set select options whenever competitors, week, or pick changes
         setSelectOptions(getSelectOptions(competitors, week, pick?.team));
-    }, [competitors, week, pick])
+    }, [competitors, week, pick]);
 
     const handleChange = event => {
         const selectedOption = event.target.value;
@@ -55,12 +62,12 @@ const PickSelect = ({picks, week, value, setPicks}) => {
 
     // TODO take away the '&& pick.week < 9' for deployment
     const isPickStartDatePast = () => {
-        // if (pick && pick.startDate && pick.week < 9) {
-        //     const pickDate = new Date(pick.startDate);
-        //     const currentDate = new Date();
-        //
-        //     return pickDate < currentDate;
-        // }
+        if (pick && pick.startDate && pick.week < 10) {
+            const pickDate = new Date(pick.startDate);
+            const currentDate = new Date();
+        
+            return pickDate < currentDate;
+        }
         return false;
     }
 

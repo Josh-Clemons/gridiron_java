@@ -1,17 +1,20 @@
-import React, { useContext } from 'react';
+// Libraries
 import axios from 'axios';
 import Box from '@mui/material/Box';
-
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Modal from '@mui/material/Modal';
-import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
 import PropTypes from 'prop-types';
-import { errorAlert, infoAlert } from '../../utils/ToastAlerts';
+import Stack from '@mui/material/Stack';
+import { useNavigate } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import Typography from '@mui/material/Typography';
 
+// Contexts
+import { UserContext } from '../../contexts/UserContext';
+
+// Utilities
+import { errorAlert, infoAlert } from '../../utils/ToastAlerts';
 
 const style = {
     position: 'absolute',
@@ -27,11 +30,11 @@ const style = {
 };
 
 const LeaveLeagueButton = ({leagueDetails}) => {
-    const navigate = useNavigate();
     const {user} = useContext(UserContext);
+    const navigate = useNavigate();
 
     // open, handleOpen/Close are all used to control the modal
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -39,42 +42,42 @@ const LeaveLeagueButton = ({leagueDetails}) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         await axios.delete(`http://localhost:8080/api/league/leave?leagueId=${leagueDetails.id}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${user.accessToken}`
-        }
-      })
-      .then(() => {
-        navigate('/dashboard');
-        infoAlert('League left');
-      }).catch(() => {
-        errorAlert('Error leaving league');
-      })
+            {
+                headers: {
+                    'Authorization': `Bearer ${user.accessToken}`
+                }
+            })
+            .then(() => {
+                navigate('/dashboard');
+                infoAlert('League left');
+            }).catch(() => {
+                errorAlert('Error leaving league');
+            })
     };
 
     return (
-      <Box>
-          <Button variant="outlined" onClick={handleOpen} color={'error'} size='small' sx={{ width: 125, m: 1, borderWidth: 2, '&:hover': { borderWidth: '2px' } }}>Leave<ExitToAppIcon sx={{ ml: 2 }} /></Button>
-          <Modal
-              open={open}
-              onClose={handleClose}
-          >
-              <Box sx={style} component='form' onSubmit={handleSubmit}>
-                  <Typography id="modal-modal-title" variant="h6">
-                      Are you sure you want to leave?
-                  </Typography>
-                  <Stack spacing={1} p={2} direction='row-reverse'>
-                      <Button variant='outlined' color={'error'} onClick={handleSubmit} sx={{ width: 80 }}>Yes</Button>
-                      <Button variant='outlined' color={'warning'} onClick={handleClose} sx={{ width: 80 }}>Cancel</Button>
-                  </Stack>
-              </Box>
-          </Modal>
-      </Box>
-  );
+        <Box>
+            <Button variant="outlined" onClick={handleOpen} color={'error'} size='small' sx={{ width: 125, m: 1, borderWidth: 2, '&:hover': { borderWidth: '2px' } }}>Leave<ExitToAppIcon sx={{ ml: 2 }} /></Button>
+            <Modal
+                open={open}
+                onClose={handleClose}
+            >
+                <Box sx={style} component='form' onSubmit={handleSubmit}>
+                    <Typography id="modal-modal-title" variant="h6">
+                        Are you sure you want to leave?
+                    </Typography>
+                    <Stack spacing={1} p={2} direction='row-reverse'>
+                        <Button variant='outlined' color={'error'} onClick={handleSubmit} sx={{ width: 80 }}>Yes</Button>
+                        <Button variant='outlined' color={'warning'} onClick={handleClose} sx={{ width: 80 }}>Cancel</Button>
+                    </Stack>
+                </Box>
+            </Modal>
+        </Box>
+    );
 }
 
 LeaveLeagueButton.propTypes = {
-  leagueDetails: PropTypes.object
+    leagueDetails: PropTypes.object
 }
 
 export default LeaveLeagueButton;

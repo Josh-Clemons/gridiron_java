@@ -1,7 +1,8 @@
+// Libraries
 import {Button} from '@mui/material';
+import PropTypes from 'prop-types';
 import SearchIcon from '@mui/icons-material/Search';
 import {useNavigate} from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 const LoginButton = ({width}) => {
     const navigate = useNavigate();
@@ -11,7 +12,9 @@ const LoginButton = ({width}) => {
             sx={{ml: 2}}/></Button>
     )
 }
+
 LoginButton.propTypes = {
     width: PropTypes.number
 }
+
 export default LoginButton;

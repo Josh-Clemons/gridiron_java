@@ -1,3 +1,5 @@
+// Libraries
+import PropTypes from 'prop-types';
 import {
     Accordion,
     AccordionDetails,
@@ -8,32 +10,36 @@ import {
     Stack,
     Tooltip,
     Typography
-} from '@mui/material'
+} from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {useNavigate} from 'react-router-dom';
-import PropTypes from 'prop-types';
-import {useEffect, useState} from 'react';
-import JoinLeagueButton from '../Buttons/JoinLeagueButton';
-import RulesButton from '../Buttons/RulesButton';
-import DeleteLeagueButton from '../Buttons/DeleteLeagueButton';
-import LeaveLeagueButton from '../Buttons/LeaveLeagueButton';
-import {ThreeCircles} from 'react-loader-spinner';
-import InviteMemberButton from "../Buttons/InviteMemberButton.jsx";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ThreeCircles } from 'react-loader-spinner';
 
-const LeagueDetails = ({isMember, isOwner, leagueDetails}) => {
+// Components
+import DeleteLeagueButton from '../Buttons/DeleteLeagueButton';
+import InviteMemberButton from "../Buttons/InviteMemberButton.jsx";
+import JoinLeagueButton from '../Buttons/JoinLeagueButton';
+import LeaveLeagueButton from '../Buttons/LeaveLeagueButton';
+import RulesButton from '../Buttons/RulesButton';
+
+const LeagueDetails = ({ isMember, isOwner, leagueDetails }) => {
+    // Hooks
     const navigate = useNavigate();
     const [openCopied, setOpenCopied] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    // Effects
     useEffect(() => {
         if (leagueDetails) setLoading(false);
     }, [leagueDetails]);
 
+    // Loaders
     if (loading) {
         return (
-            <Box sx={{display: 'flex', height: '100vh', mt: 5}}>
+            <Box sx={{ display: 'flex', height: '100vh', mt: 5 }}>
                 <ThreeCircles
                     type="ThreeDots"
                     color="#5BC0BE"
@@ -44,6 +50,7 @@ const LeagueDetails = ({isMember, isOwner, leagueDetails}) => {
         );
     }
 
+    // Functions
     const handleTooltipClose = () => {
         setOpenCopied(false);
     };

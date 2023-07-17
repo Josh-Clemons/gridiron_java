@@ -72,7 +72,7 @@ const LeagueDetailsPage = () => {
             for (let [week, picks] of weekPicks.entries()) {
                 let allWinners = picks.every(pick => pick?.competitor?.winner);
 
-                if (allWinners) {
+                if (allWinners && picks.length === 3) {
                     let weekScore = picks.reduce((total, pick) => total + pick.value, 0);
                     score += weekScore + 2;
                 } else {

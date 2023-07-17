@@ -25,6 +25,7 @@ import TestApi from '../../assets/TestApi';
 
 // CSS
 import 'react-toastify/dist/ReactToastify.css';
+import AboutPage from "../../pages/AboutPage.jsx";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ function App() {
                 <Route path='/league-detail/:inviteCode' element={<PrivateRoute><LeagueDetailsPage /></PrivateRoute>} />
                 <Route path='/find-league' element={<PrivateRoute><FindLeaguePage /></PrivateRoute>} />
                 <Route path='/create' element={<PrivateRoute><CreateLeaguePage /></PrivateRoute>} />
+                <Route path='/about' element={<PrivateRoute><AboutPage /></PrivateRoute>} />
               </Routes>
               <ToastContainer
                   position="top-right"

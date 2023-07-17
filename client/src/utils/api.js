@@ -28,7 +28,20 @@ export const fetchLeagueDetails = async ({queryKey}) => {
     return response.data;
 };
 
-export const inviteNewMember = ((to, inviteCode, accessToken) => {
+export const updateCompetitorData = async ({accessToken}) => {
+    const response = await axios.get(`http://localhost:8080/api/gamedata//update-db`, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+    if (!response.data) {
+        throw new Error('No data!');
+    }
+    return response.data;
+};
+
+
+    export const inviteNewMember = ((to, inviteCode, accessToken) => {
     axios.post(`http://localhost:8080/api/email/invite`, {
             to: to,
             inviteCode: inviteCode

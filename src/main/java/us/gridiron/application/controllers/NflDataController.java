@@ -42,7 +42,7 @@ public class NflDataController {
 	}
 
 	@GetMapping("/espn")
-	@PreAuthorize("hasRole('MODERATOR')")
+//	@PreAuthorize("hasRole('MODERATOR')")
 	public ResponseEntity<List<CompetitorDTO>> getAllGameData() {
 		logger.info("Get /api/gamedata/espn");
 		try{

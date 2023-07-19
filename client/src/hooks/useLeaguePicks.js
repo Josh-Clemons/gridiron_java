@@ -7,7 +7,7 @@ function useLeaguePicks(code) {
     const {user} = useContext(UserContext);
 
     return useQuery(['leaguePicks', code], async () => {
-        const response = await axios.get(`http://localhost:8080/api/pick/all-league-picks?inviteCode=${code}`, {
+        const response = await axios.get(`${window.BACKEND_URL}/api/pick/all-league-picks?inviteCode=${code}`, {
             headers: {
                 'Authorization': `Bearer ${user.accessToken}`
             }

@@ -11,7 +11,7 @@ export const UserProvider = ({children}) => {
     const [token, setToken] = useState(user?.accessToken);
 
     const signinMutation = useMutation(({username, password}) => axios
-        .post('http://localhost:8080/api/auth/signin', {username, password}), {
+        .post(`${window.BACKEND_URL}/api/auth/signin`, {username, password}), {
         onSuccess: (data) => {
             setUser(data.data);
             setToken(data.data.accessToken);
@@ -26,7 +26,7 @@ export const UserProvider = ({children}) => {
     const signupMutation = useMutation(({username, email, password}) => {
         const credentials = {username, password};
 
-        return axios.post('http://localhost:8080/api/auth/signup', {username, email, password})
+        return axios.post(`${window.BACKEND_URL}/api/auth/signup`, {username, email, password})
             .then((data) => {
                 return {...data, credentials};  // Return data and credentials together.
             }).catch((error) => {

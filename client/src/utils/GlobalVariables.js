@@ -1,0 +1,1 @@
+window.BACKEND_URL = "https://gridiron-java-c95bfe4c87da.herokuapp.com/"

@@ -103,11 +103,11 @@ public class AuthController {
 		logger.info("Post /api/auth/signup, signupRequest: {}", signUpRequest.toString());
 		try {
 			if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-				return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+				return ResponseEntity.badRequest().body(new MessageResponse("Username is already taken!"));
 			}
 
 			if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-				return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+				return ResponseEntity.badRequest().body(new MessageResponse("Email is already in use!"));
 			}
 
 			// Create new user's account
@@ -119,24 +119,24 @@ public class AuthController {
 
 			if (strRoles == null) {
 				Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					.orElseThrow(() -> new RuntimeException("Role is not found."));
 				roles.add(userRole);
 			} else {
 				strRoles.forEach(role -> {
 					switch(role) {
 						case "admin" -> {
 							Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-								.orElseThrow(() -> new RuntimeException("Error: Admin role is not found."));
+								.orElseThrow(() -> new RuntimeException("Admin role is not found."));
 							roles.add(adminRole);
 						}
 						case "mod" -> {
 							Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-								.orElseThrow(() -> new RuntimeException("Error: Mod role is not found."));
+								.orElseThrow(() -> new RuntimeException("Mod role is not found."));
 							roles.add(modRole);
 						}
 						default -> {
 							Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-								.orElseThrow(() -> new RuntimeException("Error: User role is not found."));
+								.orElseThrow(() -> new RuntimeException("User role is not found."));
 							roles.add(userRole);
 						}
 					}

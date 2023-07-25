@@ -35,14 +35,14 @@ public class EmailController {
 		}
 	}
 
-	@PostMapping("/password-reset-request")
-	public ResponseEntity<?> resetPassword(@RequestParam String email) {
+	@PutMapping("/password-reset-request")
+	public ResponseEntity<?> resetPasswordEmail(@RequestBody String email) {
 		try {
 			emailService.sendPasswordReset(email);
 			return ResponseEntity.ok("Request sent");
-		} catch (Exception e){
+		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
-			return ResponseEntity.badRequest().body(e.getMessage());
+			return ResponseEntity.badRequest().body("Problem sending password reset email");
 		}
 	}
 }

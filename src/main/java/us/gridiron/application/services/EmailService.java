@@ -22,7 +22,9 @@ public class EmailService {
 	private final CodeService codeService;
 
 	@Autowired
-	public EmailService(JavaMailSender emailSender, SpringTemplateEngine templateEngine, UserService userService, UserRepository userRepository, CodeService codeService) {
+	public EmailService(
+		JavaMailSender emailSender, SpringTemplateEngine templateEngine, UserService userService,
+		UserRepository userRepository, CodeService codeService) {
 		this.emailSender = emailSender;
 		this.templateEngine = templateEngine;
 		this.userService = userService;
@@ -55,20 +57,20 @@ public class EmailService {
 
 	public void sendPasswordReset(String email) throws MessagingException {
 		User user = userRepository.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("User not found"));
+			.orElseThrow(() -> new RuntimeException("User not found"));
 		MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(
-				message, true);
+			message, true);
 
 		helper.setFrom("gridironpickem@outlook.com");
 		helper.setTo(email);
 		helper.setSubject("Password Reset: Grid Iron Pickems");
 
 		Code code = codeService.generateCode(10);
-		String codeLink = "https://gridiron-java-c95bfe4c87da.herokuapp.com/api/email/reset?accessCode="+code.getAccessCode();
+		String codeLink = "https://gridiron-java-c95bfe4c87da.herokuapp.com/api/auth/reset?accessCode=" + code.getAccessCode();
 
 		String content = ("<h2>" + user.getUsername() + " below is a link to reset your password</h2>" +
-				"<h3>Link to league: <a href=" + codeLink + ">Click here</a></h3>");
+			"<h3>Link to league: <a href=" + codeLink + ">Click here</a></h3>");
 
 		helper.setText(content, true);
 

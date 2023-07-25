@@ -27,6 +27,7 @@ import us.gridiron.application.models.ERole;
 import us.gridiron.application.models.Role;
 import us.gridiron.application.models.User;
 import us.gridiron.application.payload.request.LoginRequest;
+import us.gridiron.application.payload.request.PasswordResetRequest;
 import us.gridiron.application.payload.request.SignupRequest;
 import us.gridiron.application.payload.response.JwtResponse;
 import us.gridiron.application.payload.response.MessageResponse;
@@ -51,8 +52,10 @@ public class AuthController {
 	JwtUtils jwtUtils;
 
 	@Autowired
-	public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-						  RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils, UserService userService, ModelMapper modelMapper){
+	public AuthController(
+		AuthenticationManager authenticationManager, UserRepository userRepository,
+		RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils, UserService userService,
+		ModelMapper modelMapper) {
 		this.authenticationManager = authenticationManager;
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
@@ -63,12 +66,12 @@ public class AuthController {
 	}
 
 	@GetMapping("/current")
-	public ResponseEntity<?> getCurrentUser(){
+	public ResponseEntity<?> getCurrentUser() {
 		try {
 			User user = userService.getLoggedInUser();
 			UserDTO userDTO = modelMapper.map(user, UserDTO.class);
 			return ResponseEntity.ok(userDTO);
-		} catch (Exception e) {
+		} catch(Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
@@ -78,21 +81,21 @@ public class AuthController {
 		logger.info("Post api/auth/signin, user: {}", loginRequest.getUsername());
 		try {
 			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(
-							loginRequest.getUsername(), loginRequest.getPassword()));
+				.authenticate(new UsernamePasswordAuthenticationToken(
+					loginRequest.getUsername(), loginRequest.getPassword()));
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			String jwt = jwtUtils.generateJwtToken(authentication);
 
-			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+			UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
 			List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-					.collect(Collectors.toList());
+				.collect(Collectors.toList());
 
 			return ResponseEntity
-					.ok(new JwtResponse(jwt,
-							userDetails.getId(), userDetails.getUsername(),
-							userDetails.getEmail(), roles));
-		} catch (Exception e){
+				.ok(new JwtResponse(jwt,
+					userDetails.getId(), userDetails.getUsername(),
+					userDetails.getEmail(), roles));
+		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
@@ -102,11 +105,11 @@ public class AuthController {
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		logger.info("Post /api/auth/signup, signupRequest: {}", signUpRequest.toString());
 		try {
-			if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+			if(userRepository.existsByUsername(signUpRequest.getUsername())) {
 				return ResponseEntity.badRequest().body(new MessageResponse("Username is already taken!"));
 			}
 
-			if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+			if(userRepository.existsByEmail(signUpRequest.getEmail())) {
 				return ResponseEntity.badRequest().body(new MessageResponse("Email is already in use!"));
 			}
 
@@ -117,7 +120,7 @@ public class AuthController {
 			Set<String> strRoles = signUpRequest.getRole();
 			Set<Role> roles = new HashSet<>();
 
-			if (strRoles == null) {
+			if(strRoles == null) {
 				Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 					.orElseThrow(() -> new RuntimeException("Role is not found."));
 				roles.add(userRole);
@@ -146,9 +149,24 @@ public class AuthController {
 			user.setRoles(roles);
 
 			return ResponseEntity.ok(userRepository.save(user));
-		} catch (Exception e) {
+		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+
+	@PutMapping("/reset")
+	public ResponseEntity<?> resetUserPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
+		String username = passwordResetRequest.getUsername();
+		String newPassword = passwordResetRequest.getNewPassword();
+		String accessCode = passwordResetRequest.getAccessCode();
+
+		try {
+			User updatedUser = userService.resetPassword(username, newPassword, accessCode);
+			return ResponseEntity.ok(updatedUser);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body("Password reset unsuccessful.");
 		}
 	}
 }

@@ -27,7 +27,7 @@ public class CodeService {
             codeBuilder.append(alphanumeric.charAt(random.nextInt(alphanumeric.length())));
         }
 
-        return new Code(codeBuilder.toString(), LocalDateTime.now());
+        return codeRepository.save(new Code(codeBuilder.toString(), LocalDateTime.now()));
     }
 
     public void validateCode(String accessCode, long minutes) {

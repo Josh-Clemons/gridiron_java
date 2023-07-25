@@ -36,7 +36,7 @@ public class EmailController {
 	}
 
 	@PutMapping("/password-reset-request")
-	public ResponseEntity<?> resetPasswordEmail(@RequestBody String email) {
+	public ResponseEntity<?> resetPasswordEmail(@RequestParam String email) {
 		try {
 			emailService.sendPasswordReset(email);
 			return ResponseEntity.ok("Request sent");

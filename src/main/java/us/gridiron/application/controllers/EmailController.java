@@ -5,11 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import us.gridiron.application.payload.request.EmailDTO;
 import us.gridiron.application.services.EmailService;
 
@@ -32,9 +28,19 @@ public class EmailController {
 
 		try {
 			emailService.sendLeagueInvite(emailDto.getTo(), emailDto.getInviteCode());
-			//			emailService.sendSimpleMessage(emailDto.getTo(), emailDto.getSubject(), emailDto.getText());
 			return ResponseEntity.ok("Message sent");
 		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+
+	@PostMapping("/password-reset-request")
+	public ResponseEntity<?> resetPassword(@RequestParam String email) {
+		try {
+			emailService.sendPasswordReset(email);
+			return ResponseEntity.ok("Request sent");
+		} catch (Exception e){
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}

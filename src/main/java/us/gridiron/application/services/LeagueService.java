@@ -10,21 +10,21 @@ import us.gridiron.application.payload.request.JoinLeagueDTO;
 import us.gridiron.application.repository.LeagueRepository;
 import us.gridiron.application.repository.PickRepository;
 
-import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class LeagueService {
 	private final LeagueRepository leagueRepository;
 	private final PickService pickService;
 	private final PickRepository pickRepository;
+	private final CodeService codeService;
 
 	@Autowired
-	public LeagueService(LeagueRepository leagueRepository, PickService pickService, PickRepository pickRepository) {
+	public LeagueService(LeagueRepository leagueRepository, PickService pickService, PickRepository pickRepository, CodeService codeService) {
 		this.leagueRepository = leagueRepository;
 		this.pickService = pickService;
 		this.pickRepository = pickRepository;
+		this.codeService = codeService;
 	}
 
 	public List<League> getAllLeagues() {
@@ -63,7 +63,7 @@ public class LeagueService {
 		String inviteCode = "";
 		// confirms the invite code is unique before moving on
 		while(inviteCode.equals("")) {
-			String tempCode = generateInviteCode();
+			String tempCode = codeService.generateCode(6).getAccessCode();
 			if(leagueRepository.findByInviteCode(tempCode) == null) {
 				inviteCode = tempCode;
 			}
@@ -127,17 +127,5 @@ public class LeagueService {
 		} else {
 			throw new RuntimeException("Unable to delete, you are not the owner");
 		}
-	}
-
-	public String generateInviteCode() {
-		Random random = new SecureRandom();
-		String alphanumberic = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-		int codeLength = 6;
-
-		StringBuilder codeBuilder = new StringBuilder(codeLength);
-		for(int i = 0; i < codeLength; i++) {
-			codeBuilder.append(alphanumberic.charAt(random.nextInt(alphanumberic.length())));
-		}
-		return codeBuilder.toString();
 	}
 }

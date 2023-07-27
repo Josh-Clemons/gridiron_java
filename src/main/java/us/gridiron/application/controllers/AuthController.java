@@ -113,6 +113,10 @@ public class AuthController {
 				return ResponseEntity.badRequest().body(new MessageResponse("Email is already in use!"));
 			}
 
+			if(!userService.validatePassword(signUpRequest.getPassword())) {
+				return ResponseEntity.badRequest().body(new MessageResponse("Invalid password"));
+			}
+
 			// Create new user's account
 			User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
 				encoder.encode(signUpRequest.getPassword()));
@@ -157,16 +161,22 @@ public class AuthController {
 
 	@PutMapping("/reset")
 	public ResponseEntity<?> resetUserPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
+		logger.debug("Put api/email/reset for username: {}", passwordResetRequest.getUsername());
+
 		String username = passwordResetRequest.getUsername();
 		String newPassword = passwordResetRequest.getNewPassword();
 		String accessCode = passwordResetRequest.getAccessCode();
+
+		if(!userService.validatePassword(newPassword)) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Invalid new password"));
+		}
 
 		try {
 			User updatedUser = userService.resetPassword(username, newPassword, accessCode);
 			return ResponseEntity.ok(updatedUser);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
-			return ResponseEntity.badRequest().body("Password reset unsuccessful.");
+			return ResponseEntity.badRequest().body(new MessageResponse("Password reset unsuccessful."));
 		}
 	}
 }

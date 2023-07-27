@@ -22,7 +22,10 @@ public class EmailService {
 	private final CodeService codeService;
 
 	@Autowired
-	public EmailService(JavaMailSender emailSender, SpringTemplateEngine templateEngine, UserService userService, UserRepository userRepository, CodeService codeService) {
+	public EmailService(
+		JavaMailSender emailSender, SpringTemplateEngine templateEngine, UserService userService,
+		UserRepository userRepository, CodeService codeService)
+	{
 		this.emailSender = emailSender;
 		this.templateEngine = templateEngine;
 		this.userService = userService;
@@ -30,7 +33,8 @@ public class EmailService {
 		this.codeService = codeService;
 	}
 
-	public void sendLeagueInvite(String to, String inviteCode) throws MessagingException {
+	public void sendLeagueInvite(String to, String inviteCode) throws MessagingException
+	{
 		User user = userService.getLoggedInUser();
 		MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(
@@ -53,23 +57,24 @@ public class EmailService {
 
 	}
 
-	public void sendPasswordReset(String email) throws MessagingException {
+	public void sendPasswordReset(String email) throws MessagingException
+	{
 		User user = userRepository.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("User not found"));
+			.orElseThrow(() -> new RuntimeException("User not found"));
 		MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(
-				message, true);
+			message, true);
 
 		helper.setFrom("gridironpickem@outlook.com");
 		helper.setTo(email);
 		helper.setSubject("Password Reset: Grid Iron Pickems");
 
-		Code code = codeService.generateCode(10);
-		String codeLink = "gridironpicks.us/#/password-reset/"+ code.getAccessCode();
+		Code code = codeService.generateCode(10, email);
+		String codeLink = "gridironpicks.us/#/password-reset/" + code.getAccessCode() + "/" + user.getEmail();
 		// this is the link I'll need in my front end: "http://localhost:5173/api/auth/reset?accessCode="+code.getAccessCode();
 
 		String content = ("<h2>" + user.getUsername() + " below is a link to reset your password</h2>" +
-				"<h3>Link: <a href=" + codeLink + ">Click here</a></h3>");
+			"<h3>Link: <a href=" + codeLink + ">Click here</a></h3>");
 
 		helper.setText(content, true);
 
@@ -77,7 +82,8 @@ public class EmailService {
 
 	}
 
-	public void sendSimpleMessage(String to, String subject, String text) {
+	public void sendSimpleMessage(String to, String subject, String text)
+	{
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom("gridironpickem@outlook.com");
 		message.setTo(to);

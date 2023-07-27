@@ -29,12 +29,12 @@ public class UserService {
 			.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + loggedInUsername));
 	}
 
-	public User resetPassword(String username, String newPassword, String accessCode)
+	public User resetPassword(String email, String newPassword, String accessCode)
 	{
-		User user = userRepository.findByUsername(username)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+		User user = userRepository.findByEmail(email)
+			.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-		codeService.validateCode(accessCode, 120);
+		codeService.validateCode(accessCode, 120, email);
 
 		String encodedPassword = passwordEncoder.encode(newPassword);
 		user.setPassword(encodedPassword);

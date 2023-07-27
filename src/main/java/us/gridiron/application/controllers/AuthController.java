@@ -55,7 +55,8 @@ public class AuthController {
 	public AuthController(
 		AuthenticationManager authenticationManager, UserRepository userRepository,
 		RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils, UserService userService,
-		ModelMapper modelMapper) {
+		ModelMapper modelMapper)
+	{
 		this.authenticationManager = authenticationManager;
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
@@ -66,7 +67,8 @@ public class AuthController {
 	}
 
 	@GetMapping("/current")
-	public ResponseEntity<?> getCurrentUser() {
+	public ResponseEntity<?> getCurrentUser()
+	{
 		try {
 			User user = userService.getLoggedInUser();
 			UserDTO userDTO = modelMapper.map(user, UserDTO.class);
@@ -77,7 +79,8 @@ public class AuthController {
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest)
+	{
 		logger.info("Post api/auth/signin, user: {}", loginRequest.getUsername());
 		try {
 			Authentication authentication = authenticationManager
@@ -102,7 +105,8 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest)
+	{
 		logger.info("Post /api/auth/signup, signupRequest: {}", signUpRequest.toString());
 		try {
 			if(userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -160,10 +164,11 @@ public class AuthController {
 	}
 
 	@PutMapping("/reset")
-	public ResponseEntity<?> resetUserPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
-		logger.debug("Put api/email/reset for username: {}", passwordResetRequest.getUsername());
+	public ResponseEntity<?> resetUserPassword(@RequestBody PasswordResetRequest passwordResetRequest)
+	{
+		logger.debug("Put api/email/reset for email: {}", passwordResetRequest.getEmail());
 
-		String username = passwordResetRequest.getUsername();
+		String email = passwordResetRequest.getEmail();
 		String newPassword = passwordResetRequest.getNewPassword();
 		String accessCode = passwordResetRequest.getAccessCode();
 
@@ -172,7 +177,7 @@ public class AuthController {
 		}
 
 		try {
-			User updatedUser = userService.resetPassword(username, newPassword, accessCode);
+			User updatedUser = userService.resetPassword(email, newPassword, accessCode);
 			return ResponseEntity.ok(updatedUser);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);

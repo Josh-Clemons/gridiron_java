@@ -12,43 +12,51 @@ import java.util.Random;
 @Service
 public class CodeService {
 
-    private final CodeRepository codeRepository;
+	private final CodeRepository codeRepository;
 
-    public CodeService(CodeRepository codeRepository) {
-        this.codeRepository = codeRepository;
-    }
+	public CodeService(CodeRepository codeRepository)
+	{
+		this.codeRepository = codeRepository;
+	}
 
-    public Code generateCode(int codeLength) {
-        Random random = new SecureRandom();
-        String alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	public Code generateCode(int codeLength, String email)
+	{
+		Random random = new SecureRandom();
+		String alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-        StringBuilder codeBuilder = new StringBuilder(codeLength);
-        for(int i = 0; i < codeLength; i++) {
-            codeBuilder.append(alphanumeric.charAt(random.nextInt(alphanumeric.length())));
-        }
+		StringBuilder codeBuilder = new StringBuilder(codeLength);
+		for(int i = 0; i < codeLength; i++) {
+			codeBuilder.append(alphanumeric.charAt(random.nextInt(alphanumeric.length())));
+		}
 
-        return codeRepository.save(new Code(codeBuilder.toString(), LocalDateTime.now()));
-    }
+		return codeRepository.save(new Code(codeBuilder.toString(), LocalDateTime.now(), email));
+	}
 
-    public void validateCode(String accessCode, long minutes) {
-        Code code = codeRepository.findCodeByAccessCode(accessCode);
+	public Code generateCode(int codeLength)
+	{
+		return generateCode(codeLength, "");
+	}
 
-        if(code == null) {
-            throw new RuntimeException("Unable to locate code details");
-        }
+	public void validateCode(String accessCode, long minutes, String email)
+	{
+		Code code = codeRepository.findCodeByAccessCode(accessCode);
 
-        if(!code.getIsUsed()) {
-            LocalDateTime now = LocalDateTime.now();
-            Duration duration = Duration.between(code.getCreatedDate(), now);
+		if(code == null) {
+			throw new RuntimeException("Unable to locate code details");
+		} else if(!code.getEmail().equals("") && !code.getEmail().equals(email)) {
+			throw new RuntimeException("Access code does not match email");
+		} else if(code.getIsUsed()) {
+			throw new RuntimeException("Code already used, request another");
+		} else {
+			LocalDateTime now = LocalDateTime.now();
+			Duration duration = Duration.between(code.getCreatedDate(), now);
 
-            if(duration.toMinutes() >= minutes) {
-                throw new RuntimeException("Access code has expired");
-            }
-        } else {
-            throw new RuntimeException("Code already used, request another");
-        }
+			if(duration.toMinutes() >= minutes) {
+				throw new RuntimeException("Access code has expired");
+			}
+		}
 
-        code.setIsUsed(true);
-        codeRepository.save(code);
-    }
+		code.setIsUsed(true);
+		codeRepository.save(code);
+	}
 }

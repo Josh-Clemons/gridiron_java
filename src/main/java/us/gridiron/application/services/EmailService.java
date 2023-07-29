@@ -70,7 +70,7 @@ public class EmailService {
 		helper.setSubject("Password Reset: Grid Iron Pickems");
 
 		Code code = codeService.generateCode(10, email);
-		String codeLink = "gridironpicks.us/#/password-reset/" + code.getAccessCode() + "/" + user.getEmail();
+		String codeLink = "http://localhost:5173/#/password-reset/" + code.getAccessCode() + "/" + user.getEmail();
 		// this is the link I'll need in my front end: "http://localhost:5173/api/auth/reset?accessCode="+code.getAccessCode();
 
 		String content = ("<h2>" + user.getUsername() + " below is a link to reset your password</h2>" +

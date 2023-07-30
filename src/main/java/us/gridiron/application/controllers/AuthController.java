@@ -178,7 +178,8 @@ public class AuthController {
 
 		try {
 			User updatedUser = userService.resetPassword(email, newPassword, accessCode);
-			return ResponseEntity.ok(updatedUser);
+			UserDTO userDTO = modelMapper.map(updatedUser, UserDTO.class);
+			return ResponseEntity.ok(userDTO);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));

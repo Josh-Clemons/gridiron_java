@@ -181,7 +181,7 @@ public class AuthController {
 			return ResponseEntity.ok(updatedUser);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
-			return ResponseEntity.badRequest().body(new MessageResponse("Password reset unsuccessful."));
+			return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
 		}
 	}
 }

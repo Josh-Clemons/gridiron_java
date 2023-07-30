@@ -46,7 +46,7 @@ public class CodeService {
 		} else if(!code.getEmail().equals("") && !code.getEmail().equals(email)) {
 			throw new RuntimeException("Access code does not match email");
 		} else if(code.getIsUsed()) {
-			throw new RuntimeException("Code already used, request another");
+			throw new RuntimeException("Code already used");
 		} else {
 			LocalDateTime now = LocalDateTime.now();
 			Duration duration = Duration.between(code.getCreatedDate(), now);

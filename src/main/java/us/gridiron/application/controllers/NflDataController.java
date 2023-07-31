@@ -2,6 +2,7 @@ package us.gridiron.application.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,32 +25,50 @@ public class NflDataController {
 	public static final Logger logger = LoggerFactory.getLogger(NflDataController.class);
 	private final NflDataService nflDataService;
 
-	public NflDataController(NflDataService nflDataService) {
+	public NflDataController(NflDataService nflDataService)
+	{
 		this.nflDataService = nflDataService;
 	}
 
 	@GetMapping("/competitors")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<List<CompetitorDTO>> getCompetitorData() {
+	public ResponseEntity<List<CompetitorDTO>> getCompetitorData()
+	{
 		logger.info("Get /api/gamedata/competitors");
 		try {
 			List<CompetitorDTO> allCompetitors = nflDataService.getAllCompetitorData();
 			return ResponseEntity.ok(allCompetitors);
-		} catch (Exception e) {
+		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(new ArrayList<>());
 		}
 	}
 
-	@GetMapping("/espn")
-//	@PreAuthorize("hasRole('MODERATOR')")
-	public ResponseEntity<List<CompetitorDTO>> getAllGameData() {
-		logger.info("Get /api/gamedata/espn");
-		try{
-			Pair<List<CompetitorDTO>, List<TeamDTO>> results = nflDataService.getAllEspnData();
+	@GetMapping("/all-espn-data")
+	//	@PreAuthorize("hasRole('MODERATOR')")
+	public ResponseEntity<List<CompetitorDTO>> getAllGameData()
+	{
+		logger.info("Get /api/gamedata/all-espn-data");
+		try {
+			Pair<List<CompetitorDTO>, Set<TeamDTO>> results = nflDataService.getAllEspnData();
 			List<CompetitorDTO> allCompetitors = results.getFirst();
 			return ResponseEntity.ok(allCompetitors);
-		} catch (Exception e){
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body(new ArrayList<>());
+		}
+	}
+
+	@GetMapping("/espn-competitor-data")
+	//	@PreAuthorize("hasRole('MODERATOR')")
+	public ResponseEntity<List<CompetitorDTO>> updateCompetitorData()
+	{
+		logger.info("Get /api/gamedata/espn");
+		try {
+			Pair<List<CompetitorDTO>, Set<TeamDTO>> results = nflDataService.getCompetitorDataFromEspn();
+			List<CompetitorDTO> allCompetitors = results.getFirst();
+			return ResponseEntity.ok(allCompetitors);
+		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(new ArrayList<>());
 		}
@@ -57,12 +76,13 @@ public class NflDataController {
 
 	@GetMapping("/update-db")
 	@PreAuthorize("hasRole('MODERATOR')")
-	public ResponseEntity<String> refreshGameDataInDB() {
+	public ResponseEntity<String> refreshGameDataInDB()
+	{
 		logger.info("Get /api/gamedata/update-db");
 		try {
 			nflDataService.updateGameDataInDB();
 			return ResponseEntity.ok("Success updating DB");
-		} catch (Exception e) {
+		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body("Error updating DB: " + e.getMessage());
 		}

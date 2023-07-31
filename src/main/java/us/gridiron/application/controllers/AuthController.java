@@ -173,7 +173,7 @@ public class AuthController {
 		String accessCode = passwordResetRequest.getAccessCode();
 
 		if(!userService.validatePassword(newPassword)) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Invalid new password"));
+			return ResponseEntity.badRequest().body("Invalid new password");
 		}
 
 		try {
@@ -182,7 +182,7 @@ public class AuthController {
 			return ResponseEntity.ok(userDTO);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
-			return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 }

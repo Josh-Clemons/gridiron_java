@@ -44,8 +44,8 @@ public class EmailService {
 		helper.setTo(to);
 		helper.setSubject("Grid Iron Pickems");
 
-		String leagueLink = "http://localhost:5173/#/league-detail/" + inviteCode;
-		String registerLink = "http://localhost:5173/#/register";
+		String leagueLink = "gridironpicks.us/#/league-detail/" + inviteCode;
+		String registerLink = "gridironpicks.us/#/register";
 
 		String content = ("<h1>" + user.getUsername() + " has invited you to join a Grid Iron league!</h1>" +
 			"<h3>Link to league: <a href=" + leagueLink + ">" + inviteCode + "</a></h3>" +

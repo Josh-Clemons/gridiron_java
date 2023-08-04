@@ -57,6 +57,26 @@ public class EmailService {
 
 	}
 
+	public void sendHelpEmail(String email, String subject, String message) throws MessagingException
+	{
+		MimeMessage emailMessage = emailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(
+			emailMessage, true);
+
+		helper.setFrom("gridironpickem@outlook.com");
+		helper.setTo("gridironpickem@outlook.com");
+		helper.setSubject("Help Request from: " + email);
+
+		String content = (
+			"<h3>Subject: " + subject + "</h3><br/>" +
+				"<div>" + message + "</div>");
+
+		helper.setText(content, true);
+
+		emailSender.send(emailMessage);
+
+	}
+
 	public void sendPasswordReset(String email) throws MessagingException
 	{
 		User user = userRepository.findByEmail(email)

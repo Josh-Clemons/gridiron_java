@@ -53,7 +53,7 @@ public class NflDataService {
 	@Transactional
 	public void updateGameDataInDB()
 	{
-		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getCompetitorDataFromEspn();
+		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
 		List<Competitor> allCompetitors = results.getFirst()
 			.stream().map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class)).toList();
 		List<Team> allTeams = results.getSecond()

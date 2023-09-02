@@ -18,8 +18,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+		String lowerCaseUsernameOrEmail = usernameOrEmail.toLowerCase();
 		User user = userRepository.findByUsername(usernameOrEmail)
-			.orElseGet(() -> userRepository.findByEmail(usernameOrEmail)
+			.orElseGet(() -> userRepository.findByEmail(lowerCaseUsernameOrEmail)
 				.orElseThrow(
 					() -> new UsernameNotFoundException("User Not Found with username or email: " + usernameOrEmail)));
 

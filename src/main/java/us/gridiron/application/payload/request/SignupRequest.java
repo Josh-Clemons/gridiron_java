@@ -20,45 +20,54 @@ public class SignupRequest {
 	@Size(min = 6, max = 40)
 	private String password;
 
-	public String getUsername() {
-		return username;
+	public String getUsername()
+	{
+		return username.toLowerCase();
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUsername(String username)
+	{
+		this.username = username.toLowerCase();
 	}
 
-	public String getEmail() {
+	public String getEmail()
+	{
 		return email.toLowerCase();
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(String email)
+	{
 		this.email = email.toLowerCase();
 	}
 
-	public String getPassword() {
+	public String getPassword()
+	{
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(String password)
+	{
 		this.password = password;
 	}
 
-	public Set<String> getRole() {
+	public Set<String> getRole()
+	{
 		return this.role;
 	}
 
-	public void setRole(Set<String> role) {
+	public void setRole(Set<String> role)
+	{
 		this.role = role;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return "SignupRequest{" +
-				"username='" + username + '\'' +
-				", email='" + email + '\'' +
-				", role=" + role +
-				", password='" + password + '\'' +
-				'}';
+			"username='" + username + '\'' +
+			", email='" + email + '\'' +
+			", role=" + role +
+			", password='" + password + '\'' +
+			'}';
 	}
 }

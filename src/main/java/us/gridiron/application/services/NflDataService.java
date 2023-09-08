@@ -50,26 +50,61 @@ public class NflDataService {
 			.toList();
 	}
 
+	//	@Transactional
+	//	public void updateGameDataInDB()
+	//	{
+	//		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
+	//		List<Competitor> allCompetitors = results.getFirst()
+	//			.stream().map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class)).toList();
+	//		//		List<Team> allTeams = results.getSecond()
+	//		//			.stream().map(teamDTO -> modelMapper.map(teamDTO, Team.class)).toList();
+	//		//		teamRepository.deleteAll();
+	//		//		teamRepository.saveAll(allTeams);
+	//		List<Team> updatedTeams = teamRepository.findAll();
+	//		List<Competitor> oldCompetitors = competitorRepository.findAll();
+	//		for(Competitor competitor : allCompetitors) {
+	//			for(Team team : updatedTeams) {
+	//				if(team.getName().equals(competitor.getTeam().getName())) {
+	//					competitor.setTeam(team);
+	//				}
+	//			}
+	//			// I want to find the competitor in oldCompetitors that matches the one in allCompetitors where week and team_id match, then replace the value "winner" for the matching competitor(in old competitors) with the "winner" value from allCompetitors. If the competitor does not exist in oldCompetitors, instead add that competitor
+	//		}
+	//		competitorRepository.saveAll(allCompetitors);
+	//	}
 	@Transactional
 	public void updateGameDataInDB()
 	{
 		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
 		List<Competitor> allCompetitors = results.getFirst()
-			.stream().map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class)).toList();
-		//		List<Team> allTeams = results.getSecond()
-		//			.stream().map(teamDTO -> modelMapper.map(teamDTO, Team.class)).toList();
-		//		teamRepository.deleteAll();
-		//		// TODO figure out why not all of the teams are being saved everytime, inconsistent behavior with no errors
-		//		teamRepository.saveAll(allTeams);
-		List<Team> updatedTeams = teamRepository.findAll();
+			.stream()
+			.map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class))
+			.toList();
+
+		// TODO have to fix teams so they work for next year
+		//		List<Team> updatedTeams = teamRepository.findAll();
+		List<Competitor> oldCompetitors = competitorRepository.findAll();
+
 		for(Competitor competitor : allCompetitors) {
-			for(Team team : updatedTeams) {
-				if(team.getName().equals(competitor.getTeam().getName())) {
-					competitor.setTeam(team);
+			boolean foundMatch = false;
+			for(Competitor oldCompetitor : oldCompetitors) {
+				if(oldCompetitor.getWeek().equals(competitor.getWeek()) &&
+					oldCompetitor.getTeam().getId().equals(competitor.getTeam().getId())) {
+					// Update the "winner" value
+					oldCompetitor.setWinner(competitor.isWinner());
+					foundMatch = true;
+					break;
 				}
 			}
+
+			if(!foundMatch) {
+				// Add the competitor to oldCompetitors
+				oldCompetitors.add(competitor);
+			}
 		}
-		competitorRepository.saveAll(allCompetitors);
+
+		// Save the updated oldCompetitors (including modified and new competitors)
+		competitorRepository.saveAll(oldCompetitors);
 	}
 
 	private Pair<List<CompetitorDTO>, Set<TeamDTO>> fetchDataFromEspn(String uri)

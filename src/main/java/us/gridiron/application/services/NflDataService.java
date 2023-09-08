@@ -76,7 +76,7 @@ public class NflDataService {
 	public void updateGameDataInDB()
 	{
 		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
-		List<Competitor> allCompetitors = results.getFirst()
+		List<Competitor> newCompetitors = results.getFirst()
 			.stream()
 			.map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class))
 			.toList();
@@ -85,27 +85,30 @@ public class NflDataService {
 		List<Team> updatedTeams = teamRepository.findAll();
 		List<Competitor> oldCompetitors = competitorRepository.findAll();
 
-		for(Competitor competitor : allCompetitors) {
+		for(Competitor newCompetitor : newCompetitors) {
 			boolean foundMatch = false;
+
+
 			for(Competitor oldCompetitor : oldCompetitors) {
-				if(oldCompetitor.getWeek().equals(competitor.getWeek()) &&
-					oldCompetitor.getTeam().getId().equals(competitor.getTeam().getId())) {
+
+				if(oldCompetitor.getWeek().equals(newCompetitor.getWeek()) &&
+					oldCompetitor.getTeam().getAbbreviation().equals(newCompetitor.getTeam().getAbbreviation())) {
 					// Update the "winner" value
-					oldCompetitor.setWinner(competitor.isWinner());
+					oldCompetitor.setWinner(newCompetitor.isWinner());
 					foundMatch = true;
-					for(Team team : updatedTeams) {
-						if(team.getName().equals(competitor.getTeam().getName())) {
-							competitor.setTeam(team);
-							break;
-						}
-					}
 					break;
 				}
 			}
 
 			if(!foundMatch) {
+				for(Team team : updatedTeams) {
+					if(team.getName().equals(newCompetitor.getTeam().getName())) {
+						newCompetitor.setTeam(team);
+						break;
+					}
+				}
 				// Add the competitor to oldCompetitors
-				oldCompetitors.add(competitor);
+				oldCompetitors.add(newCompetitor);
 			}
 		}
 

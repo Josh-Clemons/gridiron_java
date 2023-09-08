@@ -56,11 +56,11 @@ public class NflDataService {
 		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
 		List<Competitor> allCompetitors = results.getFirst()
 			.stream().map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class)).toList();
-		List<Team> allTeams = results.getSecond()
-			.stream().map(teamDTO -> modelMapper.map(teamDTO, Team.class)).toList();
-		teamRepository.deleteAll();
-		// TODO figure out why not all of the teams are being saved everytime, inconsistent behavior with no errors
-		teamRepository.saveAll(allTeams);
+		//		List<Team> allTeams = results.getSecond()
+		//			.stream().map(teamDTO -> modelMapper.map(teamDTO, Team.class)).toList();
+		//		teamRepository.deleteAll();
+		//		// TODO figure out why not all of the teams are being saved everytime, inconsistent behavior with no errors
+		//		teamRepository.saveAll(allTeams);
 		List<Team> updatedTeams = teamRepository.findAll();
 		for(Competitor competitor : allCompetitors) {
 			for(Team team : updatedTeams) {

@@ -82,7 +82,7 @@ public class NflDataService {
 			.toList();
 
 		// TODO have to fix teams so they work for next year
-		//		List<Team> updatedTeams = teamRepository.findAll();
+		List<Team> updatedTeams = teamRepository.findAll();
 		List<Competitor> oldCompetitors = competitorRepository.findAll();
 
 		for(Competitor competitor : allCompetitors) {
@@ -93,6 +93,12 @@ public class NflDataService {
 					// Update the "winner" value
 					oldCompetitor.setWinner(competitor.isWinner());
 					foundMatch = true;
+					for(Team team : updatedTeams) {
+						if(team.getName().equals(competitor.getTeam().getName())) {
+							competitor.setTeam(team);
+							break;
+						}
+					}
 					break;
 				}
 			}

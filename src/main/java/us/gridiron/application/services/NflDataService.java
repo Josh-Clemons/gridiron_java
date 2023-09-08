@@ -97,6 +97,14 @@ public class NflDataService {
 					oldCompetitor.setWinner(newCompetitor.isWinner());
 					oldCompetitor.setEventId(newCompetitor.getEventId());
 					oldCompetitor.setStartDate(newCompetitor.getStartDate());
+
+					for(Team team : updatedTeams) {
+						if(team.getName().equals(newCompetitor.getTeam().getName())) {
+							oldCompetitor.setTeam(team);
+							break;
+						}
+					}
+
 					foundMatch = true;
 					break;
 				}

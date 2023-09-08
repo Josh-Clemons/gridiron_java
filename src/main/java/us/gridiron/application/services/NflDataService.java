@@ -95,6 +95,8 @@ public class NflDataService {
 					oldCompetitor.getTeam().getAbbreviation().equals(newCompetitor.getTeam().getAbbreviation())) {
 					// Update the "winner" value
 					oldCompetitor.setWinner(newCompetitor.isWinner());
+					oldCompetitor.setEventId(newCompetitor.getEventId());
+					oldCompetitor.setStartDate(newCompetitor.getStartDate());
 					foundMatch = true;
 					break;
 				}

@@ -76,12 +76,11 @@ public class NflDataController {
 
 	@GetMapping("/update-db")
 	@PreAuthorize("hasRole('MODERATOR')")
-	public ResponseEntity<String> refreshGameDataInDB()
+	public ResponseEntity<?> refreshGameDataInDB()
 	{
 		logger.info("Get /api/gamedata/update-db");
 		try {
-			nflDataService.updateGameDataInDB();
-			return ResponseEntity.ok("Success updating DB");
+			return ResponseEntity.ok(nflDataService.updateGameDataInDB());
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body("Error updating DB: " + e.getMessage());

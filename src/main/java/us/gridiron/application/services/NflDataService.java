@@ -73,7 +73,7 @@ public class NflDataService {
 	//		competitorRepository.saveAll(allCompetitors);
 	//	}
 	@Transactional
-	public void updateGameDataInDB()
+	public List<CompetitorDTO> updateGameDataInDB()
 	{
 		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
 		List<Competitor> newCompetitors = results.getFirst()
@@ -81,7 +81,7 @@ public class NflDataService {
 			.map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class))
 			.toList();
 
-		// TODO have to fix teams so they work for next year
+		// TODO check teams in 2024 to confirm the old records will still work
 		List<Team> updatedTeams = teamRepository.findAll();
 		List<Competitor> oldCompetitors = competitorRepository.findAll();
 
@@ -124,6 +124,10 @@ public class NflDataService {
 
 		// Save the updated oldCompetitors (including modified and new competitors)
 		competitorRepository.saveAll(oldCompetitors);
+
+		return oldCompetitors.stream()
+			.map(competitor -> modelMapper.map(competitor, CompetitorDTO.class))
+			.collect(Collectors.toList());
 	}
 
 	private Pair<List<CompetitorDTO>, Set<TeamDTO>> fetchDataFromEspn(String uri)

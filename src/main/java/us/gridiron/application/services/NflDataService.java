@@ -163,6 +163,9 @@ public class NflDataService {
 									competitor.setWeek(event.getWeek().getNumber());
 									competitor.setEventId(event.getId());
 									competitor.setStartDate(competition.getStartDate());
+									if(competition.getStatus() != null && competition.getStatus().getType() != null) {
+										competitor.setCompleted(competition.getStatus().getType().isCompleted());
+									}
 								}
 								allCompetitors.addAll(competitors);
 							}

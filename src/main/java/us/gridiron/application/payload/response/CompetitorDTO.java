@@ -8,6 +8,7 @@ public class CompetitorDTO {
     private String startDate;
     private int week;
     private String eventId;
+    private Boolean completed;
 
     public Long getId() {
         return id;
@@ -63,5 +64,13 @@ public class CompetitorDTO {
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
+    }
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
     }
 }

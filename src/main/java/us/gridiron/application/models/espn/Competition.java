@@ -10,6 +10,7 @@ public class Competition {
 	private String startDate;
 	private int week;
 	private List<Competitor> competitors;
+	private Status status;
 
 	public String getId() {
 		return id;
@@ -41,5 +42,13 @@ public class Competition {
 
 	public void setCompetitors(List<Competitor> competitors) {
 		this.competitors = competitors;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 }

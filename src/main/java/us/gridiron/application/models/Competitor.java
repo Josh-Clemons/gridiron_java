@@ -21,6 +21,7 @@ public class Competitor {
 	private String startDate;
 	private Integer week;
 	private String eventId;
+	private Boolean completed;
 
 
 	public Long getId() {
@@ -86,5 +87,13 @@ public class Competitor {
 
 	public void setPicks(List<Pick> picks) {
 		this.picks = picks;
+	}
+
+	public Boolean isCompleted() {
+		return completed;
+	}
+
+	public void setCompleted(Boolean completed) {
+		this.completed = (completed != null && completed);
 	}
 }

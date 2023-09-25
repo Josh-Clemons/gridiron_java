@@ -49,33 +49,14 @@ public class NflDataService {
 			.map(competitor -> modelMapper.map(competitor, CompetitorDTO.class))
 			.toList();
 	}
-
-	//	@Transactional
-	//	public void updateGameDataInDB()
-	//	{
-	//		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
-	//		List<Competitor> allCompetitors = results.getFirst()
-	//			.stream().map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class)).toList();
-	//		//		List<Team> allTeams = results.getSecond()
-	//		//			.stream().map(teamDTO -> modelMapper.map(teamDTO, Team.class)).toList();
-	//		//		teamRepository.deleteAll();
-	//		//		teamRepository.saveAll(allTeams);
-	//		List<Team> updatedTeams = teamRepository.findAll();
-	//		List<Competitor> oldCompetitors = competitorRepository.findAll();
-	//		for(Competitor competitor : allCompetitors) {
-	//			for(Team team : updatedTeams) {
-	//				if(team.getName().equals(competitor.getTeam().getName())) {
-	//					competitor.setTeam(team);
-	//				}
-	//			}
-	//			// I want to find the competitor in oldCompetitors that matches the one in allCompetitors where week and team_id match, then replace the value "winner" for the matching competitor(in old competitors) with the "winner" value from allCompetitors. If the competitor does not exist in oldCompetitors, instead add that competitor
-	//		}
-	//		competitorRepository.saveAll(allCompetitors);
-	//	}
+	
 	@Transactional
 	public List<CompetitorDTO> updateGameDataInDB()
 	{
 		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
+		if(results.getFirst().get(0) != null && results.getFirst().get(0).getCompleted() == null) {
+			System.out.println("getCompleted() in dto is null");
+		}
 		List<Competitor> newCompetitors = results.getFirst()
 			.stream()
 			.map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class))
@@ -163,8 +144,14 @@ public class NflDataService {
 									competitor.setWeek(event.getWeek().getNumber());
 									competitor.setEventId(event.getId());
 									competitor.setStartDate(competition.getStartDate());
-									if(competition.getStatus() != null && competition.getStatus().getType() != null) {
-										competitor.setCompleted(competition.getStatus().getType().isCompleted());
+									if(competition.getStatus() != null) {
+										if( competition.getStatus().getType() != null){
+											competitor.setCompleted(competition.getStatus().getType().isCompleted());
+										} else {
+											System.out.println("\nError: Type is null");
+										}
+									} else {
+										System.out.println("\nError: Status is null\n");
 									}
 								}
 								allCompetitors.addAll(competitors);

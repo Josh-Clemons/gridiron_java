@@ -54,9 +54,6 @@ public class NflDataService {
 	public List<CompetitorDTO> updateGameDataInDB()
 	{
 		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
-		if(results.getFirst().get(0) != null && results.getFirst().get(0).getCompleted() == null) {
-			System.out.println("getCompleted() in dto is null");
-		}
 		List<Competitor> newCompetitors = results.getFirst()
 			.stream()
 			.map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class))
@@ -78,6 +75,7 @@ public class NflDataService {
 					oldCompetitor.setWinner(newCompetitor.isWinner());
 					oldCompetitor.setEventId(newCompetitor.getEventId());
 					oldCompetitor.setStartDate(newCompetitor.getStartDate());
+					oldCompetitor.setCompleted(newCompetitor.isCompleted());
 
 					for(Team team : updatedTeams) {
 						if(team.getName().equals(newCompetitor.getTeam().getName())) {
@@ -144,15 +142,7 @@ public class NflDataService {
 									competitor.setWeek(event.getWeek().getNumber());
 									competitor.setEventId(event.getId());
 									competitor.setStartDate(competition.getStartDate());
-									if(competition.getStatus() != null) {
-										if( competition.getStatus().getType() != null){
-											competitor.setCompleted(competition.getStatus().getType().isCompleted());
-										} else {
-											System.out.println("\nError: Type is null");
-										}
-									} else {
-										System.out.println("\nError: Status is null\n");
-									}
+									competitor.setCompleted(competition.getStatus().getType().isCompleted());
 								}
 								allCompetitors.addAll(competitors);
 							}

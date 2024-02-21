@@ -3,7 +3,6 @@ package us.gridiron.application.services;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -32,7 +31,6 @@ public class NflDataService {
 	private final TeamRepository teamRepository;
 	private final ModelMapper modelMapper;
 
-	@Autowired
 	public NflDataService(
 		CompetitorRepository competitorRepository, TeamRepository teamRepository, ModelMapper modelMapper)
 	{

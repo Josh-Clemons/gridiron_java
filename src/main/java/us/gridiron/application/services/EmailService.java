@@ -2,12 +2,10 @@ package us.gridiron.application.services;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.spring5.SpringTemplateEngine;
 import us.gridiron.application.models.Code;
 import us.gridiron.application.models.User;
 import us.gridiron.application.repository.UserRepository;
@@ -16,18 +14,15 @@ import us.gridiron.application.repository.UserRepository;
 public class EmailService {
 
 	private final JavaMailSender emailSender;
-	private final SpringTemplateEngine templateEngine;
 	private final UserService userService;
 	private final UserRepository userRepository;
 	private final CodeService codeService;
 
-	@Autowired
 	public EmailService(
-		JavaMailSender emailSender, SpringTemplateEngine templateEngine, UserService userService,
+		JavaMailSender emailSender, UserService userService,
 		UserRepository userRepository, CodeService codeService)
 	{
 		this.emailSender = emailSender;
-		this.templateEngine = templateEngine;
 		this.userService = userService;
 		this.userRepository = userRepository;
 		this.codeService = codeService;

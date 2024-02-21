@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface PickRepository extends JpaRepository<Pick, Long> {
     List<Pick> findByOwnerAndLeague(User owner, League league);
+    List<Pick> findByOwnerAndLeagueId(User owner, Long leagueId);
     void deletePicksByOwnerAndLeague(User owner, League league);
     List<Pick> findPicksByLeagueInviteCode(String inviteCode);
     void deleteAllByLeague(League league);

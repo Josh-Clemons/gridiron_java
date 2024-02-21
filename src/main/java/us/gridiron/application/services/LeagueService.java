@@ -1,7 +1,6 @@
 package us.gridiron.application.services;
 
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import us.gridiron.application.models.League;
@@ -19,7 +18,6 @@ public class LeagueService {
 	private final PickRepository pickRepository;
 	private final CodeService codeService;
 
-	@Autowired
 	public LeagueService(LeagueRepository leagueRepository, PickService pickService, PickRepository pickRepository, CodeService codeService) {
 		this.leagueRepository = leagueRepository;
 		this.pickService = pickService;

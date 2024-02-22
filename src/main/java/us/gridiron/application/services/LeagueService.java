@@ -12,52 +12,59 @@ import us.gridiron.application.repository.PickRepository;
 import java.util.List;
 
 @Service
-public class LeagueService {
+public class LeagueService
+{
 	private final LeagueRepository leagueRepository;
 	private final PickService pickService;
 	private final PickRepository pickRepository;
 	private final CodeService codeService;
 
-	public LeagueService(LeagueRepository leagueRepository, PickService pickService, PickRepository pickRepository, CodeService codeService) {
+	public LeagueService(
+		LeagueRepository leagueRepository, PickService pickService, PickRepository pickRepository,
+		CodeService codeService)
+	{
 		this.leagueRepository = leagueRepository;
 		this.pickService = pickService;
 		this.pickRepository = pickRepository;
 		this.codeService = codeService;
 	}
 
-	public List<League> getAllLeagues() {
-		return leagueRepository.findAll();
-	}
-
-	public List<League> getAvailableLeagues(User user) {
+	public List<League> getAvailableLeagues(User user)
+	{
 		return leagueRepository.findAvailableLeagues(user.getId());
 	}
 
-	public League findLeagueById(Long leagueId) {
+	public League findLeagueById(Long leagueId)
+	{
 		return leagueRepository.findById(leagueId)
 			.orElseThrow(() -> new RuntimeException("Error finding the league"));
 	}
 
-	public League findLeagueByInviteCode(String inviteCode) {
+	public League findLeagueByInviteCode(String inviteCode)
+	{
 		return leagueRepository.findByInviteCode(inviteCode);
 	}
 
-	public List<User> findUsersByLeagueId(Long leagueId) {
+	public List<User> findUsersByLeagueId(Long leagueId)
+	{
 		return leagueRepository.findUsersByLeagueId(leagueId);
 	}
 
-	public League findLeagueByLeagueName(String name) {
+	public League findLeagueByLeagueName(String name)
+	{
 		return leagueRepository.findByLeagueName(name);
 	}
 
-	public List<League> findUsersLeagues(Long userId) {
+	public List<League> findUsersLeagues(Long userId)
+	{
 		return leagueRepository.findAllByUserId(userId);
 	}
 
 	@Transactional
 	public League createLeague(
 		String leagueName, User leagueOwner,
-		Integer maxUsers, boolean isPrivate) {
+		Integer maxUsers, boolean isPrivate)
+	{
 		String inviteCode = "";
 		// confirms the invite code is unique before moving on
 		while(inviteCode.equals("")) {
@@ -69,13 +76,14 @@ public class LeagueService {
 
 		League newLeague = new League(leagueName, leagueOwner, isPrivate, maxUsers, inviteCode);
 		newLeague.addUser(leagueOwner);
-		League savedLeague =  leagueRepository.save(newLeague);
+		League savedLeague = leagueRepository.save(newLeague);
 		pickService.createPicksForNewUser(leagueOwner, savedLeague);
 		return savedLeague;
 	}
 
 	@Transactional
-	public ResponseEntity<String> addUserToLeague(JoinLeagueDTO joinLeagueDTO, User user) {
+	public ResponseEntity<String> addUserToLeague(JoinLeagueDTO joinLeagueDTO, User user)
+	{
 		League league = leagueRepository.findByInviteCode(joinLeagueDTO.getInviteCode());
 		// not allowed to join full leagues
 		if(league.getMaxUsers() <= league.getUserCount()) {
@@ -96,7 +104,8 @@ public class LeagueService {
 	}
 
 	@Transactional
-	public void removeUserFromLeague(Long leagueId, User user) {
+	public void removeUserFromLeague(Long leagueId, User user)
+	{
 
 		League leagueToUpdate = leagueRepository.findById(leagueId)
 			.orElseThrow(() -> new RuntimeException("Error finding the league"));
@@ -115,7 +124,8 @@ public class LeagueService {
 	}
 
 	@Transactional
-	public void deleteLeague(User user, Long leagueId) {
+	public void deleteLeague(User user, Long leagueId)
+	{
 		League leagueToDelete = leagueRepository.findById(leagueId)
 			.orElseThrow(() -> new RuntimeException("Error finding the league"));
 

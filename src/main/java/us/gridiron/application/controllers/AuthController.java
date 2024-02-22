@@ -37,7 +37,8 @@ import us.gridiron.application.services.UserService;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController
+{
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	private final UserService userService;
 	private final ModelMapper modelMapper;
@@ -59,18 +60,6 @@ public class AuthController {
 		this.jwtUtils = jwtUtils;
 		this.userService = userService;
 		this.modelMapper = modelMapper;
-	}
-
-	@GetMapping("/current")
-	public ResponseEntity<?> getCurrentUser()
-	{
-		try {
-			User user = userService.getLoggedInUser();
-			UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-			return ResponseEntity.ok(userDTO);
-		} catch(Exception e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
 	}
 
 	@PostMapping("/signin")

@@ -21,40 +21,25 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/league")
-public class LeagueController {
+public class LeagueController
+{
 
 	private static final Logger logger = LoggerFactory.getLogger(LeagueController.class);
 	private final LeagueService leagueService;
 	private final UserService userService;
 	private final ModelMapper modelMapper;
 
-	public LeagueController(LeagueService leagueService, UserService userService, ModelMapper modelMapper) {
+	public LeagueController(LeagueService leagueService, UserService userService, ModelMapper modelMapper)
+	{
 		this.leagueService = leagueService;
 		this.userService = userService;
 		this.modelMapper = modelMapper;
 	}
 
-	@GetMapping("/all")
-	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<List<LeagueResponseDTO>> getAllLeagues() {
-		logger.info("Get /api/league/all");
-		try {
-			List<League> allLeagues = leagueService.getAllLeagues();
-
-			List<LeagueResponseDTO> allLeaguesDTO = allLeagues.stream()
-				.map(league -> modelMapper.map(league, LeagueResponseDTO.class))
-				.toList();
-
-			return ResponseEntity.ok(allLeaguesDTO);
-		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
-			return ResponseEntity.badRequest().body(new ArrayList<>());
-		}
-	}
-
 	@GetMapping("/available")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<List<LeagueResponseDTO>> getAvailableLeagues() {
+	public ResponseEntity<List<LeagueResponseDTO>> getAvailableLeagues()
+	{
 		logger.info("Get /api/league/available");
 		User user = userService.getLoggedInUser();
 		try {
@@ -73,7 +58,8 @@ public class LeagueController {
 
 	@GetMapping("/all-for-user")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> getLeaguesByUserId() {
+	public ResponseEntity<?> getLeaguesByUserId()
+	{
 		logger.info("Get /api/league/all-for-user");
 		User user = userService.getLoggedInUser();
 		try {
@@ -90,7 +76,8 @@ public class LeagueController {
 
 	@GetMapping("/get-users")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> getUsersInLeague(@RequestParam Long leagueId) {
+	public ResponseEntity<?> getUsersInLeague(@RequestParam Long leagueId)
+	{
 		logger.info("Get /api/league/get-users, leagueId: {}", leagueId);
 		try {
 			List<User> users = leagueService.findUsersByLeagueId(leagueId);
@@ -103,7 +90,8 @@ public class LeagueController {
 
 	@GetMapping("/get-scores")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> getLeagueScores(@RequestParam Long leagueId) {
+	public ResponseEntity<?> getLeagueScores(@RequestParam Long leagueId)
+	{
 		logger.info("Get /api/league/get-scores, leagueId: {}", leagueId);
 		try {
 			return ResponseEntity.ok("good job");
@@ -115,7 +103,8 @@ public class LeagueController {
 
 	@GetMapping("/find-by-id")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Object> getLeagueByLeagueId(@RequestParam Long leagueId) {
+	public ResponseEntity<Object> getLeagueByLeagueId(@RequestParam Long leagueId)
+	{
 		logger.info("Get /api/league/find-by-id, leagueId: {}", leagueId);
 		try {
 			League league = leagueService.findLeagueById(leagueId);
@@ -129,7 +118,8 @@ public class LeagueController {
 
 	@GetMapping("/find-by-code")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Object> getLeagueByInviteCode(@RequestParam String inviteCode) {
+	public ResponseEntity<Object> getLeagueByInviteCode(@RequestParam String inviteCode)
+	{
 		logger.info("Get /api/league/find-by-code, inviteCode: {}", inviteCode);
 		try {
 			League league = leagueService.findLeagueByInviteCode(inviteCode);
@@ -143,7 +133,8 @@ public class LeagueController {
 
 	@PostMapping("/create")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> createLeague(@RequestBody CreateLeagueRequestDTO createLeagueRequestDTO) {
+	public ResponseEntity<?> createLeague(@RequestBody CreateLeagueRequestDTO createLeagueRequestDTO)
+	{
 		logger.info("Post /api/league/create, createLeagueRequestDTO: {}", createLeagueRequestDTO.toString());
 		try {
 			User loggedInUser = userService.getLoggedInUser();
@@ -160,7 +151,8 @@ public class LeagueController {
 
 	@PostMapping("/join")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<String> joinLeague(@RequestBody JoinLeagueDTO joinLeagueDTO) {
+	public ResponseEntity<String> joinLeague(@RequestBody JoinLeagueDTO joinLeagueDTO)
+	{
 		logger.info("Post /api/league/join, joinLeagueDTO: {}", joinLeagueDTO.toString());
 		try {
 			User loggedInUser = userService.getLoggedInUser();
@@ -173,7 +165,8 @@ public class LeagueController {
 
 	@DeleteMapping("/leave")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<String> leaveLeague(@RequestParam Long leagueId) {
+	public ResponseEntity<String> leaveLeague(@RequestParam Long leagueId)
+	{
 		logger.info("Delete /api/league/leave, leagueId: {}", leagueId);
 		try {
 			User loggedInUser = userService.getLoggedInUser();
@@ -188,7 +181,8 @@ public class LeagueController {
 
 	@DeleteMapping("/delete")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<String> deleteLeague(@RequestParam Long leagueId) {
+	public ResponseEntity<String> deleteLeague(@RequestParam Long leagueId)
+	{
 		logger.info("Delete /api/league/delete, leagueId: {}", leagueId);
 		try {
 			User loggedInUser = userService.getLoggedInUser();

@@ -7,7 +7,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "leagues", uniqueConstraints = {@UniqueConstraint(columnNames = "leagueName")})
-public class League {
+public class League
+{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +26,14 @@ public class League {
 	private Integer maxUsers;
 	private Integer userCount;
 	private String inviteCode;
+	private boolean discontinued;
 
-	public League() {
+	public League()
+	{
 	}
 
-	public League(String leagueName, User leagueOwner, Boolean isPrivate, Integer maxUsers, String inviteCode) {
+	public League(String leagueName, User leagueOwner, Boolean isPrivate, Integer maxUsers, String inviteCode)
+	{
 		this.leagueName = leagueName;
 		this.leagueOwner = leagueOwner;
 		this.isPrivate = isPrivate;
@@ -37,78 +41,106 @@ public class League {
 		this.inviteCode = inviteCode;
 	}
 
-	public Long getId() {
+	public Long getId()
+	{
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Long id)
+	{
 		this.id = id;
 	}
 
-	public Set<User> getUsers() {
+	public Set<User> getUsers()
+	{
 		return users;
 	}
 
-	public void setUsers(Set<User> users) {
+	public void setUsers(Set<User> users)
+	{
 		this.users = users;
 	}
 
-	public boolean addUser(User user) {
+	public boolean addUser(User user)
+	{
 		boolean isAdded = this.users.add(user);
 		this.userCount = this.users.size();
 		return isAdded;
 	}
 
-	public void removeUser(User user) {
+	public void removeUser(User user)
+	{
 		this.users.remove(user);
 		this.userCount = this.users.size();
 	}
 
-	public String getLeagueName() {
+	public String getLeagueName()
+	{
 		return leagueName;
 	}
 
-	public void setLeagueName(String leagueName) {
+	public void setLeagueName(String leagueName)
+	{
 		this.leagueName = leagueName;
 	}
 
-	public Boolean getIsPrivate() {
+	public Boolean getIsPrivate()
+	{
 		return isPrivate != null && isPrivate;
 	}
 
-	public void setIsPrivate(Boolean isPrivate) {
+	public void setIsPrivate(Boolean isPrivate)
+	{
 		this.isPrivate = isPrivate;
 	}
 
-	public Integer getMaxUsers() {
+	public Integer getMaxUsers()
+	{
 		return maxUsers;
 	}
 
-	public void setMaxUsers(Integer maxUsers) {
+	public void setMaxUsers(Integer maxUsers)
+	{
 		this.maxUsers = maxUsers;
 	}
 
-	public Integer getUserCount() {
+	public Integer getUserCount()
+	{
 		return userCount;
 	}
 
-	public void setUserCount(Integer userCount) {
+	public void setUserCount(Integer userCount)
+	{
 		this.userCount = userCount;
 	}
 
-	public String getInviteCode() {
+	public String getInviteCode()
+	{
 		return inviteCode;
 	}
 
-	public void setInviteCode(String inviteCode) {
+	public void setInviteCode(String inviteCode)
+	{
 		this.inviteCode = inviteCode;
 	}
 
-	public User getLeagueOwner() {
+	public User getLeagueOwner()
+	{
 		return leagueOwner;
 	}
 
-	public void setLeagueOwner(User leagueOwner) {
+	public void setLeagueOwner(User leagueOwner)
+	{
 		this.leagueOwner = leagueOwner;
+	}
+
+	public void setIsDiscontinued(boolean discontinued)
+	{
+		this.discontinued = discontinued;
+	}
+
+	public boolean getIsDiscontinued()
+	{
+		return discontinued;
 	}
 }

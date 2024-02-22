@@ -29,7 +29,7 @@ public class LeagueService
 		this.codeService = codeService;
 	}
 
-	public List<League> getAvailableLeagues(User user)
+	public List<League> findAvailableLeagues(User user)
 	{
 		return leagueRepository.findAvailableLeagues(user.getId());
 	}
@@ -118,20 +118,20 @@ public class LeagueService
 			throw new RuntimeException("User not in the league");
 		}
 		// remove players picks from the league
-		pickRepository.deletePicksByOwnerAndLeague(user, leagueToUpdate);
+		pickRepository.discontinuePicksByUserIdAndLeagueId(user.getId(), leagueToUpdate.getId());
 		leagueToUpdate.removeUser(user);
 		leagueRepository.save(leagueToUpdate);
 	}
 
 	@Transactional
-	public void deleteLeague(User user, Long leagueId)
+	public void discontinueLeague(User user, Long leagueId)
 	{
-		League leagueToDelete = leagueRepository.findById(leagueId)
+		League leagueToDiscontinue = leagueRepository.findById(leagueId)
 			.orElseThrow(() -> new RuntimeException("Error finding the league"));
 
-		if(user.equals(leagueToDelete.getLeagueOwner())) {
-			pickRepository.deleteAllByLeague(leagueToDelete);
-			leagueRepository.delete(leagueToDelete);
+		if(user.equals(leagueToDiscontinue.getLeagueOwner())) {
+			pickRepository.discontinuePicksByUserIdAndLeagueId(user.getId(), leagueId);
+			leagueRepository.deleteById();
 		} else {
 			throw new RuntimeException("Unable to delete, you are not the owner");
 		}

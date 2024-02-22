@@ -38,12 +38,12 @@ public class LeagueController
 
 	@GetMapping("/available")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<List<LeagueResponseDTO>> getAvailableLeagues()
+	public ResponseEntity<List<LeagueResponseDTO>> findAvailableLeagues()
 	{
 		logger.info("Get /api/league/available");
 		User user = userService.getLoggedInUser();
 		try {
-			List<League> availableLeagues = leagueService.getAvailableLeagues(user);
+			List<League> availableLeagues = leagueService.findAvailableLeagues(user);
 
 			List<LeagueResponseDTO> availableLeaguesDTO = availableLeagues.stream()
 				.map(league -> modelMapper.map(league, LeagueResponseDTO.class))
@@ -56,9 +56,9 @@ public class LeagueController
 		}
 	}
 
-	@GetMapping("/all-for-user")
+	@GetMapping("/user-leagues")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> getLeaguesByUserId()
+	public ResponseEntity<?> findLeaguesByAuthenticatedUser()
 	{
 		logger.info("Get /api/league/all-for-user");
 		User user = userService.getLoggedInUser();
@@ -70,29 +70,15 @@ public class LeagueController
 			return ResponseEntity.ok(leaguesDTO);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
-			return ResponseEntity.badRequest().body("Error finding users's leagues");
+			return ResponseEntity.badRequest().body("Error finding user's leagues");
 		}
 	}
 
-	@GetMapping("/get-users")
+	@GetMapping("/find-league-scores")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> getUsersInLeague(@RequestParam Long leagueId)
+	public ResponseEntity<?> findLeagueScores(@RequestParam Long leagueId)
 	{
-		logger.info("Get /api/league/get-users, leagueId: {}", leagueId);
-		try {
-			List<User> users = leagueService.findUsersByLeagueId(leagueId);
-			return ResponseEntity.ok(users.stream().map(user -> modelMapper.map(user, UserDTO.class)));
-		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
-			return ResponseEntity.badRequest().body("Error getting users from league: " + leagueId);
-		}
-	}
-
-	@GetMapping("/get-scores")
-	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> getLeagueScores(@RequestParam Long leagueId)
-	{
-		logger.info("Get /api/league/get-scores, leagueId: {}", leagueId);
+		logger.info("Get /api/league/find-league-scores, leagueId: {}", leagueId);
 		try {
 			return ResponseEntity.ok("good job");
 		} catch(Exception e) {
@@ -103,7 +89,7 @@ public class LeagueController
 
 	@GetMapping("/find-by-id")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Object> getLeagueByLeagueId(@RequestParam Long leagueId)
+	public ResponseEntity<Object> findLeagueByLeagueId(@RequestParam Long leagueId)
 	{
 		logger.info("Get /api/league/find-by-id, leagueId: {}", leagueId);
 		try {
@@ -118,7 +104,7 @@ public class LeagueController
 
 	@GetMapping("/find-by-code")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Object> getLeagueByInviteCode(@RequestParam String inviteCode)
+	public ResponseEntity<Object> findLeagueByInviteCode(@RequestParam String inviteCode)
 	{
 		logger.info("Get /api/league/find-by-code, inviteCode: {}", inviteCode);
 		try {
@@ -179,15 +165,15 @@ public class LeagueController
 		return ResponseEntity.ok("Successfully left league");
 	}
 
-	@DeleteMapping("/delete")
+	@DeleteMapping("/discontinue")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<String> deleteLeague(@RequestParam Long leagueId)
+	public ResponseEntity<String> discontinueLeague(@RequestParam Long leagueId)
 	{
 		logger.info("Delete /api/league/delete, leagueId: {}", leagueId);
 		try {
 			User loggedInUser = userService.getLoggedInUser();
-			leagueService.deleteLeague(loggedInUser, leagueId);
-			return ResponseEntity.ok("Success deleting league");
+			leagueService.discontinueLeague(loggedInUser, leagueId);
+			return ResponseEntity.ok("Success discontinuing league");
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(e.getMessage());

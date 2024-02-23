@@ -20,7 +20,8 @@ import us.gridiron.application.services.NflDataService;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/gamedata")
-public class NflDataController {
+public class NflDataController
+{
 
 	public static final Logger logger = LoggerFactory.getLogger(NflDataController.class);
 	private final NflDataService nflDataService;
@@ -45,7 +46,7 @@ public class NflDataController {
 	}
 
 	@GetMapping("/all-espn-data")
-	//	@PreAuthorize("hasRole('MODERATOR')")
+	//	@PreAuthorize("hasRole(ERole.MODERATOR)")
 	public ResponseEntity<List<CompetitorDTO>> getAllGameData()
 	{
 		logger.info("Get /api/gamedata/all-espn-data");
@@ -60,7 +61,7 @@ public class NflDataController {
 	}
 
 	@GetMapping("/espn-competitor-data")
-	//	@PreAuthorize("hasRole('MODERATOR')")
+	//	@PreAuthorize("hasRole(ERole.MODERATOR)")
 	public ResponseEntity<List<CompetitorDTO>> updateCompetitorData()
 	{
 		logger.info("Get /api/gamedata/espn");
@@ -75,7 +76,7 @@ public class NflDataController {
 	}
 
 	@GetMapping("/update-db")
-	@PreAuthorize("hasRole('MODERATOR')")
+	@PreAuthorize("hasRole(ERole.MODERATOR)")
 	public ResponseEntity<?> refreshGameDataInDB()
 	{
 		logger.info("Get /api/gamedata/update-db");

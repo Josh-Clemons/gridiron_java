@@ -139,7 +139,7 @@ public class LeagueRepositoryIT
 
 		testEntityManager.refresh(league);
 
-		assertThat(leagueRepository.findById(league.getId()).get().getIsDiscontinued(), is(true));
+		assertThat(leagueRepository.findById(league.getId()).get().isDiscontinued(), is(true));
 
 	}
 }

@@ -140,7 +140,7 @@ public class League
 		this.discontinued = discontinued;
 	}
 
-	public boolean getIsDiscontinued()
+	public boolean isDiscontinued()
 	{
 		return discontinued;
 	}

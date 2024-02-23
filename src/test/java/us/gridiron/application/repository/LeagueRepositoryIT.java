@@ -28,7 +28,6 @@ public class LeagueRepositoryIT
 	private final static String LEAGUE_NAME = "Test League";
 	private final static String INVITE_CODE = "1234";
 
-	private static EntityManagerFactory entityManagerFactory;
 	private final TestEntityManager testEntityManager;
 	private final LeagueRepository leagueRepository;
 	private final UserRepository userRepository;
@@ -42,7 +41,6 @@ public class LeagueRepositoryIT
 		LeagueRepository leagueRepository, UserRepository userRepository,
 		EntityManagerFactory entityManagerFactory)
 	{
-		LeagueRepositoryIT.entityManagerFactory = entityManagerFactory;
 		this.testEntityManager = new TestEntityManager(entityManagerFactory);
 		this.leagueRepository = leagueRepository;
 		this.userRepository = userRepository;
@@ -73,6 +71,7 @@ public class LeagueRepositoryIT
 	@BeforeEach
 	public void setUp()
 	{
+		testEntityManager.clear();
 		user = makeUser("test", "1234@email.com");
 		league = makeLeague(LEAGUE_NAME, INVITE_CODE, user);
 	}

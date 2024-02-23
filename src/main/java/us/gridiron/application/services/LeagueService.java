@@ -113,7 +113,7 @@ public class LeagueService
 			throw new RuntimeException("User not in the league");
 		}
 		// remove players picks from the league
-		pickRepository.discontinuePicksByUserIdAndLeagueId(user.getId(), leagueToUpdate.getId());
+		pickRepository.discontinuePicksByUserAndLeague(user, leagueToUpdate);
 		leagueToUpdate.removeUser(user);
 		leagueRepository.save(leagueToUpdate);
 	}
@@ -125,7 +125,7 @@ public class LeagueService
 			.orElseThrow(() -> new RuntimeException("Error finding the league"));
 
 		if(user.equals(leagueToDiscontinue.getLeagueOwner())) {
-			pickRepository.discontinuePicksByUserIdAndLeagueId(user.getId(), leagueId);
+			pickRepository.discontinuePicksByUserAndLeague(user, leagueToDiscontinue);
 			//			leagueRepository.deleteById();
 		} else {
 			throw new RuntimeException("Unable to delete, you are not the owner");

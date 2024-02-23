@@ -19,10 +19,9 @@ public interface PickRepository extends JpaRepository<Pick, Long>
 	List<Pick> findByOwnerAndLeagueId(User owner, Long leagueId);
 
 	@Modifying
-	@Query("UPDATE Pick p SET p.discontinued = true WHERE p.id = :userId AND p.league = :leagueId")
-	void discontinuePicksByUserIdAndLeagueId(@Param("userId") Long userId, @Param("leagueId") Long leagueId);
+	@Query("UPDATE Pick p SET p.discontinued = true WHERE p.owner = :user AND p.league = :league")
+	void discontinuePicksByUserAndLeague(@Param("user") User user, @Param("league") League league);
 
-	List<Pick> findPicksByLeagueInviteCode(String inviteCode);
-
-	void deleteAllByLeague(League league);
+	@Query("SELECT p FROM Pick p WHERE p.league.inviteCode = :inviteCode AND p.discontinued = false")
+	List<Pick> findByLeagueInviteCode(String inviteCode);
 }

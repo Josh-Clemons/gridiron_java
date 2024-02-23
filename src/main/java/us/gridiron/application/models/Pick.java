@@ -112,7 +112,7 @@ public class Pick
 		this.discontinued = discontinued;
 	}
 
-	public boolean getDiscontinued()
+	public boolean isDiscontinued()
 	{
 		return discontinued;
 	}

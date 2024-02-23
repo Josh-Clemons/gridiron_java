@@ -20,6 +20,7 @@ public class Pick
 	private Competitor competitor;
 	private Integer value;
 	private Integer week;
+	@Column(columnDefinition = "boolean default false")
 	private boolean discontinued;
 
 	public Pick()

@@ -51,7 +51,7 @@ public class UserController
 	{
 		logger.info("Get /user/users-by-league-id, leagueId: {}", leagueId);
 		try {
-			List<User> users = leagueService.findUsersByLeagueId(leagueId);
+			List<User> users = userService.findUsersByLeagueId(leagueId);
 			return ResponseEntity.ok(users.stream().map(user -> modelMapper.map(user, UserDTO.class)));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);

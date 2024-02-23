@@ -45,11 +45,6 @@ public class LeagueService
 		return leagueRepository.findByInviteCode(inviteCode);
 	}
 
-	public List<User> findUsersByLeagueId(Long leagueId)
-	{
-		return leagueRepository.findUsersByLeagueId(leagueId);
-	}
-
 	public League findLeagueByLeagueName(String name)
 	{
 		return leagueRepository.findByLeagueName(name);
@@ -131,7 +126,7 @@ public class LeagueService
 
 		if(user.equals(leagueToDiscontinue.getLeagueOwner())) {
 			pickRepository.discontinuePicksByUserIdAndLeagueId(user.getId(), leagueId);
-			leagueRepository.deleteById();
+			//			leagueRepository.deleteById();
 		} else {
 			throw new RuntimeException("Unable to delete, you are not the owner");
 		}

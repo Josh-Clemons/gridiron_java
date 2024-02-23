@@ -26,6 +26,7 @@ public class League
 	private Integer maxUsers;
 	private Integer userCount;
 	private String inviteCode;
+	@Column(columnDefinition = "boolean default false")
 	private boolean discontinued;
 
 	public League()

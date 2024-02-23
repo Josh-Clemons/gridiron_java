@@ -87,6 +87,11 @@
 			<artifactId>thymeleaf-spring5</artifactId>
 			<version>3.1.2.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

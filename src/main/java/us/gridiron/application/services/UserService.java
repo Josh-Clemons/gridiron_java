@@ -1,5 +1,7 @@
 package us.gridiron.application.services;
 
+import java.util.List;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,7 +10,8 @@ import us.gridiron.application.models.User;
 import us.gridiron.application.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService
+{
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -50,5 +53,10 @@ public class UserService {
 	{
 		// This can be expanded if more password complexity is required, or better error responses
 		return password.length() > 5;
+	}
+
+	public List<User> findUsersByLeagueId(Long leagueId)
+	{
+		return userRepository.findUsersByLeagueId(leagueId);
 	}
 }

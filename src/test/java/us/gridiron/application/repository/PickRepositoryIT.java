@@ -1,9 +1,7 @@
 package us.gridiron.application.repository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
@@ -51,7 +49,7 @@ public class PickRepositoryIT
 		this.userRepository = userRepository;
 	}
 
-	public User makeUser(String username, String email)
+	private User makeUser(String username, String email)
 	{
 		User user = new User();
 		user.setUsername(username);
@@ -60,7 +58,7 @@ public class PickRepositoryIT
 		return userRepository.save(user);
 	}
 
-	public League makeLeague(String leagueName, String inviteCode, User user)
+	private League makeLeague(String leagueName, String inviteCode, User user)
 	{
 		League league = new League();
 		league.setLeagueName(leagueName);
@@ -73,7 +71,7 @@ public class PickRepositoryIT
 		return leagueRepository.save(league);
 	}
 
-	public List<Pick> makePick(League league, User user)
+	private List<Pick> makePick(League league, User user)
 	{
 		List<Pick> newPicks = new ArrayList<>();
 
@@ -87,7 +85,7 @@ public class PickRepositoryIT
 	}
 
 	@BeforeEach
-	public void setUp()
+	void setUp()
 	{
 		testEntityManager.clear();
 		user = makeUser("test", "1234@email.com");

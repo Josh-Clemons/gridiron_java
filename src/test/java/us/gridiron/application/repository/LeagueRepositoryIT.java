@@ -46,7 +46,7 @@ public class LeagueRepositoryIT
 		this.userRepository = userRepository;
 	}
 
-	public League makeLeague(String leagueName, String inviteCode, User user)
+	private League makeLeague(String leagueName, String inviteCode, User user)
 	{
 		League league = new League();
 		league.setLeagueName(leagueName);
@@ -59,7 +59,7 @@ public class LeagueRepositoryIT
 		return leagueRepository.save(league);
 	}
 
-	public User makeUser(String username, String email)
+	private User makeUser(String username, String email)
 	{
 		User user = new User();
 		user.setUsername(username);
@@ -69,7 +69,7 @@ public class LeagueRepositoryIT
 	}
 
 	@BeforeEach
-	public void setUp()
+	void setUp()
 	{
 		testEntityManager.clear();
 		user = makeUser("test", "1234@email.com");

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import us.gridiron.application.models.Competitor;
 import us.gridiron.application.payload.response.CompetitorDTO;
 import us.gridiron.application.payload.response.TeamDTO;
 import us.gridiron.application.services.NflDataService;
@@ -46,7 +47,7 @@ public class NflDataController
 	}
 
 	@GetMapping("/all-espn-data")
-	//	@PreAuthorize("hasRole(ERole.MODERATOR)")
+	//	@PreAuthorize("hasRole('MODERATOR')")
 	public ResponseEntity<List<CompetitorDTO>> getAllGameData()
 	{
 		logger.info("Get /api/gamedata/all-espn-data");
@@ -61,7 +62,7 @@ public class NflDataController
 	}
 
 	@GetMapping("/espn-competitor-data")
-	//	@PreAuthorize("hasRole(ERole.MODERATOR)")
+	//	@PreAuthorize("hasRole('MODERATOR')")
 	public ResponseEntity<List<CompetitorDTO>> updateCompetitorData()
 	{
 		logger.info("Get /api/gamedata/espn");
@@ -76,7 +77,7 @@ public class NflDataController
 	}
 
 	@GetMapping("/update-db")
-	@PreAuthorize("hasRole(ERole.MODERATOR)")
+	@PreAuthorize("hasRole('MODERATOR')")
 	public ResponseEntity<?> refreshGameDataInDB()
 	{
 		logger.info("Get /api/gamedata/update-db");

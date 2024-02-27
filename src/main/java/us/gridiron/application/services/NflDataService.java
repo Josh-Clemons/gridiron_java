@@ -25,7 +25,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class NflDataService {
+public class NflDataService
+{
 
 	private final CompetitorRepository competitorRepository;
 	private final TeamRepository teamRepository;
@@ -39,7 +40,6 @@ public class NflDataService {
 		this.modelMapper = modelMapper;
 	}
 
-	@Transactional
 	public List<CompetitorDTO> getAllCompetitorData()
 	{
 		List<Competitor> competitors = competitorRepository.findAll();
@@ -47,64 +47,78 @@ public class NflDataService {
 			.map(competitor -> modelMapper.map(competitor, CompetitorDTO.class))
 			.toList();
 	}
-	
-	@Transactional
+
 	public List<CompetitorDTO> updateGameDataInDB()
 	{
 		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
-		List<Competitor> newCompetitors = results.getFirst()
-			.stream()
+
+		List<Team> updatedTeams = validateTeams(results);
+
+		List<Competitor> newCompetitors = results.getFirst().stream()
 			.map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class))
 			.toList();
 
-		// TODO check teams in 2024 to confirm the old records will still work
-		List<Team> updatedTeams = teamRepository.findAll();
 		List<Competitor> oldCompetitors = competitorRepository.findAll();
 
-		for(Competitor newCompetitor : newCompetitors) {
-			boolean foundMatch = false;
-
-
-			for(Competitor oldCompetitor : oldCompetitors) {
-
-				if(oldCompetitor.getWeek().equals(newCompetitor.getWeek()) &&
-					oldCompetitor.getTeam().getAbbreviation().equals(newCompetitor.getTeam().getAbbreviation())) {
-					// Update the "winner" value
+		newCompetitors.forEach(newCompetitor -> {
+			oldCompetitors.stream()
+				.filter(oldCompetitor -> oldCompetitor.getEventId().equals(newCompetitor.getEventId())
+					&& oldCompetitor.getHomeAway().equals(newCompetitor.getHomeAway()))
+				.findFirst()
+				.ifPresentOrElse(oldCompetitor -> {
 					oldCompetitor.setWinner(newCompetitor.isWinner());
-					oldCompetitor.setEventId(newCompetitor.getEventId());
 					oldCompetitor.setStartDate(newCompetitor.getStartDate());
 					oldCompetitor.setCompleted(newCompetitor.isCompleted());
+					oldCompetitor.setWeek(newCompetitor.getWeek());
 
-					for(Team team : updatedTeams) {
-						if(team.getName().equals(newCompetitor.getTeam().getName())) {
-							oldCompetitor.setTeam(team);
-							break;
-						}
-					}
+					competitorRepository.save(oldCompetitor);
+				}, () -> {
+					newCompetitor.setId(null);
+					newCompetitor.setTeam(updatedTeams.stream()
+						.filter(team -> team.getName().equals(newCompetitor.getTeam().getName()))
+						.findFirst()
+						.orElseThrow(() -> new RuntimeException("Team not found in updatedTeams list")));
 
-					foundMatch = true;
-					break;
-				}
-			}
+					competitorRepository.save(newCompetitor);
+				});
+		});
 
-			if(!foundMatch) {
-				for(Team team : updatedTeams) {
-					if(team.getName().equals(newCompetitor.getTeam().getName())) {
-						newCompetitor.setTeam(team);
-						break;
-					}
-				}
-				// Add the competitor to oldCompetitors
-				oldCompetitors.add(newCompetitor);
-			}
-		}
 
-		// Save the updated oldCompetitors (including modified and new competitors)
-		competitorRepository.saveAll(oldCompetitors);
+		List<Competitor> savedCompetitors = competitorRepository.findAll();
 
-		return oldCompetitors.stream()
+		return savedCompetitors.stream()
 			.map(competitor -> modelMapper.map(competitor, CompetitorDTO.class))
 			.collect(Collectors.toList());
+	}
+
+	private List<Team> validateTeams(Pair<List<CompetitorDTO>, Set<TeamDTO>> results)
+	{
+		List<Team> newTeams = results.getSecond()
+			.stream()
+			.map(teamDTO -> modelMapper.map(teamDTO, Team.class))
+			.toList();
+
+		List<Team> oldTeams = teamRepository.findAll();
+
+		if(oldTeams.isEmpty()) {
+			newTeams.forEach(team -> team.setId(null));
+			return teamRepository.saveAll(newTeams);
+		}
+
+		oldTeams.forEach(oldTeam -> {
+			newTeams.stream()
+				.filter(newTeam -> newTeam.getName().equals(oldTeam.getName()))
+				.findFirst()
+				.ifPresent(newTeam -> {
+					oldTeam.setName(newTeam.getName());
+					oldTeam.setAbbreviation(newTeam.getAbbreviation());
+					oldTeam.setColor(newTeam.getColor());
+					oldTeam.setAlternateColor(newTeam.getAlternateColor());
+					oldTeam.setLogo(newTeam.getLogo());
+				});
+		});
+
+		return teamRepository.saveAll(oldTeams);
 	}
 
 	private Pair<List<CompetitorDTO>, Set<TeamDTO>> fetchDataFromEspn(String uri)
@@ -165,7 +179,9 @@ public class NflDataService {
 			String uri = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=" + i;
 			Pair<List<CompetitorDTO>, Set<TeamDTO>> weeklyData = fetchDataFromEspn(uri);
 			allCompetitorsDTO.addAll(weeklyData.getFirst());
-			allTeamsDTO.addAll(weeklyData.getSecond());
+			if(allTeamsDTO.isEmpty()) {
+				allTeamsDTO.addAll(weeklyData.getSecond());
+			}
 		}
 		return Pair.of(allCompetitorsDTO, allTeamsDTO);
 	}

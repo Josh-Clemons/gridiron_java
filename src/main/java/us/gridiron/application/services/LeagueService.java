@@ -105,7 +105,7 @@ public class LeagueService
 		League leagueToUpdate = leagueRepository.findById(leagueId)
 			.orElseThrow(() -> new RuntimeException("Error finding the league"));
 
-		// league owner is not allowed to leave a league, they must delete it,
+		// league owner is not allowed to leave a league, they must discontinue it,
 		// at some point being able to transfer ownership should be considered
 		if(leagueToUpdate.getLeagueOwner().equals(user)) {
 			throw new RuntimeException("Cannot remove league owner from league");

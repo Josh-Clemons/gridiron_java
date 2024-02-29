@@ -48,7 +48,7 @@ public class NflDataService
 			.toList();
 	}
 
-	public List<CompetitorDTO> updateGameDataInDB()
+	public List<CompetitorDTO> updateGameData()
 	{
 		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
 
@@ -186,7 +186,7 @@ public class NflDataService
 		return Pair.of(allCompetitorsDTO, allTeamsDTO);
 	}
 
-	public Pair<List<CompetitorDTO>, Set<TeamDTO>> getCompetitorDataFromEspn()
+	public Pair<List<CompetitorDTO>, Set<TeamDTO>> getTemporaryEspnData()
 	{
 		String uri = "http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=1000&dates=20230901-20240401";
 		return fetchDataFromEspn(uri);

@@ -57,7 +57,9 @@ public class CompetitorRepositoryIT
 	{
 		competitor1.setWeek(2);
 		competitorRepository.save(competitor1);
+
 		Competitor updatedCompetitor = competitorRepository.findById(competitor1.getId()).get();
+
 		assertThat(updatedCompetitor.getWeek(), is(2));
 		assertThat(competitor1.getId(), is(updatedCompetitor.getId()));
 

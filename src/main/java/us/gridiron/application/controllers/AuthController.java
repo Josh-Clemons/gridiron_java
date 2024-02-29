@@ -36,7 +36,7 @@ import us.gridiron.application.services.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController
 {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -62,10 +62,10 @@ public class AuthController
 		this.modelMapper = modelMapper;
 	}
 
-	@PostMapping("/signin")
+	@PostMapping("/login")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest)
 	{
-		logger.info("Post api/auth/signin, user: {}", loginRequest.getUsername());
+		logger.info("Post /auth/signin, user: {}", loginRequest.getUsername());
 		try {
 			Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(
@@ -91,7 +91,7 @@ public class AuthController
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest)
 	{
-		logger.info("Post /api/auth/signup, signupRequest: {}", signUpRequest.toString());
+		logger.info("Post /auth/signup, signupRequest: {}", signUpRequest.toString());
 		try {
 			if(userRepository.existsByUsername(signUpRequest.getUsername())) {
 				return ResponseEntity.badRequest().body(new MessageResponse("Username is already taken!"));
@@ -147,10 +147,10 @@ public class AuthController
 		}
 	}
 
-	@PutMapping("/reset")
+	@PutMapping("/reset-password")
 	public ResponseEntity<?> resetUserPassword(@RequestBody PasswordResetRequest passwordResetRequest)
 	{
-		logger.debug("Put api/email/reset for email: {}", passwordResetRequest.getEmail());
+		logger.debug("Put auth/reset-password for: {}", passwordResetRequest.getEmail());
 
 		String email = passwordResetRequest.getEmail();
 		String newPassword = passwordResetRequest.getNewPassword();

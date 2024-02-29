@@ -17,59 +17,64 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/pick")
-public class PickController {
-    private static final Logger logger = LoggerFactory.getLogger(PickController.class);
-    private final PickService pickService;
-    private final UserService userService;
-    private final ModelMapper modelMapper;
+@RequestMapping("/pick")
+public class PickController
+{
+	private static final Logger logger = LoggerFactory.getLogger(PickController.class);
+	private final PickService pickService;
+	private final UserService userService;
+	private final ModelMapper modelMapper;
 
-    public PickController(PickService pickService, UserService userService, ModelMapper modelMapper) {
-        this.pickService = pickService;
-        this.userService = userService;
-        this.modelMapper = modelMapper;
-    }
+	public PickController(PickService pickService, UserService userService, ModelMapper modelMapper)
+	{
+		this.pickService = pickService;
+		this.userService = userService;
+		this.modelMapper = modelMapper;
+	}
 
-    @GetMapping("/my-league-picks")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Object> findMyLeaguePicks(@RequestParam Long leagueId) {
-        logger.info("Get /api/pick/my-league-picks, leagueId: {}", leagueId);
-        try{
-            User user = userService.getLoggedInUser();
-            List<PickDTO> picks = pickService.findPicksByUserAndLeagueId(user, leagueId);
-            return ResponseEntity.ok(picks);
-        } catch(Exception e) {
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+	@GetMapping("/user-league-picks")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<Object> findMyLeaguePicks(@RequestParam Long leagueId)
+	{
+		logger.info("Get /pick/user-league-picks, leagueId: {}", leagueId);
+		try {
+			User user = userService.getLoggedInUser();
+			List<PickDTO> picks = pickService.findPicksByUserAndLeagueId(user, leagueId);
+			return ResponseEntity.ok(picks);
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
 
-    @GetMapping("/all-league-picks")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Object> findAllLeaguePicks(@RequestParam String inviteCode) {
-        logger.info("Get /api/pick/all-league-picks, inviteCode: {}", inviteCode);
-        try {
-            return ResponseEntity.ok(pickService.findLeaguePicks(inviteCode));
-        } catch(Exception e) {
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body("error finding league picks");
-        }
-    }
+	@GetMapping("/all-league-picks")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<Object> findAllLeaguePicks(@RequestParam String inviteCode)
+	{
+		logger.info("Get /pick/all-league-picks, inviteCode: {}", inviteCode);
+		try {
+			return ResponseEntity.ok(pickService.findLeaguePicks(inviteCode));
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body("error finding league picks");
+		}
+	}
 
-    @PostMapping("/update")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Object> updateLeaguePicks(@RequestBody List<PickUpdateRequest> pickUpdates){
-        logger.info("Post /api/pick/update");
-        try{
-            User user = userService.getLoggedInUser();
-            List<Pick> updatedPicks = pickService.convertPickUpdateRequestToPicksList(pickUpdates);
-            List<PickDTO> updatedPickDTOs = updatedPicks.stream().map(pick ->
-                modelMapper.map(pick, PickDTO.class)).toList();
-            return ResponseEntity.ok(pickService.updateUserPicks(user, updatedPickDTOs));
-        } catch(Exception e) {
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+	@PostMapping("/update")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<Object> updateLeaguePicks(@RequestBody List<PickUpdateRequest> pickUpdates)
+	{
+		logger.info("Post /pick/update");
+		try {
+			User user = userService.getLoggedInUser();
+			List<Pick> updatedPicks = pickService.convertPickUpdateRequestToPicksList(pickUpdates);
+			List<PickDTO> updatedPickDTOs = updatedPicks.stream().map(pick ->
+				modelMapper.map(pick, PickDTO.class)).toList();
+			return ResponseEntity.ok(pickService.updateUserPicks(user, updatedPickDTOs));
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
 
 }

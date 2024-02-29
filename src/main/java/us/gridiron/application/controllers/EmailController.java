@@ -11,8 +11,9 @@ import us.gridiron.application.services.EmailService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/email")
-public class EmailController {
+@RequestMapping("/email")
+public class EmailController
+{
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	private final EmailService emailService;
@@ -26,6 +27,7 @@ public class EmailController {
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<String> sendTest(@RequestBody InviteEmailDTO inviteEmailDto)
 	{
+		logger.info("Post /email/invite");
 
 		try {
 			emailService.sendLeagueInvite(inviteEmailDto.getTo(), inviteEmailDto.getInviteCode());
@@ -39,6 +41,8 @@ public class EmailController {
 	@PutMapping("/password-reset-request")
 	public ResponseEntity<?> resetPasswordEmail(@RequestParam String email)
 	{
+		logger.info("Put /email/password-reset-request for email: {}", email);
+
 		try {
 			emailService.sendPasswordReset(email);
 			return ResponseEntity.ok("Request sent");
@@ -51,6 +55,7 @@ public class EmailController {
 	@PostMapping("/help")
 	public ResponseEntity<String> createHelpRequest(@RequestBody HelpEmailDTO helpEmailDTO)
 	{
+		logger.info("Post /email/help with subject: {}", helpEmailDTO.getSubject());
 
 		try {
 			emailService.sendHelpEmail(helpEmailDTO.getEmail(), helpEmailDTO.getSubject(), helpEmailDTO.getMessage());

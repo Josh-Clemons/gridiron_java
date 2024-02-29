@@ -20,7 +20,7 @@ import us.gridiron.application.services.NflDataService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/gamedata")
+@RequestMapping("/gamedata")
 public class NflDataController
 {
 
@@ -36,7 +36,7 @@ public class NflDataController
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<List<CompetitorDTO>> getCompetitorData()
 	{
-		logger.info("Get /api/gamedata/competitors");
+		logger.info("Get /gamedata/competitors");
 		try {
 			List<CompetitorDTO> allCompetitors = nflDataService.getAllCompetitorData();
 			return ResponseEntity.ok(allCompetitors);
@@ -46,13 +46,19 @@ public class NflDataController
 		}
 	}
 
-	@GetMapping("/all-espn-data")
+	/**
+	 * This method is used in the offseason when ESPN has not updated the detailed source of data.
+	 * The data returned here is often incomplete and should only be used for off-season purposes.
+	 *
+	 * @return a list of CompetitorDTOs
+	 */
+	@GetMapping("/temporary-espn-data")
 	//	@PreAuthorize("hasRole('MODERATOR')")
-	public ResponseEntity<List<CompetitorDTO>> getAllGameData()
+	public ResponseEntity<List<CompetitorDTO>> getTemporaryEspnData()
 	{
-		logger.info("Get /api/gamedata/all-espn-data");
+		logger.info("Get /gamedata/espn");
 		try {
-			Pair<List<CompetitorDTO>, Set<TeamDTO>> results = nflDataService.getAllEspnData();
+			Pair<List<CompetitorDTO>, Set<TeamDTO>> results = nflDataService.getTemporaryEspnData();
 			List<CompetitorDTO> allCompetitors = results.getFirst();
 			return ResponseEntity.ok(allCompetitors);
 		} catch(Exception e) {
@@ -61,28 +67,13 @@ public class NflDataController
 		}
 	}
 
-	@GetMapping("/espn-competitor-data")
-	//	@PreAuthorize("hasRole('MODERATOR')")
-	public ResponseEntity<List<CompetitorDTO>> updateCompetitorData()
-	{
-		logger.info("Get /api/gamedata/espn");
-		try {
-			Pair<List<CompetitorDTO>, Set<TeamDTO>> results = nflDataService.getCompetitorDataFromEspn();
-			List<CompetitorDTO> allCompetitors = results.getFirst();
-			return ResponseEntity.ok(allCompetitors);
-		} catch(Exception e) {
-			logger.error(e.getMessage(), e);
-			return ResponseEntity.badRequest().body(new ArrayList<>());
-		}
-	}
-
-	@GetMapping("/update-db")
+	@GetMapping("/update-game-data")
 	@PreAuthorize("hasRole('MODERATOR')")
-	public ResponseEntity<?> refreshGameDataInDB()
+	public ResponseEntity<?> updateGameData()
 	{
-		logger.info("Get /api/gamedata/update-db");
+		logger.info("Get /gamedata/update-game-data");
 		try {
-			return ResponseEntity.ok(nflDataService.updateGameDataInDB());
+			return ResponseEntity.ok(nflDataService.updateGameData());
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body("Error updating DB: " + e.getMessage());

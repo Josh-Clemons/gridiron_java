@@ -80,11 +80,11 @@ public class PickService
 	{
 
 		boolean isPickOwner = picks.stream()
-				.noneMatch(pick -> pick.getOwner().equals(user));
+				.allMatch(pick -> pick.getOwner().equals(user));
 		boolean isLeagueOwner = leagueRepository.findById(picks.get(0).getLeague().getId())
 				.map(league -> league.getLeagueOwner().equals(user))
 				.orElse(false);
-		if(!isPickOwner || !isLeagueOwner) {
+		if(!isLeagueOwner && !isPickOwner) {
 			throw new RuntimeException("Those are not your picks!");
 		}
 

@@ -21,26 +21,28 @@ import java.util.List;
 public class PickController
 {
 	private static final Logger logger = LoggerFactory.getLogger(PickController.class);
+	private final static ModelMapper modelMapper = new ModelMapper();
 	private final PickService pickService;
 	private final UserService userService;
-	private final ModelMapper modelMapper;
 
-	public PickController(PickService pickService, UserService userService, ModelMapper modelMapper)
+	public PickController(PickService pickService, UserService userService)
 	{
 		this.pickService = pickService;
 		this.userService = userService;
-		this.modelMapper = modelMapper;
 	}
 
 	@GetMapping("/user-league-picks")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Object> findMyLeaguePicks(@RequestParam Long leagueId)
+	public ResponseEntity<Object> findPicksByLeagueIdAndAuthenticatedUser(@RequestParam Long leagueId)
 	{
 		logger.info("Get /pick/user-league-picks, leagueId: {}", leagueId);
 		try {
 			User user = userService.getLoggedInUser();
-			List<PickDTO> picks = pickService.findPicksByUserAndLeagueId(user, leagueId);
-			return ResponseEntity.ok(picks);
+			List<Pick> picks = pickService.findPicksByUserAndLeagueId(user, leagueId);
+			List<PickDTO> pickDTOs = picks.stream()
+					.map(pick -> modelMapper.map(pick, PickDTO.class))
+					.toList();
+			return ResponseEntity.ok(pickDTOs);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(e.getMessage());
@@ -49,11 +51,16 @@ public class PickController
 
 	@GetMapping("/all-league-picks")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Object> findAllLeaguePicks(@RequestParam String inviteCode)
+	public ResponseEntity<Object> findPicksByInviteCode(@RequestParam String inviteCode)
 	{
 		logger.info("Get /pick/all-league-picks, inviteCode: {}", inviteCode);
 		try {
-			return ResponseEntity.ok(pickService.findLeaguePicks(inviteCode));
+
+			List<PickDTO> pickDTOs = pickService.findLeaguePicks(inviteCode).stream()
+					.map(pick -> modelMapper.map(pick, PickDTO.class))
+					.toList();
+
+			return ResponseEntity.ok(pickDTOs);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body("error finding league picks");
@@ -62,15 +69,19 @@ public class PickController
 
 	@PostMapping("/update")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Object> updateLeaguePicks(@RequestBody List<PickUpdateRequest> pickUpdates)
+	public ResponseEntity<Object> updatePicks(@RequestBody List<PickUpdateRequest> pickUpdates)
 	{
 		logger.info("Post /pick/update");
 		try {
 			User user = userService.getLoggedInUser();
-			List<Pick> updatedPicks = pickService.convertPickUpdateRequestToPicksList(pickUpdates);
-			List<PickDTO> updatedPickDTOs = updatedPicks.stream().map(pick ->
-				modelMapper.map(pick, PickDTO.class)).toList();
-			return ResponseEntity.ok(pickService.updateUserPicks(user, updatedPickDTOs));
+
+			List<Pick> newPicks = pickService.convertPickUpdateRequestToPicksList(pickUpdates);
+			List<Pick> updatedPicks = pickService.updateUserPicks(user, newPicks);
+			List<PickDTO> pickDTOs = updatedPicks.stream()
+					.map(pick -> modelMapper.map(pick, PickDTO.class))
+					.toList();
+
+			return ResponseEntity.ok(pickDTOs);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(e.getMessage());

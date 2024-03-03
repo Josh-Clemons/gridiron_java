@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import us.gridiron.application.models.User;
 import us.gridiron.application.payload.response.UserDTO;
-import us.gridiron.application.services.LeagueService;
 import us.gridiron.application.services.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)

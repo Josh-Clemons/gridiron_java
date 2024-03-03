@@ -10,7 +10,6 @@ import us.gridiron.application.models.League;
 import us.gridiron.application.models.Pick;
 import us.gridiron.application.models.User;
 import us.gridiron.application.payload.request.PickUpdateRequest;
-import us.gridiron.application.payload.response.PickDTO;
 import us.gridiron.application.repository.CompetitorRepository;
 import us.gridiron.application.repository.LeagueRepository;
 import us.gridiron.application.repository.PickRepository;
@@ -57,7 +56,7 @@ public class PickService
 	}
 
 	@Transactional
-	public List<PickDTO> findPicksByUserAndLeagueId(User user, Long leagueId)
+	public List<Pick> findPicksByUserAndLeagueId(User user, Long leagueId)
 	{
 
 		// I can probably eliminate this repository call by passing in the entire league,
@@ -68,35 +67,31 @@ public class PickService
 		if(!isLeagueMember) {
 			throw new RuntimeException("User not in league");
 		}
-		List<Pick> picks = pickRepository.findByOwnerAndLeague(user, league);
-		return picks.stream().map(pick ->
-			modelMapper.map(pick, PickDTO.class)).toList();
+		return pickRepository.findByOwnerAndLeague(user, league);
 	}
 
 	@Transactional
-	public List<PickDTO> findLeaguePicks(String inviteCode)
+	public List<Pick> findLeaguePicks(String inviteCode)
 	{
 
-		return pickRepository.findByLeagueInviteCode(inviteCode)
-			.stream().map(pick -> modelMapper.map(pick, PickDTO.class)).toList();
+		return pickRepository.findByLeagueInviteCode(inviteCode);
 
 	}
 
 	@Transactional
-	public List<PickDTO> updateUserPicks(User user, List<PickDTO> pickDTOS)
+	public List<Pick> updateUserPicks(User user, List<Pick> picks)
 	{
-		// converts DTO back to entity
-		List<Pick> picks = pickDTOS.stream()
-			.map(pickDTO -> modelMapper.map(pickDTO, Pick.class)).toList();
 
-		boolean isOwner = picks.stream().noneMatch(pick -> pick.getOwner().equals(user));
-		if(!isOwner) {
+		boolean isPickOwner = picks.stream()
+				.noneMatch(pick -> pick.getOwner().equals(user));
+		boolean isLeagueOwner = leagueRepository.findById(picks.get(0).getLeague().getId())
+				.map(league -> league.getLeagueOwner().equals(user))
+				.orElse(false);
+		if(!isPickOwner || !isLeagueOwner) {
 			throw new RuntimeException("Those are not your picks!");
 		}
 
-		List<Pick> updatedPicks = pickRepository.saveAll(picks);
-		return updatedPicks.stream()
-			.map(pick -> modelMapper.map(pick, PickDTO.class)).toList();
+		return pickRepository.saveAll(picks);
 	}
 
 	@Transactional

@@ -12,8 +12,6 @@ import us.gridiron.application.models.espn.Competition;
 import us.gridiron.application.models.Competitor;
 import us.gridiron.application.models.espn.Event;
 import us.gridiron.application.models.espn.NflWeek;
-import us.gridiron.application.payload.response.CompetitorDTO;
-import us.gridiron.application.payload.response.TeamDTO;
 import us.gridiron.application.repository.CompetitorRepository;
 import us.gridiron.application.repository.TeamRepository;
 
@@ -21,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class NflDataService
@@ -39,24 +36,18 @@ public class NflDataService
 		this.modelMapper = modelMapper;
 	}
 
-	public List<CompetitorDTO> getAllCompetitorData()
+	public List<Competitor> getAllCompetitorData()
 	{
-		List<Competitor> competitors = competitorRepository.findAll();
-		return competitors.stream()
-			.map(competitor -> modelMapper.map(competitor, CompetitorDTO.class))
-			.toList();
+		return competitorRepository.findAll();
+
 	}
 
-	public List<CompetitorDTO> updateGameData()
+	public List<Competitor> updateGameData()
 	{
-		Pair<List<CompetitorDTO>, Set<TeamDTO>> results = getAllEspnData();
+		Pair<List<Competitor>, Set<Team>> results = getAllEspnData();
 
-		List<Team> updatedTeams = validateTeams(results);
-
-		List<Competitor> newCompetitors = results.getFirst().stream()
-			.map(competitorDTO -> modelMapper.map(competitorDTO, Competitor.class))
-			.toList();
-
+		List<Team> updatedTeams = validateTeams(results.getSecond());
+		List<Competitor> newCompetitors = results.getFirst();
 		List<Competitor> oldCompetitors = competitorRepository.findAll();
 
 		newCompetitors.forEach(newCompetitor -> {
@@ -84,20 +75,11 @@ public class NflDataService
 		});
 
 
-		List<Competitor> savedCompetitors = competitorRepository.findAll();
-
-		return savedCompetitors.stream()
-			.map(competitor -> modelMapper.map(competitor, CompetitorDTO.class))
-			.collect(Collectors.toList());
+		return competitorRepository.findAll();
 	}
 
-	private List<Team> validateTeams(Pair<List<CompetitorDTO>, Set<TeamDTO>> results)
+	private List<Team> validateTeams(Set<Team> newTeams)
 	{
-		List<Team> newTeams = results.getSecond()
-			.stream()
-			.map(teamDTO -> modelMapper.map(teamDTO, Team.class))
-			.toList();
-
 		List<Team> oldTeams = teamRepository.findAll();
 
 		if(oldTeams.isEmpty()) {
@@ -121,7 +103,7 @@ public class NflDataService
 		return teamRepository.saveAll(oldTeams);
 	}
 
-	private Pair<List<CompetitorDTO>, Set<TeamDTO>> fetchDataFromEspn(String uri)
+	private Pair<List<Competitor>, Set<Team>> fetchDataFromEspn(String uri)
 	{
 		List<Competitor> allCompetitors = new ArrayList<>();
 		Set<Team> allTeams = new HashSet<>();
@@ -164,30 +146,25 @@ public class NflDataService
 				}
 			}
 		}
-
-		List<CompetitorDTO> allCompetitorsDTO = allCompetitors.stream()
-			.map(competitor -> modelMapper.map(competitor, CompetitorDTO.class)).toList();
-		Set<TeamDTO> allTeamsDTO = allTeams.stream()
-			.map(team -> modelMapper.map(team, TeamDTO.class)).collect(Collectors.toSet());
-		return Pair.of(allCompetitorsDTO, allTeamsDTO);
+		return Pair.of(allCompetitors, allTeams);
 	}
 
-	public Pair<List<CompetitorDTO>, Set<TeamDTO>> getAllEspnData()
+	public Pair<List<Competitor>, Set<Team>> getAllEspnData()
 	{
-		List<CompetitorDTO> allCompetitorsDTO = new ArrayList<>();
-		Set<TeamDTO> allTeamsDTO = new HashSet<>();
+		List<Competitor> allCompetitors = new ArrayList<>();
+		Set<Team> allTeams = new HashSet<>();
 		for(int i = 1; i <= 18; i++) {
 			String uri = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=" + i;
-			Pair<List<CompetitorDTO>, Set<TeamDTO>> weeklyData = fetchDataFromEspn(uri);
-			allCompetitorsDTO.addAll(weeklyData.getFirst());
-			if(allTeamsDTO.isEmpty()) {
-				allTeamsDTO.addAll(weeklyData.getSecond());
+			Pair<List<Competitor>, Set<Team>> weeklyData = fetchDataFromEspn(uri);
+			allCompetitors.addAll(weeklyData.getFirst());
+			if(allTeams.isEmpty()) {
+				allTeams.addAll(weeklyData.getSecond());
 			}
 		}
-		return Pair.of(allCompetitorsDTO, allTeamsDTO);
+		return Pair.of(allCompetitors, allTeams);
 	}
 
-	public Pair<List<CompetitorDTO>, Set<TeamDTO>> getTemporaryEspnData()
+	public Pair<List<Competitor>, Set<Team>> getTemporaryEspnData()
 	{
 		String uri = "http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=1000&dates=20230901-20240401";
 		return fetchDataFromEspn(uri);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import us.gridiron.application.models.Competitor;
+import us.gridiron.application.models.Team;
 import us.gridiron.application.payload.response.CompetitorDTO;
 import us.gridiron.application.payload.response.TeamDTO;
 import us.gridiron.application.services.NflDataService;
@@ -22,6 +25,7 @@ import us.gridiron.application.services.NflDataService;
 @RequestMapping("/gamedata")
 public class NflDataController
 {
+	private final static ModelMapper modelMapper = new ModelMapper();
 
 	public static final Logger logger = LoggerFactory.getLogger(NflDataController.class);
 	private final NflDataService nflDataService;
@@ -37,8 +41,12 @@ public class NflDataController
 	{
 		logger.info("Get /gamedata/competitors");
 		try {
-			List<CompetitorDTO> allCompetitors = nflDataService.getAllCompetitorData();
-			return ResponseEntity.ok(allCompetitors);
+			List<Competitor> allCompetitors = nflDataService.getAllCompetitorData();
+			return ResponseEntity.ok(
+					allCompetitors.stream()
+							.map(competitor -> modelMapper.map(competitor, CompetitorDTO.class))
+							.toList()
+			);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(new ArrayList<>());
@@ -46,20 +54,24 @@ public class NflDataController
 	}
 
 	/**
-	 * This method is used in the offseason when ESPN has not updated the detailed source of data.
+	 * This method is used in the off-season when ESPN has not updated the detailed source of data.
 	 * The data returned here is often incomplete and should only be used for off-season purposes.
 	 *
 	 * @return a list of CompetitorDTOs
 	 */
 	@GetMapping("/temporary-espn-data")
-	//	@PreAuthorize("hasRole('MODERATOR')")
+	@PreAuthorize("hasRole('MODERATOR')")
 	public ResponseEntity<List<CompetitorDTO>> getTemporaryEspnData()
 	{
 		logger.info("Get /gamedata/espn");
 		try {
-			Pair<List<CompetitorDTO>, Set<TeamDTO>> results = nflDataService.getTemporaryEspnData();
-			List<CompetitorDTO> allCompetitors = results.getFirst();
-			return ResponseEntity.ok(allCompetitors);
+			Pair<List<Competitor>, Set<Team>> results = nflDataService.getTemporaryEspnData();
+
+			List<CompetitorDTO> allCompetitorsDTO = results.getFirst().stream()
+					.map(competitor -> modelMapper.map(competitor, CompetitorDTO.class))
+					.toList();
+
+			return ResponseEntity.ok(allCompetitorsDTO);
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body(new ArrayList<>());
@@ -72,7 +84,11 @@ public class NflDataController
 	{
 		logger.info("Get /gamedata/update-game-data");
 		try {
-			return ResponseEntity.ok(nflDataService.updateGameData());
+			List<Competitor> competitors = nflDataService.updateGameData();
+
+			return ResponseEntity.ok(competitors.stream()
+					.map(competitor -> modelMapper.map(competitor, CompetitorDTO.class))
+					.toList());
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body("Error updating DB: " + e.getMessage());

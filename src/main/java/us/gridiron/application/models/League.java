@@ -130,6 +130,11 @@ public class League
 		return leagueOwner;
 	}
 
+	public boolean isLeagueOwner(User user)
+	{
+		return this.leagueOwner.equals(user);
+	}
+
 	public void setLeagueOwner(User leagueOwner)
 	{
 		this.leagueOwner = leagueOwner;

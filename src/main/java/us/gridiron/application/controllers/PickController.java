@@ -21,14 +21,15 @@ import java.util.List;
 public class PickController
 {
 	private static final Logger logger = LoggerFactory.getLogger(PickController.class);
-	private final static ModelMapper modelMapper = new ModelMapper();
 	private final PickService pickService;
 	private final UserService userService;
+	private final ModelMapper modelMapper;
 
-	public PickController(PickService pickService, UserService userService)
+	public PickController(PickService pickService, UserService userService, ModelMapper modelMapper)
 	{
 		this.pickService = pickService;
 		this.userService = userService;
+		this.modelMapper = modelMapper;
 	}
 
 	@GetMapping("/user-league-picks")
@@ -49,14 +50,16 @@ public class PickController
 		}
 	}
 
-	@GetMapping("/all-league-picks")
+	@GetMapping("/by-invite-code")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Object> findPicksByInviteCode(@RequestParam String inviteCode)
 	{
 		logger.info("Get /pick/all-league-picks, inviteCode: {}", inviteCode);
 		try {
 
-			List<PickDTO> pickDTOs = pickService.findLeaguePicks(inviteCode).stream()
+			List<Pick> picks = pickService.findLeaguePicks(inviteCode);
+
+			List<PickDTO> pickDTOs = picks.stream()
 					.map(pick -> modelMapper.map(pick, PickDTO.class))
 					.toList();
 

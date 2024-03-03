@@ -7,6 +7,7 @@ public class CompetitorDTO {
     private String homeAway;
     private String startDate;
     private int week;
+    private Integer year;
     private String eventId;
     private Boolean completed;
 
@@ -56,6 +57,14 @@ public class CompetitorDTO {
 
     public void setWeek(int week) {
         this.week = week;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public String getEventId() {

@@ -69,6 +69,7 @@ public class NflDataService
 					oldCompetitor.setStartDate(newCompetitor.getStartDate());
 					oldCompetitor.setCompleted(newCompetitor.isCompleted());
 					oldCompetitor.setWeek(newCompetitor.getWeek());
+					oldCompetitor.setYear(newCompetitor.getYear());
 
 					competitorRepository.save(oldCompetitor);
 				}, () -> {
@@ -150,6 +151,7 @@ public class NflDataService
 									if(existingTeam == null) {
 										allTeams.add(competitor.getTeam());
 									}
+									competitor.setYear(result.getSeason().getYear());
 									competitor.setWeek(event.getWeek().getNumber());
 									competitor.setEventId(event.getId());
 									competitor.setStartDate(competition.getStartDate());

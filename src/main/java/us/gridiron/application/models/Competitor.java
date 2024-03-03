@@ -20,6 +20,7 @@ public class Competitor {
 	private String homeAway;
 	private String startDate;
 	private Integer week;
+	private Integer year;
 	private String eventId;
 	private Boolean completed;
 
@@ -63,6 +64,14 @@ public class Competitor {
 
 	public void setWeek(Integer week) {
 		this.week = week;
+	}
+
+	public Integer getYear() {
+		return year;
+	}
+
+	public void setYear(Integer year) {
+		this.year = year;
 	}
 
 	public Team getTeam() {

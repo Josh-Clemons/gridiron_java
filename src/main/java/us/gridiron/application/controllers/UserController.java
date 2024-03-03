@@ -20,13 +20,11 @@ import us.gridiron.application.services.UserService;
 public class UserController
 {
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-	private final LeagueService leagueService;
 	private final UserService userService;
 	private final ModelMapper modelMapper;
 
-	public UserController(UserService userService, ModelMapper modelMapper, LeagueService leagueService)
+	public UserController(UserService userService, ModelMapper modelMapper)
 	{
-		this.leagueService = leagueService;
 		this.userService = userService;
 		this.modelMapper = modelMapper;
 	}

@@ -1,7 +1,6 @@
 package us.gridiron.application.services;
 
 import jakarta.transaction.Transactional;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,17 +25,15 @@ public class PickService
 	private static final Logger logger = LoggerFactory.getLogger(PickService.class);
 	private final PickRepository pickRepository;
 	private final LeagueRepository leagueRepository;
-	private final ModelMapper modelMapper;
 	private final CompetitorRepository competitorRepository;
 	private final UserRepository userRepository;
 
 	public PickService(
-		PickRepository pickRepository, LeagueRepository leagueRepository, ModelMapper modelMapper,
+		PickRepository pickRepository, LeagueRepository leagueRepository,
 		CompetitorRepository competitorRepository, UserRepository userRepository)
 	{
 		this.pickRepository = pickRepository;
 		this.leagueRepository = leagueRepository;
-		this.modelMapper = modelMapper;
 		this.competitorRepository = competitorRepository;
 		this.userRepository = userRepository;
 	}

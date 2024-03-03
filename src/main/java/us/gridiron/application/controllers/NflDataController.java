@@ -25,14 +25,15 @@ import us.gridiron.application.services.NflDataService;
 @RequestMapping("/gamedata")
 public class NflDataController
 {
-	private final static ModelMapper modelMapper = new ModelMapper();
 
 	public static final Logger logger = LoggerFactory.getLogger(NflDataController.class);
+	private final ModelMapper modelMapper;
 	private final NflDataService nflDataService;
 
-	public NflDataController(NflDataService nflDataService)
+	public NflDataController(NflDataService nflDataService, ModelMapper modelMapper)
 	{
 		this.nflDataService = nflDataService;
+		this.modelMapper = modelMapper;
 	}
 
 	@GetMapping("/competitors")

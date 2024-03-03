@@ -1,7 +1,6 @@
 package us.gridiron.application.services;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,14 +25,12 @@ public class NflDataService
 
 	private final CompetitorRepository competitorRepository;
 	private final TeamRepository teamRepository;
-	private final ModelMapper modelMapper;
 
 	public NflDataService(
-		CompetitorRepository competitorRepository, TeamRepository teamRepository, ModelMapper modelMapper)
+		CompetitorRepository competitorRepository, TeamRepository teamRepository)
 	{
 		this.competitorRepository = competitorRepository;
 		this.teamRepository = teamRepository;
-		this.modelMapper = modelMapper;
 	}
 
 	public List<Competitor> getAllCompetitorData()

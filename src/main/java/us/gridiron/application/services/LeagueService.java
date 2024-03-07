@@ -124,6 +124,7 @@ public class LeagueService
 		League leagueToDiscontinue = leagueRepository.findById(leagueId)
 			.orElseThrow(() -> new RuntimeException("Error finding the league"));
 
+		// TODO (Josh) - this should discontinue picks for all users and discontinue the league
 		if(user.equals(leagueToDiscontinue.getLeagueOwner())) {
 			pickRepository.discontinuePicksByUserAndLeague(user, leagueToDiscontinue);
 			//			leagueRepository.deleteById();

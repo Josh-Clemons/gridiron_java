@@ -153,7 +153,7 @@ public class LeagueController
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<String> leaveLeague(@RequestParam Long leagueId)
 	{
-		logger.info("Delete /league/leave, leagueId: {}", leagueId);
+		logger.info("Put /league/leave, leagueId: {}", leagueId);
 		try {
 			User loggedInUser = userService.getLoggedInUser();
 			leagueService.removeUserFromLeague(leagueId, loggedInUser);
@@ -169,7 +169,7 @@ public class LeagueController
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<String> discontinueLeague(@RequestParam Long leagueId)
 	{
-		logger.info("Delete /league/delete, leagueId: {}", leagueId);
+		logger.info("Put /league/delete, leagueId: {}", leagueId);
 		try {
 			User loggedInUser = userService.getLoggedInUser();
 			leagueService.discontinueLeague(loggedInUser, leagueId);

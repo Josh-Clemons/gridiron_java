@@ -16,16 +16,13 @@ public class LeagueService
 {
 	private final LeagueRepository leagueRepository;
 	private final PickService pickService;
-	private final PickRepository pickRepository;
 	private final CodeService codeService;
 
 	public LeagueService(
-		LeagueRepository leagueRepository, PickService pickService, PickRepository pickRepository,
-		CodeService codeService)
+		LeagueRepository leagueRepository, PickService pickService, CodeService codeService)
 	{
 		this.leagueRepository = leagueRepository;
 		this.pickService = pickService;
-		this.pickRepository = pickRepository;
 		this.codeService = codeService;
 	}
 
@@ -88,13 +85,14 @@ public class LeagueService
 		if(league.getIsPrivate() && !league.getInviteCode().equals(joinLeagueDTO.getInviteCode())) {
 			throw new RuntimeException("Incorrect invite code");
 		}
-		boolean isAdded = league.addUser(user);
-		if(!isAdded) {
-			return ResponseEntity.badRequest().body("User is already in the league");
-		} else {
+		// TODO (Josh) check is the user was in the league previously, then just activate their old picks
+
+		if(league.addUser(user)) {
 			leagueRepository.save(league);
 			pickService.createPicksForNewUser(user, league);
 			return ResponseEntity.ok("User added to the league");
+		} else {
+			return ResponseEntity.badRequest().body("User is already in the league");
 		}
 	}
 
@@ -113,21 +111,19 @@ public class LeagueService
 			throw new RuntimeException("User not in the league");
 		}
 		// remove players picks from the league
-		pickRepository.discontinuePicksByUserAndLeague(user, leagueToUpdate);
+		pickService.discontinuePicksByUserAndLeague(user, leagueToUpdate);
 		leagueToUpdate.removeUser(user);
 		leagueRepository.save(leagueToUpdate);
 	}
 
 	@Transactional
-	public void discontinueLeague(User user, Long leagueId)
-	{
+	public void discontinueLeague(User user, Long leagueId) {
 		League leagueToDiscontinue = leagueRepository.findById(leagueId)
-			.orElseThrow(() -> new RuntimeException("Error finding the league"));
+				.orElseThrow(() -> new RuntimeException("Error finding the league"));
 
-		// TODO (Josh) - this should discontinue picks for all users and discontinue the league
-		if(user.equals(leagueToDiscontinue.getLeagueOwner())) {
-			pickRepository.discontinuePicksByUserAndLeague(user, leagueToDiscontinue);
-			//			leagueRepository.deleteById();
+		if (user.equals(leagueToDiscontinue.getLeagueOwner())) {
+			pickService.discontinuePicksByUserAndLeague(user, leagueToDiscontinue);
+			leagueRepository.discontinueLeagueByLeagueId(leagueId);
 		} else {
 			throw new RuntimeException("Unable to delete, you are not the owner");
 		}

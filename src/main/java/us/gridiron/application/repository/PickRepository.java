@@ -22,6 +22,10 @@ public interface PickRepository extends JpaRepository<Pick, Long>
 	@Query("UPDATE Pick p SET p.discontinued = true WHERE p.owner = :user AND p.league = :league")
 	void discontinuePicksByUserAndLeague(@Param("user") User user, @Param("league") League league);
 
+	@Modifying
+	@Query("UPDATE Pick p SET p.discontinued = false WHERE p.owner = :user AND p.league = :league")
+	void activatePicksByUserAndLeague(@Param("user") User user, @Param("league") League league);
+
 	@Query("SELECT p FROM Pick p WHERE p.league.inviteCode = :inviteCode AND p.discontinued = false")
 	List<Pick> findByLeagueInviteCode(String inviteCode);
 }

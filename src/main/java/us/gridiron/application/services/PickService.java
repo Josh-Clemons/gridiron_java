@@ -41,6 +41,16 @@ public class PickService
 	@Transactional
 	public void createPicksForNewUser(User user, League league)
 	{
+		// check if user has previously discontinued picks in this league
+		List<Pick> picks = pickRepository.findByOwnerAndLeague(user, league);
+
+		if(!picks.isEmpty()) {
+			logger.info("User has previously discontinued picks in this league, activating picks");
+			activatePicksByUserAndLeague(user, league);
+			return;
+		}
+
+		// create picks for new user
 		List<Pick> newPicks = new ArrayList<>();
 
 		for(int i = 1; i <= 18; i++) {
@@ -56,8 +66,7 @@ public class PickService
 	public List<Pick> findPicksByUserAndLeagueId(User user, Long leagueId)
 	{
 
-		// I can probably eliminate this repository call by passing in the entire league,
-		// keeping it this way for now (mostly to simplify testing)
+		// I can probably eliminate this repository call by passing in the entire league
 		League league = leagueRepository.findById(leagueId)
 			.orElseThrow(() -> new RuntimeException("Unable to find league"));
 		boolean isLeagueMember = league.getUsers().stream().anyMatch(leagueUser -> leagueUser.equals(user));
@@ -89,6 +98,16 @@ public class PickService
 		}
 
 		return pickRepository.saveAll(picks);
+	}
+
+	public void discontinuePicksByUserAndLeague(User user, League league)
+	{
+		pickRepository.discontinuePicksByUserAndLeague(user, league);
+	}
+
+	public void activatePicksByUserAndLeague(User user, League league)
+	{
+		pickRepository.activatePicksByUserAndLeague(user, league);
 	}
 
 	@Transactional

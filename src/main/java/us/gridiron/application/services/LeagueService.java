@@ -1,15 +1,21 @@
 package us.gridiron.application.services;
 
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import us.gridiron.application.models.League;
+import us.gridiron.application.models.Pick;
 import us.gridiron.application.models.User;
 import us.gridiron.application.payload.request.JoinLeagueDTO;
+import us.gridiron.application.payload.response.UserDTO;
 import us.gridiron.application.repository.LeagueRepository;
 import us.gridiron.application.repository.PickRepository;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LeagueService
@@ -126,5 +132,35 @@ public class LeagueService
 		} else {
 			throw new RuntimeException("Unable to delete, you are not the owner");
 		}
+	}
+
+	// TODO (Josh) write tests for this method
+	public Map<String, Map<Integer, Integer>> getLeagueScores(String inviteCode)
+	{
+		Map<String, Map<Integer, Integer>> scores = new HashMap<>();
+		Map<String, Map<Integer, Integer>> correctPicksPerWeek = new HashMap<>();
+		List<Pick> picks = pickService.findLeaguePicksByInviteCode(inviteCode);
+
+		for (Pick pick : picks) {
+			String username = pick.getOwner().getUsername();
+			scores.putIfAbsent(username, new HashMap<>());
+			correctPicksPerWeek.putIfAbsent(username, new HashMap<>());
+
+			int week = pick.getWeek();
+			scores.get(username).putIfAbsent(week, 0);
+			correctPicksPerWeek.get(username).putIfAbsent(week, 0);
+
+			if (pick.getCompetitor() != null && pick.getCompetitor().isWinner()) {
+				scores.get(username).put(week, scores.get(username).get(week) + pick.getValue());
+				correctPicksPerWeek.get(username).put(week, correctPicksPerWeek.get(username).get(week) + 1);
+
+				if (correctPicksPerWeek.get(username).get(week) == 3) {
+					scores.get(username).put(week, scores.get(username).get(week) + 2);
+					correctPicksPerWeek.get(username).put(week, 0);
+				}
+			}
+		}
+
+		return scores;
 	}
 }

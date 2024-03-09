@@ -74,13 +74,13 @@ public class LeagueController
 		}
 	}
 
-	@GetMapping("/league-scores")
+	@GetMapping("/scores")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> findLeagueScores(@RequestParam Long leagueId)
+	public ResponseEntity<?> findLeagueScores(@RequestParam String inviteCode)
 	{
-		logger.info("Get /league/league-scores, leagueId: {}", leagueId);
+		logger.info("Get /league/scores, inviteCode: {}", inviteCode);
 		try {
-			return ResponseEntity.ok("good job");
+			return ResponseEntity.ok(leagueService.getLeagueScores(inviteCode));
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.badRequest().body("Error getting league scores");

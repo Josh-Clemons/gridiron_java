@@ -57,7 +57,7 @@ public class PickController
 		logger.info("Get /pick/all-league-picks, inviteCode: {}", inviteCode);
 		try {
 
-			List<Pick> picks = pickService.findLeaguePicks(inviteCode);
+			List<Pick> picks = pickService.findLeaguePicksByInviteCode(inviteCode);
 
 			List<PickDTO> pickDTOs = picks.stream()
 					.map(pick -> modelMapper.map(pick, PickDTO.class))

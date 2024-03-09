@@ -77,7 +77,7 @@ public class PickService
 	}
 
 	@Transactional
-	public List<Pick> findLeaguePicks(String inviteCode)
+	public List<Pick> findLeaguePicksByInviteCode(String inviteCode)
 	{
 
 		return pickRepository.findByLeagueInviteCode(inviteCode);

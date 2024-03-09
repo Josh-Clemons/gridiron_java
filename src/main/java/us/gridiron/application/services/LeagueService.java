@@ -69,7 +69,7 @@ public class LeagueService
 		League newLeague = new League(leagueName, leagueOwner, isPrivate, maxUsers, inviteCode);
 		newLeague.addUser(leagueOwner);
 		League savedLeague = leagueRepository.save(newLeague);
-		pickService.createPicksForNewUser(leagueOwner, savedLeague);
+		pickService.createPicksForUser(leagueOwner, savedLeague);
 		return savedLeague;
 	}
 
@@ -85,11 +85,10 @@ public class LeagueService
 		if(league.getIsPrivate() && !league.getInviteCode().equals(joinLeagueDTO.getInviteCode())) {
 			throw new RuntimeException("Incorrect invite code");
 		}
-		// TODO (Josh) check is the user was in the league previously, then just activate their old picks
 
 		if(league.addUser(user)) {
 			leagueRepository.save(league);
-			pickService.createPicksForNewUser(user, league);
+			pickService.createPicksForUser(user, league);
 			return ResponseEntity.ok("User added to the league");
 		} else {
 			return ResponseEntity.badRequest().body("User is already in the league");
@@ -122,7 +121,7 @@ public class LeagueService
 				.orElseThrow(() -> new RuntimeException("Error finding the league"));
 
 		if (user.equals(leagueToDiscontinue.getLeagueOwner())) {
-			pickService.discontinuePicksByUserAndLeague(user, leagueToDiscontinue);
+			pickService.discontinuePicksByLeague(leagueToDiscontinue);
 			leagueRepository.discontinueLeagueByLeagueId(leagueId);
 		} else {
 			throw new RuntimeException("Unable to delete, you are not the owner");

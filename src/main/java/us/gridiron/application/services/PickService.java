@@ -39,7 +39,7 @@ public class PickService
 	}
 
 	@Transactional
-	public void createPicksForNewUser(User user, League league)
+	public void createPicksForUser(User user, League league)
 	{
 		// check if user has previously discontinued picks in this league
 		List<Pick> picks = pickRepository.findByOwnerAndLeague(user, league);
@@ -98,6 +98,11 @@ public class PickService
 		}
 
 		return pickRepository.saveAll(picks);
+	}
+
+	public void discontinuePicksByLeague(League league)
+	{
+		pickRepository.discontinuePicksByLeague(league);
 	}
 
 	public void discontinuePicksByUserAndLeague(User user, League league)

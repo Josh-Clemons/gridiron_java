@@ -107,8 +107,14 @@ public class LeagueController
 	public ResponseEntity<Object> findLeagueByInviteCode(@RequestParam String inviteCode)
 	{
 		logger.info("Get /league/find-by-code, inviteCode: {}", inviteCode);
+
+		League league = leagueService.findLeagueByInviteCode(inviteCode);
+
+		if(league.isDiscontinued()) {
+			return ResponseEntity.badRequest().body("League is discontinued");
+		}
+
 		try {
-			League league = leagueService.findLeagueByInviteCode(inviteCode);
 			LeagueResponseDTO leagueDto = modelMapper.map(league, LeagueResponseDTO.class);
 			return ResponseEntity.ok(leagueDto);
 		} catch(Exception e) {

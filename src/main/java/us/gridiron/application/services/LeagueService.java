@@ -134,12 +134,15 @@ public class LeagueService
 		}
 	}
 
-	// TODO (Josh) write tests for this method
 	public Map<String, Map<Integer, Integer>> getLeagueScores(String inviteCode)
 	{
 		Map<String, Map<Integer, Integer>> scores = new HashMap<>();
 		Map<String, Map<Integer, Integer>> correctPicksPerWeek = new HashMap<>();
 		List<Pick> picks = pickService.findLeaguePicksByInviteCode(inviteCode);
+
+		if(picks.isEmpty()) {
+			throw new RuntimeException("No picks found for the league");
+		}
 
 		for (Pick pick : picks) {
 			String username = pick.getOwner().getUsername();

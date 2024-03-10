@@ -35,6 +35,15 @@ public class Pick
 		this.week = week;
 	}
 
+	public Pick(User owner, League league, Integer value, Integer week, Competitor competitor)
+	{
+		this.owner = owner;
+		this.league = league;
+		this.value = value;
+		this.week = week;
+		this.competitor = competitor;
+	}
+
 	public Pick(
 		Long id, User owner, League league,
 		Competitor competitor, Integer value, Integer week)

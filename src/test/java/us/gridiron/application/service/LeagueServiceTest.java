@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 
 public class LeagueServiceTest
@@ -55,7 +55,7 @@ public class LeagueServiceTest
     @BeforeEach
     public void setUp()
     {
-        initMocks(this);
+        openMocks(this);
         leagueService = new LeagueService(null, pickService, null);
     }
 
